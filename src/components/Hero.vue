@@ -1,0 +1,38 @@
+<template>
+  <!-- <section class="hero is-primary">  -->
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns is-vcentered">
+          
+          <div class="column">
+
+            <p class="title">
+            <router-link to="/" >     
+              慈濟大學社會教育推廣中心
+               </router-link>
+           </p>
+            <p class="subtitle">
+            啟發善念 終身學習 生活有智慧
+           </p>
+          </div>     
+
+        
+      </div>
+    </div>
+  </div>
+
+  
+   <!-- </section> -->
+</template>
+
+
+<script>
+export default {
+  name: 'hero',
+  data () {
+    return {
+    }
+  },
+
+}
+</script>
