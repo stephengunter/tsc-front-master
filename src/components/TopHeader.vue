@@ -2,9 +2,10 @@
 <div class="container">
     <nav class="nav">
         <div class="nav-left">
-            <a class="nav-item is-brand" href="/">
-              <img :src="src" alt=""> 
-            </a>
+           <router-link to="/" class="nav-item is-tab">     
+             <img :src="src" alt=""> 
+           </router-link>
+           
         </div>
 
         <div class="nav-center">
