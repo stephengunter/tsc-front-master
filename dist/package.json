@@ -1,0 +1,10 @@
+{
+    "name":"tscfront",
+    "version":"1.0.0",
+    "description":"test on server",
+    "author":"Stephen",
+    "private":true,
+    "scripts":{
+        "postinstall":"npm install express"
+    }
+}
