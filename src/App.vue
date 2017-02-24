@@ -103,11 +103,3 @@ export default {
 
 }
 </script>
-
-<style>
-html *
-{
-  
-   font-family: "微軟正黑體", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-</style>
