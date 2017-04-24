@@ -1,22 +1,30 @@
 <template>
   <div id="app">
 
-    <top-header></top-header>
+    <top-header @mobileMenuChanged="toggleMobileMenu"></top-header>
 
-    <section class="hero is-primary"> 
+    <section v-show="!mobileMenu" class="hero is-primary"> 
 
     <hero></hero>
 
-    <navbar v-if="showNav" :items="navItems"></navbar>
+    <navbar v-if="mainNav.show" :default_id="mainNav.selected" :items="mainNav.items"></navbar>
 
     </section>
     
-    <subnav v-if="showSubNav" :items="subNavItems"></subnav>
+    <subnav v-if="subNav.show" :default_id="subNav.selected" :items="subNav.items"
+      @itemSelected="categorySelected" >
+      
+    </subnav>
 
     <section class="section">
-      <div class="container">
-
-        <router-view></router-view>
+      <!-- <div class="container  is-fluid is-marginless"> -->
+       <div class="container">
+   
+         <level-bar v-if="levelNav.show" :centers="levelNav.centers" :default_center="levelNav.default_center"
+           :categories="levelNav.categories" :default_category="levelNav.default_category">
+           
+         </level-bar>
+         <router-view :params="params"></router-view>
 
 
     
@@ -27,79 +35,209 @@
 </template>
 
 <script>
+
 import TopHeader from './components/TopHeader.vue'
 import Navbar from './components/Navbar.vue'
 import Hero from './components/Hero.vue'
 import SubNav from './components/SubNav.vue'
+import LevelBar from './components/LevelBar.vue'
 
 export default {
   name: 'app',
   data () {
     return {
-      navItems: {},
-      subNavItems:{},
-      
-
-
+       mobileMenu:false,
+       mainNav:{
+          show:false,
+          key:'',
+          selected:0,
+          items:[]
+       },
+       subNav:{
+          show:false,
+          key:'',
+          selected:0,
+          items:[]
+       },
+       levelNav:{
+          show:false,
+          centers:[],
+          default_center:0,
+          categories:[],
+          default_category:0
+       },
+       params:{
+         center:0,
+         category:0,
+         course:0
+       }
     }
   },
   components:{
     'top-header' : TopHeader,
     'navbar' : Navbar,
     'hero':  Hero,
-    'subnav' : SubNav
+    'subnav' : SubNav,
+    'level-bar' : LevelBar
 
   },
-  // watch: {
-  //   $route () {
-  //     alert('watch!!');
-     
-  //   }
-  // },
-  beforeMount(){     
-     this.getNavItems()
-     this.getSubNavItems()
-  },
-  computed:{
-    showNav(){
-      if(this.$route.meta.nav) return true 
-      return false;
-    },
-    showSubNav(){
-      if(this.$route.meta.subNav) return true 
-      return false;
+  watch: {
+    $route () {
+        this.init()
     }
   },
+  beforeMount(){   
+     this.init()
+  },
+  computed:{
+    
+  },
   methods:{
-      getNavItems(){
-        this.navItems=[        
-            {name:'centers' ,title:'花蓮中心' , id: 1 , },
-            {name:'centers' ,title:'高雄中心' , id: 2 , },
-            {name:'centers' ,title:'台北中心' , id: 3 , },
-            {name:'centers' ,title:'新竹中心' , id: 4 , },
-            {name:'centers' ,title:'台南中心' , id: 5 , },
-            {name:'centers' ,title:'宜蘭中心' , id: 6 , },
-            {name:'centers' ,title:'桃園中心' , id: 7 , },
-        ]
+      init(){
+         this.subNav={
+            show:false,
+            key:'',
+            selected:0,
+            items:[]
+          }
+         this.params={
+           center:0,
+           category:0,
+           course:0
+         }
+
+         if(this.$route.name!='courses'){
+             this.mainNav={
+              show:false,
+              key:'',
+              selected:0,
+              items:[]
+            }
+
+            this.levelNav={
+              show:false,
+              centers:[],
+              default_center:0,
+              categories:[],
+              default_category:0
+            }
+            
+
+            return 
+         }
+         
+          this.mainNav.show=true
+          this.mainNav.key='courses'
+
+          this.levelNav.show=true
+
+          this.getCenters().then((items) => {
+             this.mainNav.items=items
+             this.levelNav.centers=items
+           
+
+             let centerId=this.$route.query.center
+             if(centerId) {
+                 let center = this.mainNav.items.find((item)=>{
+                     return item.id == centerId
+                 })
+                if(center){
+                  this.mainNav.selected=center.id
+                   this.levelNav.default_center=center.id
+                }else{
+                  this.mainNav.selected=items[0].id
+                  this.levelNav.default_center=items[0].id
+                } 
+                 
+             }else{
+                 this.mainNav.selected=items[0].id
+                 this.levelNav.default_center=items[0].id
+             }
+
+             this.getCategories().then((items)=>{
+                this.subNav.items=items
+                this.subNav.selected=items[0].id
+                this.subNav.show=true
+                this.subNav.key='categories'
+
+                this.levelNav.categories=items
+                this.levelNav.default_category=items[0].id
+
+                this.params.center=this.mainNav.selected
+                this.params.category=this.subNav.selected
+               
+             })
+
+          });
+
+              
+       
       },
-      getSubNavItems(){
-        this.subNavItems=[        
-            {name:'categories' ,title:'最新課程' , id: 1 , icon:''},
-            {name:'categories' ,title:'推薦課程' , id: 2 , icon:''},
-            {name:'categories' ,title:'全部課程' , id: 3 , icon:''},
-            {name:'categories' ,title:'語言' , id: 4 , icon:'<i class="fa fa-language" aria-hidden="true"></i>'},
-            {name:'categories' ,title:'人文' , id: 5 , icon:'<i class="fa fa-leanpub" aria-hidden="true"></i>' },            
-            {name:'categories' ,title:'生活' , id: 6 , icon:'<i class="fa fa-smile-o" aria-hidden="true"></i>'},
-            {name:'categories' ,title:'藝術' , id: 7 , icon:'<i class="fa fa-ravelry" aria-hidden="true"></i>' },
-            {name:'categories' ,title:'體育' , id: 8 , icon:'<i class="fa fa-dribbble" aria-hidden="true"></i>'},
-            {name:'categories' ,title:'電腦' , id: 9 , icon:'<i class="fa fa-laptop" aria-hidden="true"></i>' },
-            {name:'categories' ,title:'兒童' , id: 10 , icon:'<i class="fa fa-child" aria-hidden="true"></i>'},
-            {name:'categories' ,title:'學分班' , id: 11 , icon:'<i class="fa fa-graduation-cap" aria-hidden="true"></i>'},
-        ]
+      
+      getCenters(){
+        return new Promise((resolve, reject) => {
+               let url=Helper.getUrl('/api/centers/activeCenters') 
+               axios.get(url)
+              .then(response => {
+                  let centers = response.data.centers
+                  let items=[]
+                  for(let i=0; i<centers.length; i++){
+                     let item={
+                         name:centers[i].name,
+                         id:centers[i].id
+                     }
+                      items.push(item)
+                  }
+                  resolve(items);
+              })
+              .catch(error => {
+                  reject(error.response);
+              })
+          })   //End Promise
+        
+            
       },
-  }
+      getCategories(){
+         return new Promise((resolve, reject) => {
+              let url=Helper.getUrl('/api/categories/activeCategories') 
+              axios.get(url)
+              .then(response => {
+                  let items=[]
+                  let categories = response.data.categories
+                  for(let i=0; i<categories.length; i++){
+                     let item={
+                         name:categories[i].name,
+                         id:categories[i].id,
+                         icon:categories[i].icon,
+                     }
+                     items.push(item)
+                  }
+                  resolve(items);
+              })
+              .catch(error => {
+                  reject(error.response);
+              })
+          })   //End Promise
+     },
+     categorySelected(id){
+        this.params.category=id
+     },
+     toggleMobileMenu(val){
+        this.mobileMenu=val
+     }
+
+      
+  }///end methods
 
 
 
 }
 </script>
+
+<style>
+  .section {
+    background-color: white;
+    padding: 1rem 1.5rem;
+}
+</style>
+

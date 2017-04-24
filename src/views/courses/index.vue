@@ -1,9 +1,9 @@
 <template>
 
 <div>
-    <div class="columns is-multiline is-mobile">
+   <div class="columns is-multiline">
 
-    <div v-for="course in courses" class="column is-two-thirds-mobile is-half-tablet is-half-desktop">
+    <div v-for="course in courses" class="column is-one-quater-mobile is-half-tablet is-half-desktop">
        <course-card :course="course"></course-card>
     </div>
     
@@ -21,45 +21,49 @@ import Card from '../../components/course/Card.vue'
 
     export default {
         name:'CourseIndex',
+        props: ['params'],
         components:{
             'course-card':Card
         },
-
+        watch: {
+            '$route': 'init'
+        },
         data(){
             return{
+                center:0,
+                category:0,
                 courses:[]
             }
         },
+        beforeMount(){
+           this.init()
+        },
         methods:{
+            init(){
+                let query=this.$route.query
+                this.center=query.center
+                this.category=query.category
+              
+                this.courses=[]
+                this.fetchData()
+           
+            },
             fetchData(){
-                let center={ name:'花蓮中心' }
-                let teacher={ name:'林阿福' , parent:0 }
-                let course={
-                    id : 1,
-                    name:'西班牙語初級班',
-                    status:'招生中',
-                    dayofweek:'星期一',
-                    cost: 3000,
-                    time:'18:00-20:00',
-                    hours: 30,
-                    period:'2017/2/3-2017/5/22',
-                    weeks: 15,
-                    description:'課程包括問路、對時、找工作、氣候和季節、服裝與健康，文法和會話的部分則依讀本的進度調整。課程包括問路、對時、找工作、氣候和季節、服裝與健康，文法和會話的部分則依讀本的進度調整。',
-                    center:center,
-                    teacher:teacher
-                }
-                let courseList=[
-                    course,
-                    course,
-                    course,
-                    course,
-                ]
-                this.courses=courseList
-
+                let url=Helper.getUrl('/api/courses/details/2' )          
+                axios.get(url)
+                .then(response => {
+                  let course=response.data.course
+                  for (var i = 0; i < 6; i++) {
+                      this.courses.push(new Course(course))
+                  }
+                 
+                  this.loaded=true
+                })
+                .catch(function(error) {
+                  console.log(error)
+                })
             }
         },
-        beforeMount(){
-            this.fetchData()
-        }
+       
     }
 </script>

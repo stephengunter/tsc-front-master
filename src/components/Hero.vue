@@ -8,7 +8,7 @@
 
             <p class="title">
             <router-link to="/" >     
-              慈濟大學社會教育推廣中心
+              社會教育推廣中心
                </router-link>
            </p>
             <p class="subtitle">
@@ -36,3 +36,12 @@ export default {
 
 }
 </script>
+
+
+<style>
+  .hero-body {
+    flex-grow: 1;
+    flex-shrink: 0;
+    padding: 1.5rem 1.5rem;
+}
+</style>

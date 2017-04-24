@@ -1,18 +1,17 @@
 <template>
   
-
-  <div class="hero-foot">
+<div  class="hero-foot is-hidden-mobile">
     <div class="container">
-      <nav class="tabs is-boxed">
-        <ul>
-        <li v-for="item in items" :class="{'is-active': item.id==selected}">
-           <a href="#" @click.prevent="navSelected(item.name , item.id)"  v-text="item.title"></a>
-        </li>
-       
-        </ul>
-      </nav>
+        <nav v-if="hasData"  class="tabs is-boxed">
+            <ul>
+            <li v-for="item in items" :class="{'is-active': item.id==selected}">
+               <a herf="#" @click.prevent="itemSelected(item.id)" style="font-size:16px">{{ item.name }}</a>
+            </li>
+           
+            </ul>
+        </nav>
     </div>
-  </div>
+</div>
 
 
 </template>
@@ -20,30 +19,35 @@
 
 <script>
 
-
 export default {
-  name: 'navbar',
-  
-  props:{
-       items:{},
-  },
+  name: 'Navbar',  
+  props: ['items',"default_id"],
   data () {
-    return {
-        selected : 1,
-
-    }
+      return {
+          selected : this.default_id,
+      }
   },
-  methods:{
-    navSelected(name , id){
-        this.selected=id
+  computed:{
+    hasData(){
+       return this.items.length
     },
-    
   },
   beforeMount(){
-     if(this.$route.name=='center-courses'){
-            this.selected=this.$route.params.id
-         }
-  }
+     
+  },
+  watch: {
+      default_id () {
+          this.selected=this.default_id
+      }
+  },
+  methods:{
+      itemSelected(id){
+          this.selected=id
+          this.$router.push('/courses?center=' + id);
+      },
+    
+  },
+  
 
 }
 

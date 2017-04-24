@@ -8,13 +8,11 @@ let routes = [
             path:'/',
             component: require('./views/home.vue'),
             name: 'home',
-            //meta: { 'nav':false  },
         },
         {
             path:'/centers',
             component: require('./views/centers/index.vue'),
             name: 'centers',
-            meta: { 'nav': false },
         },
         {
             path:'/courses',
@@ -22,12 +20,12 @@ let routes = [
             component: require('./views/courses/index.vue'),
             meta: { 'nav':'centers' , 'subNav' : 'categories' },
         },
-        {
-            path:'/courses/center/:id',
-            name: 'center-courses',
-            component: require('./views/courses/index.vue'),
-            meta: { 'nav':'centers' , 'subNav' : 'categories' },
-        },
+        // {
+        //     path:'/courses',
+        //     name: 'center-courses',
+        //     component: require('./views/courses/index.vue'),
+        //     meta: { 'nav':'centers' , 'subNav' : 'categories' },
+        // },
          {
             path:'/courses/:id',
             name: 'course-details',
@@ -38,13 +36,20 @@ let routes = [
             path:'/register',
             component: require('./views/register.vue'),
             name: 'register',
-            //meta: { 'root':true },
+            meta: { 'forVisitors':true },
         },
         {
             path:'/login',
             component: require('./views/login.vue'),
             name: 'login',
-            //meta: { 'root':true },
+            meta: { 'forVisitors':true },
+        },
+        {
+            path:'/feed',
+            component: require('./views/feed.vue'),
+            name: 'feed',
+            meta: { 'forAuth':true },
+           
         },
 
     ]

@@ -1,72 +1,39 @@
 <template>
-<div class="card">
-   
-    <div class="box">
+  <div class="card"> 
+    <div class="card-content">
+       <div class="media">
+          <div class="media-left is-hidden-mobile">
+            <figure class="image" >
+              <img :src="course.photo.path">
+            </figure>
+          </div>
+          <div class="media-content">
+            <div>
+              <ul class="info">                    
+              <li class="title">
+                 <span v-if="course.canJoin" class="tag is-success">招生中</span> 
+                 <a @click="$router.push('/courses/' + course.id)"> 
+                    {{ course.name}}
+                 </a>
+              </li> 
+              <li class="item">上課時間：<span v-html="course.classTimesText()"></span>  </li>
+              <li class="item">開課日期：{{ course.begin_date }}</li>
+              <li class="item">課程時數：{{  course.hoursText }}&nbsp;{{  course.weeksText }}</li>
+              <li class="item">課程費用：<span v-html="course.formatCost()"></span> </li>
+             </ul> 
+             </div>
+          </div>
+       </div>
+    </div>
+  </div>
 
-        <div class="media">
-             <div class="media-left">
-                 <div class="status">
-                      <span class="tag is-success">{{ course.status }}</span>
-                  </div>
-                  <figure class="image is-128x128">
-                  <a>
-                    <img src="http://livingthelanguage.ca/wp-content/uploads/2014/10/photodune-9069093-learn-spanish-vintage-background-concept-s-300x200.jpg">
-                  </a>
-                  </figure>
-
-              </div>
-              <div class="media-content">
-                
-                      <ul class="info">                    
-                          <li class="title">
-                             <a @click="$router.push('/courses/' + course.id)"> 
-                                {{ course.name}}&nbsp;&nbsp;{{ course.teacher.name }} 老師
-                             </a>
-                          </li> 
-                          <li class="item">上課時間：{{ course.dayofweek}} &nbsp; {{ course.time }} </li>
-                          <li class="item">開課日期：2017-3-1</li>
-                          <li class="item">報名期間：2017-1-16 起至 2017-2-18 止</li>
-                          <li class="item">學費：{{course.cost}}元&nbsp;/&nbsp;{{ course.hours }}小時 &nbsp;({{course.weeks}}週)</li>
-                      </ul> 
-                       <!-- <p>{{ course.description }}</p> -->
-                          
-                          
-                  
-              </div>
-             
-        </div>
-    </div> <!--  end box -->
-       
-</div>    <!--  end Card -->
 </template>
 
 <script>
   export default {
-      props:{
-          course:{
-            name:'',
-            status:'',
-            dayofweek:'',
-            cost: 0,
-            time:'',
-            hours: 0,
-            period:'',
-            weeks: 0,
-            teacher:{ name:'' ,parent:0},
-            center:{name:''},
-             
-          },
-          showCenter:false,          
-      },
-      data(){
-        return{
-
-            lessson:{}
-        }
-      }
-
-
-
+      name:'CourseCard',
+      props:['course'],
+      
   }
 
 

@@ -1,24 +1,32 @@
 <template>
 
-    <div class="box">    
-        <div class="media">
-            <div class="media-left">
-               <figure class="image is-128x128">
-                 <a @click="aclick()"> <img :src="photo"> </a>
-               </figure>
-            </div>
+  <div class="card"> 
+    <div class="card-content">
+       <div class="media">
+          <div class="media-left is-hidden-mobile">
+            <figure class="image is-128x128">
+                 <a @click="$router.push('/courses?center=' + center.id)"> <img :src="photo.path"> </a>
+            </figure>
+          </div>
+        
+          <div class="media-content">
+            <div>
+              <ul class="info">   
+                  <li class="title">
+                     <a @click="$router.push('/courses?center=' + center.id)"> 
+                        {{ center.name}}
+                     </a>
+                  </li>                      
+                      <li class="item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;  {{ addressText(center.contactInfo) }}</li>
+                      <li class="item"><i class="fa fa-volume-control-phone" aria-hidden="true"></i>&nbsp;{{ telText(center.contactInfo) }}</li>
+                   </ul>   
 
-            <div class="media-content">            
-                <div class="content">
-                    <ul class="info">                    
-                      <a @click="aclick()"><li class="title" v-text="title"></li></a>
-                      <li class="item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;  {{ address }}</li>
-                      <li class="item"><i class="fa fa-volume-control-phone" aria-hidden="true"></i>&nbsp;{{ tel }}</li>
-                   </ul>         
             </div>
-        </div>
+          </div>
       </div>
-   </div>   <!--  end box -->
+    </div>
+  </div>
+
    
 
 </template>
@@ -26,13 +34,55 @@
 <script>
   export default {
      name:'center-card',
-     props:[
-        'id' , 'title', 'address' , 'tel' , 'photo'
-     ],
+     props:[ 'center' ],
+     data(){
+      return {
+        loaded:false,
+        photo: {
+          path: '' 
+        },
+      }
+     },
+     beforeMount() {
+            this.init()
+
+     }, 
      methods:{
-         aclick(id){
-         this.$router.push('/courses/center/' + this.id)
-       }
+       init(){
+            this.getPhoto()                
+       },  
+       addressText(contactInfo) {
+                    if(!contactInfo) return ''
+                     if(!contactInfo.addressA) return ''
+                    return contactInfo.addressA.fullText
+       },
+       telText(contactInfo) {
+          if(!contactInfo) return ''
+          return contactInfo.tel
+       },
+       faxText(contactInfo){
+          if(!contactInfo) return ''
+          return contactInfo.fax
+       },
+       
+       getPhoto() {
+            let photo_id = this.center.photo_id
+            let url =Helper.getUrl('/api/photoes/');
+            if (photo_id) {
+                url += photo_id
+            } else {
+                url += 'defaultCenter'
+            }
+
+            axios.get(url)
+                .then(response => {
+                    this.photo = response.data.photo
+                    this.photo.path=Helper.getBackUrl() + this.photo.path
+                })
+                .catch(function(error) {
+                    console.log(error)
+                })
+        },
      }
   }
 

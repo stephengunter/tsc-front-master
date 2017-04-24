@@ -1,18 +1,86 @@
 <template>
-<div>
+<div v-if="loaded">
     <large-card :course="course"></large-card>
-     <h1 class="title">課程資訊</h1>
-     <info></info>
+    <h1 class="title">課程資訊</h1>
+    <div class="course-info">
+        <div class="columns">
+          <div class="column">
+               上課地點：<span v-html="course.formatLocation()"></span>          
+          </div>
+          <div class="column">
+               聯絡電話：{{ course.center.contactInfo.tel }}
+          </div>
+          
+        </div>
+
+        <div class="columns">
+            <div class="column">
+                 課程分類：<span v-html="course.formatCategories(course.privateCategories)"></span>               
+            </div>
+            <div class="column">
+                 課程編號：{{ course.number }}
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                 上課時間：<span v-html="course.classTimesText()"></span>             
+            </div>
+            <div class="column">
+                 課程期間：<span v-html="course.period"></span>
+            </div>
+          
+        </div>
+        <div class="columns">
+            <div class="column">                          
+                 課程費用：<span v-html="course.formatCostDetails()"></span>         
+            </div>
+            <div v-if="course.credit_count>0" class="column">                          
+                 學分數：{{ course.credit_count }}       
+            </div>
+            
+        </div>
+        <div class="columns">
+            <div class="column">
+                 課程時數：{{  course.hoursText }}&nbsp;{{  course.weeksText }}              
+            </div>
+            <div class="column">
+                 招生對象：<span v-html="course.formatTarget()"></span>  
+            </div>
+          
+        </div>
+        <div class="columns">
+            <div class="column">
+                 報名期間：{{ course.open_date }} 起至 {{ course.close_date }} 止&nbsp;&nbsp;
+                 <span v-if="course.canJoin" class="tag is-success">招生中</span>          
+            </div>
+            <div class="column">
+                 上限人數：{{ course.limit }}人
+            </div>
+          
+        </div>
+      <div>  <!--  End Course-Info -->
+     
 
      <h1 class="title">師資介紹</h1>
-     <teacher></teacher>
+     <teacher-card v-for="teacher in teachers" :teacher="teacher"></teacher-card>
 
+    <div v-show="course.schedules.length" id="course-schedules">
      <h1 class="title">課程進度</h1>
-      <table class="table" style="font-size:17px;">
+      <table class="table" style="width: 95%;font-size:17px;">
+          <thead> 
+              <tr> 
+                  <th></th> 
+                  <th style="width:45%">課目大綱</th> 
+                  <th style="width:45%">內容</th>                   
+              </tr> 
+          </thead>
           <tbody>
-              <tr v-for="schedule in course.schedule">
+              <tr v-for="schedule in course.schedules">
                 <td class="order-td">
-                  {{schedule.lesson}}
+                  {{schedule.order}}
+                </td>
+                <td>
+                  {{schedule.title}}
                 </td>
                 <td>
                   {{schedule.content}}
@@ -20,66 +88,67 @@
               </tr>              
             </tbody>
       </table>
-
-      <h1 class="title">公告事項</h1>
-      <li v-for="notice in course.notices" v-text="notice" style="font-size:17px;"></li>
-     <!--  <li>台積電藝術總監</li>
-      <li>社區展望協會主任委員</li> -->
+    </div> 
+   <!--  <h1 class="title">公告事項</h1>
+    <ul style="list-style-type:disc;">
+       <li v-for="notice in course.notices" v-text="item"></li>
+    </ul> -->
+    
+     
 </div>
 </template>
 
 <script>
 import LargeCard from  '../../components/course/LargeCard.vue'
-import Info from  '../../components/course/Info.vue'
-import Teacher from  '../../components/course/Teacher.vue'
+import TeacherCard from  '../../components/course/Teacher.vue'
 
 export default {
-
-   name:'details',
+   name:'CourseDetails',
    components:{
       'large-card':LargeCard,
-      'info':Info,
-      'teacher':Teacher
+      'teacher-card':TeacherCard
    },
    data(){
      return {
-        course:{}
+        id:0,
+        course:{},
+        teachers:[],
+        loaded:false
+
      }
    },
    beforeMount(){
-       this.fetchData()
+      this.init()
+   },
+   watch: {
+      '$route': 'init'
    },
    methods:{
-        fetchData(){
-          let schedule=[
-            { lesson:'1' , content:'針氈－認識羊毛氈初步說明、圓球吊飾製作'},
-            { lesson:'2' , content: '針氈－小小布盒蓋〈布料針氈〉'},
-            { lesson:'3' , content:'針氈－接合技法、大頭狗製作'},
-            { lesson:'4' , content:'針氈－蛋糕技法、蛋糕磁鐵製作'},
-            { lesson:'5' , content:'針氈－四肢活動、小小熊熊鑰匙圈製作'},
-          ]
-          let notices=[
-              '颱風日臨時放假將擇期補課',
-               '學員需自備交通工具'
-          ]
-            let course={
-                name:'可愛羊毛氈手做',
-                status:'招生中',
-                dayofweek:'星期六',
-                cost: 3000,
-                time:'10:00 ~ 12:00',
-                hours: 32,
-                startDate:'2017-3-16',
-                period:'2017-3-16 ~ 2017-6-30',
-                weeks: 16,
-                description:'羊毛在炎熱的台灣或許會給人酷熱的印象，但羊毛氈卻可利用簡單的工具與技巧，變化出非常實用的袋物或家居用品，甚至是可愛的人偶，是非常值得一試的療癒系手做。',
-                teacher:{ name:'林阿福' ,parent:0},
-                center:{name:'花蓮中心'},
-                schedule:schedule,
-                notices:notices
-            }
-            this.course=course
-        }
+     init(){
+        this.id=this.$route.params.id
+        this.course={}
+        this.teachers=[]
+        this.loaded=false
+
+        this.fetchData()
+      },
+      fetchData(){
+        let url=Helper.getUrl('/api/courses/details/' + this.id)          
+          axios.get(url)
+              .then(response => {
+                  this.course = new Course(response.data.course)
+                
+                  for (var i = 0; i < this.course.teachers.length; i++) {
+                      this.teachers.push(new Teacher(this.course.teachers[i]))
+                  }
+                 
+                  this.loaded=true
+              })
+              .catch(function(error) {
+                  console.log(error)
+              })
+      }
+     
    },
 
 

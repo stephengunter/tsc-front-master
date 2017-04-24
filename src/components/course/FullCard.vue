@@ -1,19 +1,23 @@
 <template>
 <div class="card">
-    <p class="card-header-title">
-      <span class="course-title">  <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp; {{ course.center.name }}</span>
+   <p class="card-header-title">
+      <!-- <span class="course-title">  <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp; {{ course.center.name }}</span> -->
+    
+
+       <span  class="nav-item ">
+       <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp; {{ course.center.name }} </span>
     </p>
     <div class="box">
-
+ 
         <div class="media">
-             <div class="media-left">
+             <div class="media-left is-hidden-mobile">
                  <div class="status">
-                      <span class="tag is-success">{{ course.status }}</span>
+                      <span v-if="course.canJoin" class="tag is-success">招生中</span> 
                   </div>
                   <figure class="image is-128x128">
-                  <a>
-                    <img src="http://livingthelanguage.ca/wp-content/uploads/2014/10/photodune-9069093-learn-spanish-vintage-background-concept-s-300x200.jpg">
-                  </a>
+                    <a>
+                      <img :src="course.photo.path">
+                    </a>
                   </figure>
 
               </div>
@@ -21,13 +25,14 @@
                
                       <ul class="info">                    
                           <li class="title">
-                          <a @click="$router.push('/courses/' + course.id)"> 
-                          {{ course.name}}&nbsp;&nbsp;{{ course.teacher.name }} 老師</a>
+                            <a @click="$router.push('/courses/' + course.id)"> 
+                            {{ course.name}}
+                            </a>
                           </li> 
-                          <li class="item">上課時間：{{ course.dayofweek}} &nbsp; {{ course.time }} </li>
-                          <li class="item">開課日期：2017-3-1</li>
-                          <li class="item">報名期間：2017-1-16 起至 2017-2-18 止</li>
-                          <li class="item">學費：{{course.cost}}元&nbsp;/&nbsp;{{ course.hours }}小時 &nbsp;({{course.weeks}}週)</li>
+                          <li class="item">上課時間：<span v-html="course.classTimesText()"></span>  </li>
+                          <li class="item">開課日期：{{ course.begin_date }}</li>
+                          <li class="item">課程時數：{{  course.hoursText }}&nbsp;{{  course.weeksText }}</li>
+                          <li class="item">課程費用：<span v-html="course.formatCost()"></span> </li>
                       </ul> 
                        <!-- <p>{{ course.description }}</p> -->
                           
@@ -43,44 +48,24 @@
 
 <script>
   export default {
-      props:{
-          course:{
-            name:'',
-            status:'',
-            dayofweek:'',
-            cost: 0,
-            time:'',
-            hours: 0,
-            period:'',
-            weeks: 0,
-            teacher:{ name:'' ,parent:0},
-            center:{name:''},
-             
-          },
-          showCenter:false,          
-      },
-      data(){
-        return{
-
-            lessson:{}
-        }
-      }
-
-
-
+      name:'CourseFullCard',
+      props:['course'],
   }
 
 
 </script>
-
+   
 
 <style scoped>
+.card-header-title{
+   padding: 0.3rem;
+}
 .status{
   text-align:center;
   padding-bottom:10px;
 }
 .course-title{
-font-size: 1.125em;
+font-size: 1.325em;
  padding-left: 10px;
 }
 ul.info {

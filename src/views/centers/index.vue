@@ -1,17 +1,12 @@
 <template>
-<div class="columns is-multiline is-mobile">
 
-    <div v-for="item in items" class="column is-two-thirds-mobile is-half-tablet is-half-desktop">
-      
-      <center-card :id="item.id" :title="item.title" :address="item.address" 
-      :tel="item.tel" :photo="item.photo">
-        
-      </center-card>
-     
-    </div>
+   <div class="columns is-multiline">
+
+      <div v-for="center in centers" class="column is-one-quater-mobile is-half-tablet is-half-desktop">
+         <center-card :center="center"></center-card>
+      </div>
     
-  </div>
-
+    </div>
 
 
 
@@ -24,31 +19,37 @@ import Card from '../../components/center/Card.vue'
     
  export default{
     name:'CenterIndex',
+    components:{
+       'center-card':Card
+    },
     data(){
       return {
-        items: {}
+        loaded:false,
+        centers: []
       }
     },
     beforeMount(){
         this.fetchData()
     },
     methods:{
-      fetchData(){         
-            this.items=[
-             { id:1 , title: '台北分社' , address:'台北市敦化南路二段200號' , tel:'(02) 278877655' ,photo:'https://s-media-cache-ak0.pinimg.com/736x/fa/e5/aa/fae5aa46fe50dbf870e6483517f4390d.jpg'},
-              { id:2 , title: '台北分社' , address:'台北市敦化南路二段200號' , tel:'(02) 278877655' ,photo:'https://s-media-cache-ak0.pinimg.com/736x/fa/e5/aa/fae5aa46fe50dbf870e6483517f4390d.jpg'},
-              { id:3 ,title: '台北分社' , address:'台北市敦化南路二段200號' , tel:'(02) 278877655' ,photo:'https://s-media-cache-ak0.pinimg.com/736x/fa/e5/aa/fae5aa46fe50dbf870e6483517f4390d.jpg'},
-               {id: 4, title: '台北分社' , address:'台北市敦化南路二段200號' , tel:'(02) 278877655' ,photo:'https://s-media-cache-ak0.pinimg.com/736x/fa/e5/aa/fae5aa46fe50dbf870e6483517f4390d.jpg'},
-              { id:5 ,title: '台北分社' , address:'台北市敦化南路二段200號' , tel:'(02) 278877655' ,photo:'https://s-media-cache-ak0.pinimg.com/736x/fa/e5/aa/fae5aa46fe50dbf870e6483517f4390d.jpg'},
-             { id:6 ,title: '台北分社' , address:'台北市敦化南路二段200號' , tel:'(02) 278877655' ,photo:'https://s-media-cache-ak0.pinimg.com/736x/fa/e5/aa/fae5aa46fe50dbf870e6483517f4390d.jpg'},
-              ]
+      fetchData(){   
+          
+          let url=Helper.getUrl('/api/centers/activeCenters') 
+          axios.get(url)
+              .then(response => {
+                  this.centers = response.data.centers
+                  
+                  this.loaded=true
+               
+              })
+              .catch(function(error) {
+                  console.log(error)
+              })
       }
 
       
-    },
-    components:{
-       'center-card':Card
     }
+    
     
 
  }
