@@ -1,12 +1,12 @@
 
 export default function(Vue){
-    let authenticatedUser={}
     Vue.auth={
         setToken(token , expiration , refresh_token) {
           
             localStorage.setItem('token' , token)
             localStorage.setItem('refresh_token' , refresh_token)
             localStorage.setItem('expiration' , expiration)
+
         },
         getToken() {
             let token= localStorage.getItem('token')
@@ -27,26 +27,31 @@ export default function(Vue){
             localStorage.removeItem('expiration')
         },
         isAuthenticated() {
-            if(this.getToken()) 
-                return true
-            return false
+            if(!this.getToken())  return false
+            return true
         },
 
-        setAuthenticatedUser(data){
-            authenticatedUser=data
+        setAuthenticatedUser(user){
+            localStorage.setItem('username' , user.name)
+            localStorage.setItem('user_id' , user.id)
+            localStorage.setItem('email' , user.email)
         },
 
-        getAuthenticatedUser(){
-           return authenticatedUser
+        email(){
+           return localStorage.getItem('email')
         },
         username(){
-            if(!authenticatedUser) return ''
-                 return authenticatedUser.name
+           return localStorage.getItem('username')
+        },
+        user_id(){
+           return localStorage.getItem('user_id')
         },
         
         logout(){
             this.destroyToken()
-            this.setAuthenticatedUser(null)
+            localStorage.removeItem('username')
+            localStorage.removeItem('user_id')
+            localStorage.removeItem('email')
             axios.defaults.headers.common.Authorization=null
         }
     }

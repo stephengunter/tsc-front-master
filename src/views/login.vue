@@ -19,7 +19,8 @@
                 </p>
                 <hr>
                 <p class="control">
-                  <button type="submit" class="button is-primary">確認送出</button>                
+                  <button type="submit" class="button is-primary" :disabled="form.errors.any()">確定</button>
+                                
                   <p class="help is-danger" v-if="form.errors.has('error')" >登入失敗</p>
                 </p>
 
@@ -76,7 +77,6 @@
                      let url=Helper.getUrl('/oauth/token') 
                      this.form.post(url)
                      .then(response => {
-                       
                         let token=response.access_token
                         let expiration=response.expires_in + Date.now()
                         let refreshToken=response.refresh_token
@@ -86,49 +86,54 @@
                         resolve(true);
                      })
                      .catch(error => {
-                         reject(error.response);
-                          this.$notify.open({content: '登入失敗', type: 'danger'});
-                         Helper.BusEmitError(error,'登入失敗')
+                        this.$auth.logout()
+                        this.$notify.open({content: '登入失敗', type: 'danger'})
+                        reject(error.response);
                      })
                 });
             },
+            checkAuth(){
+                let url=Helper.getUrl('/api/user') 
+                axios.get(url)
+                .then(response =>{
+                    let user=response.data
+                    this.$auth.setAuthenticatedUser(user)
+                   
+                    Bus.$emit('authChanged', true) 
+                   
+                    this.$notify.open({
+                        content: '登入成功',
+                        type: 'success',
+                        placement: 'top-center',
+                        duration: 1500,
+                      })
+                    this.redirect()
+                })
+                .catch(error => {
+                   this.$auth.logout()
+                   this.$notify.open({content: '登入失敗', type: 'danger'})
+                })
+            },
             onSubmit(){
-               this.$notify.open({
-                      content: '登入成功',
-                      type: 'success',
-                      placement: 'top-center',
-                      duration: 1500,
-                    })
-               // this.$notify.open({content: '登入失敗', type: 'danger'});
-               return
                 this.checkInput()
                
                 if(this.form.errors.any()) {
                    return false
                 }
 
-               let url=Helper.getUrl('/oauth/token') 
-                   this.form.post(url)
-                   .then(response => {
-                     
-                      let token=response.access_token
-                      let expiration=response.expires_in + Date.now()
-                      let refreshToken=response.refresh_token
-                      this.$auth.setToken(token , expiration,refreshToken)
-                      axios.defaults.headers.common.Authorization='Bearer ' + this.$auth.getToken()
-
-                      this.$notify.open({content: '登入成功', type: 'success',placement: 'top-center',});
-
-                   })
-                   .catch(error => {
-                       reject(error.response);
-                        this.$notify.open({content: '登入失敗', type: 'danger',placement: 'top-center',});
-                       Helper.BusEmitError(error,'登入失敗')
-                   })
+                var token = this.getToken()
+                token.then(() => {
+                   this.checkAuth()
+                });
+            },
+            redirect(){
+               let returnUrl=this.$route.query.return
+               if(returnUrl){
+                  this.$router.push('/' + returnUrl)
+               }else{
+                  this.$router.push('/')
+               }
             }
-            
-            
-           
         },
 
 

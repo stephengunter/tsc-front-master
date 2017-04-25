@@ -9,7 +9,7 @@ router.beforeEach(
 
             if(Vue.auth.isAuthenticated()){
                 next({
-                    path: '/feed'
+                    path: '/'
                 })
             }else next()
 

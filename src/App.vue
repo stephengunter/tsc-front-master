@@ -2,35 +2,35 @@
   <div id="app">
 
     <top-header @mobileMenuChanged="toggleMobileMenu"></top-header>
-
-    <section v-show="!mobileMenu" class="hero is-primary"> 
-
-    <hero></hero>
-
-    <navbar v-if="mainNav.show" :default_id="mainNav.selected" :items="mainNav.items"></navbar>
-
-    </section>
-    
-    <subnav v-if="subNav.show" :default_id="subNav.selected" :items="subNav.items"
-      @itemSelected="categorySelected" >
-      
-    </subnav>
-
-    <section class="section">
-      <!-- <div class="container  is-fluid is-marginless"> -->
-       <div class="container">
    
-         <level-bar v-if="levelNav.show" :centers="levelNav.centers" :default_center="levelNav.default_center"
-           :categories="levelNav.categories" :default_category="levelNav.default_category">
-           
-         </level-bar>
-         <router-view :params="params"></router-view>
+        <section v-show="!mobileMenu" class="hero is-primary"> 
 
+          <hero></hero>
 
+          <navbar v-if="mainNav.show" :default_id="mainNav.selected" :items="mainNav.items"></navbar>
+
+        </section>
     
-      </div>  
-    </section>
+        <subnav v-if="subNav.show" :default_id="subNav.selected" :items="subNav.items"
+          @itemSelected="categorySelected" >
+          
+        </subnav>
 
+        <section class="section">
+         
+           <div class="container">
+       
+             <level-bar v-if="levelNav.show" :centers="levelNav.centers" :default_center="levelNav.default_center"
+               :categories="levelNav.categories" :default_category="levelNav.default_category">
+               
+             </level-bar>
+             <router-view :params="params"></router-view>
+
+
+        
+          </div>  
+        </section>
+   
   </div>
 </template>
 
@@ -89,9 +89,7 @@ export default {
   beforeMount(){   
      this.init()
   },
-  computed:{
-    
-  },
+  
   methods:{
       init(){
          this.subNav={

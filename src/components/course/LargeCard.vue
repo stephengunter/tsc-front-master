@@ -10,7 +10,7 @@
             <div class="tile is-parent is-vertical">
                 <div class="title is-3">
                     {{ course.name }}
-                     <a href="#" @click.prevent="netSignup" v-show="course.net_signup" class="button is-info is-outlined  is-focused">線上報名</a>
+                     <a @click.prevent="$router.push('/signup/create?course=' + course.id)" v-show="course.canNetSignup" class="button is-info is-outlined  is-focused">線上報名</a>
                    
                 </div>
                 <div class="title is-4">

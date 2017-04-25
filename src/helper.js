@@ -36,7 +36,18 @@ class Helper {
             password: '',
             scope: ''
         }
-    }    
+    } 
+    static getRefreshTokenFormData(refreshToken) {
+        return {
+            grant_type: 'refresh_token',
+            client_id: 2,
+            //client_secret: 'AzUbjsNJMkKvLBrI59d4hOVxdQDVxma35i2EvHjH',
+            client_secret: '0rPgpOkrLpMV7eaaymyHkNMXlvTerCV83EXn7a6U',
+
+            refresh_token: refreshToken,
+            scope: ''
+        }
+    }   
     
     static tpeTime(datetime) {
         return MomentTimeZone.utc(datetime).tz("Asia/Taipei").format('YYYY-MM-DD HH:mm:ss')

@@ -43,7 +43,7 @@ export default {
   methods:{
       itemSelected(id){
           this.selected=id
-          this.$router.push('/courses?center=' + id);
+          this.$router.push('/courses?center=' + id)
       },
     
   },

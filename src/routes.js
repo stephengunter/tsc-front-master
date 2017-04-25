@@ -26,12 +26,17 @@ let routes = [
         //     component: require('./views/courses/index.vue'),
         //     meta: { 'nav':'centers' , 'subNav' : 'categories' },
         // },
-         {
+        {
             path:'/courses/:id',
             name: 'course-details',
             component: require('./views/courses/details.vue'),
             meta: { 'nav':'centers' , 'subNav' : 'categories' },
-        },        
+        },
+        {
+            path:'/signup/create',
+            name: 'signup-create',
+            component: require('./views/signup/create.vue'),
+        },           
         {
             path:'/register',
             component: require('./views/register.vue'),
@@ -45,9 +50,16 @@ let routes = [
             meta: { 'forVisitors':true },
         },
         {
-            path:'/feed',
-            component: require('./views/feed.vue'),
-            name: 'feed',
+            path:'/user/profiles',
+            component: require('./views/user/profiles.vue'),
+            name: 'profiles',
+            meta: { 'forAuth':true },
+           
+        },
+        {
+            path:'/user/change-password',
+            component: require('./views/user/change-password.vue'),
+            name: 'change-password',
             meta: { 'forAuth':true },
            
         },

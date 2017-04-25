@@ -1,14 +1,13 @@
 <template>
   <nav class="level app-levelbar is-hidden-desktop">
     <div class="level-left">
-     <!--  <div  class="level-item"> -->
+    
         <drop-menu :items="centers" :default_id="default_center"></drop-menu>
         &nbsp;&nbsp;
-    <!--   </div> -->
-      <!-- <div  class="level-item"> -->
+  
         <drop-menu :items="categories" :default_id="default_category"></drop-menu>
         
-      <!-- </div> -->
+   
 
     </div>
 

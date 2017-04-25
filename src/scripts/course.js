@@ -18,6 +18,10 @@ class Course {
         this.period=Helper.periodFormat(this.begin_date,this.end_date)
         this.canJoin=Helper.inPeriod(this.open_date,this.close_date)
 
+        this.canNetSignup=false
+         if(this.net_signup && this.canSignup) this.canNetSignup=true
+
+
         this.class_times.sort( ( a, b) => {
             return a.weekday_id > b.weekday_id
         });
@@ -26,6 +30,7 @@ class Course {
         });
         
     }
+   
    
     formatLocation(){
         return this.center.contactInfo.addressA.fullText + '&nbsp;(' + this.center.name + ')'
@@ -112,23 +117,10 @@ class Course {
         return day + ' ' + on + ' - ' + off
     }
     getPhoto() {
-        let photo_id = this.photo_id
-        let url =Helper.getUrl('/api/photoes/');
-        if (photo_id) {
-            url += photo_id
-        } else {
-            url += 'defaultCourse'
-        }
-
-        axios.get(url)
-            .then(response => {
-                let photo=response.data.photo
-                this['photo'] = response.data.photo
-                this.photo.path=Helper.getBackUrl() + photo.path
-            })
-            .catch(function(error) {
-                console.log(error)
-            })
+        let path=this.photo.path
+        this.photo={
+             path:Helper.getBackUrl() + path
+        } 
     }
     
     

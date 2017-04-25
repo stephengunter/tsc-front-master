@@ -66,23 +66,11 @@
        },
        
        getPhoto() {
-            let photo_id = this.center.photo_id
-            let url =Helper.getUrl('/api/photoes/');
-            if (photo_id) {
-                url += photo_id
-            } else {
-                url += 'defaultCenter'
-            }
-
-            axios.get(url)
-                .then(response => {
-                    this.photo = response.data.photo
-                    this.photo.path=Helper.getBackUrl() + this.photo.path
-                })
-                .catch(function(error) {
-                    console.log(error)
-                })
-        },
+          let path=this.center.photo.path
+          this.photo={
+             path:Helper.getBackUrl() + path
+          }     
+       },
      }
   }
 

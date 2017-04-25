@@ -1,6 +1,6 @@
 <template>
     <dropdown v-if="hasData">
-      <a @click.prevent="setItems"  class="button is-primary">
+      <a @click.prevent="setItems"  class="button is-outlined is-primary">
         <i  :class="selectedItem.icon" v-if="selectedItem.icon"></i>
          &nbsp;{{ selectedItem.name }}
         <span class="icon is-small">
@@ -21,7 +21,7 @@
 
 export default {
   name: 'DropMenu',  
-  props: ['items',"default_id"],
+  props: ['items',"default_id",'static'],
  
   data () {
     return {
@@ -32,9 +32,11 @@ export default {
   },
   watch: {
       default_id () {
-          this.selectedId=this.default_id
           this.init()
       }
+  },
+  beforeMount(){   
+     this.init()
   },
   computed:{
         hasData(){
@@ -45,20 +47,12 @@ export default {
     },
   methods: {
     init(){
-      
+      this.selectedId=this.default_id
       this.selectedItem=null
       this.otherItems=[]
       this.setItems()
 
     },
-    // getIcon(item){
-    //    if(item.icon){
-    //      let values= item.icon.split(" ");
-    //      return values[1]
-    //    }else{
-    //     return ''
-    //    }
-    // },
     setItems(){
         if(this.otherItems.length) return
 
@@ -71,15 +65,18 @@ export default {
             }
         }
     },
-    
     itemSelected(id){
-      
-        let item = this.otherItems.find((item)=>{
+        if(!this.static){
+          let item = this.otherItems.find((item)=>{
             return item.id==id
-        });
-        this.selectedItem=item
+          });
+          this.selectedItem=item
+          this.selectedId=id
+        }
         this.otherItems=[]
-        this.selectedId=id
+
+        this.$emit('itemSelectChanged',id)
+       
     }
     
   },
