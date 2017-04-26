@@ -1,7 +1,7 @@
 <template>
 
-<div>
-    <h2 class="title is-2">課程報名</h2>
+<div v-if="loaded">
+    <h2 class="title is-3">課程報名</h2>
    
     <steps :show-footer="false" :current="currentStep" type="pills">
         <step title="報名須知"  >
@@ -53,6 +53,7 @@
         },
         data(){
             return{
+                loaded:false,
                 course:{},
                 currentStep:0,
                 showModal:false,
@@ -94,7 +95,8 @@
                     if(!course.canSignup){
                          this.showModal=true
                     }else{
-                        this.course=course
+                       this.course = new Course(response.data.course)
+                       this.loaded=true
                     }
                 })
                 .catch(function(error) {

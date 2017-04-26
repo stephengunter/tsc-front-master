@@ -7,7 +7,7 @@ router.beforeEach(
     (to, from, next)=>{
         if(to.matched.some(record=>record.meta.forVisitors)){
 
-            if(Vue.auth.isAuthenticated()){
+            if(Vue.auth.hasToken()){
                 next({
                     path: '/'
                 })
@@ -15,7 +15,7 @@ router.beforeEach(
 
         }else if(to.matched.some(record=>record.meta.forAuth)){
 
-            if(!Vue.auth.isAuthenticated()){
+            if(!Vue.auth.hasToken()){
                 next({
                     path: '/login'
                 })

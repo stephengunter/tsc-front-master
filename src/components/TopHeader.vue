@@ -39,21 +39,10 @@
               
               <div v-if="isAuth" class="nav-item">
 
-                  <drop-menu :items="userFuctions" :default_id="0" 
-                     @itemSelectChanged="userFuctionSelected" :static="true">                    
+                  <drop-menu :items="userMenuItems" :default_id="0" 
+                     @itemSelectChanged="menuItemClicked" :static="true">                    
                   </drop-menu>
-         
-
-                <!-- <dropdown>
-                  <button class="button is-outlined is-primary">{{ username }}</button>
-                  <div slot="content">
-                    <menus>
-                      <menu-item  icon="fa fa-sign-out"  to="/register">登出</menu-item>
-                      <menu-item  icon="fa fa-id-card"  to="/register">個人資訊</menu-item>
-                      <menu-item  icon="fa fa-key"  to="/register">變更密碼</menu-item>
-                    </menus>
-                  </div>
-                </dropdown> -->
+                
               </div>
         </div>
         
@@ -61,18 +50,20 @@
    
       <div v-show="showMobileMenu" class="menu" style="width:65%">
          <menus>
-            <menu-item @clicked="mobileNavClicked" id="centers" :click="true" icon="fa fa-university"  >開課中心</menu-item>
-            <menu-item @clicked="mobileNavClicked" icon="fa fa-book" :click="true"   id="courses">課程總覽</menu-item>
-            <menu-item  icon="fa fa-sign-in"  to="/login">登入</menu-item>
-            <menu-item  icon="fa fa-user-plus"  to="/register">註冊</menu-item>
-            <menu-item icon="fa fa-user-circle-o">
-            <span v-show="isAuth">{{  username }}</span>
-            <menus v-show="isAuth" slot="sub">
-              <menu-item  icon="fa fa-sign-out" :click="true" @clicked="logout">登出</menu-item>
-              <menu-item  icon="fa fa-id-card"  to="/register">個人資訊</menu-item>
-              <menu-item  icon="fa fa-key"  to="/register">變更密碼</menu-item>
-            </menus>
-          </menu-item>
+           
+            <menu-item v-for="item in menuItems" @clicked="mobileNavClicked" :id="item.id" :click="true" :icon="item.icon" >{{ item.name }}</menu-item>
+
+
+            <menu-item v-show="!isAuth" v-for="item in visitorMenuItems" @clicked="mobileNavClicked" :id="item.id" :click="true" :icon="item.icon" >{{ item.name }}</menu-item>
+
+            <menu-item  v-show="isAuth" icon="fa fa-user-circle-o">
+              <span>{{  username }}</span>
+              <menus  slot="sub">
+                  <menu-item v-for="item in userFuctions" @clicked="mobileNavClicked" :id="item.id" :click="true" :icon="item.icon" >{{ item.name }}</menu-item>
+
+             
+              </menus>
+           </menu-item>
         </menus>
       </div>
      
@@ -96,11 +87,22 @@ export default {
         src: require('../assets/logo.gif'),
         showMobileMenu:false,
         navClass: 'nav-toggle',
+        menuItems:[
+           { id:'centers', name:'開課中心', icon:'fa fa-university' },
+           { id:'courses', name:'課程總覽', icon:'fa fa-book' },
+           
+        ],
+        visitorMenuItems:[
+           { id:'login', name:'登入', icon:'fa fa-sign-in' },
+           { id:'register', name:'註冊', icon:'fa fa-user-plus' },
+        ],
+        userMenuItems:[
+           { id:0, name:'', icon:'fa fa-user-circle-o' },
+        ],
         userFuctions:[
-          { id:0, name:'', icon:'fa fa-user-circle-o' },
-          { id:1, name:'登出', icon:'fa fa-sign-out' },
-          { id:2, name:'個人資訊', icon:'fa fa-id-card' },
-          { id:3, name:'變更密碼', icon:'fa fa-key' }
+          { id:'logout', name:'登出', icon:'fa fa-sign-out' },
+          { id:'user/profiles', name:'個人資訊', icon:'fa fa-id-card' },
+          { id:'user/change-password', name:'變更密碼', icon:'fa fa-key' }
         ]
        
        
@@ -125,6 +127,16 @@ export default {
   },
   methods:{
     init(){
+       this.isAuth=this.$auth.hasToken()
+       this.setUserName(this.$auth.username())
+       if(this.$route.meta.forAuth){
+         alert('forAuth')
+       }
+       if(this.userMenuItems.length==1){
+           this.userMenuItems = this.userMenuItems.concat(this.userFuctions);
+       }
+    },
+    checkAuth(){
         this.isAuth=this.$auth.isAuthenticated()   
         if(this.isAuth){
           this.setUserName(this.$auth.username())
@@ -133,7 +145,6 @@ export default {
                 
           })
         }
-       
     },
     refreshToken(){
       return new Promise((resolve, reject) => {
@@ -160,14 +171,19 @@ export default {
     },
     setUserName(name){
       this.username=name
-       this.userFuctions[0].name=name
+       this.userMenuItems[0].name=name
     },
-    checkAuth(){
-       
-    },
+    menuItemClicked(id){
+        if(id=='logout'){
+           this.logout()
+        }else{
+           this.$router.push('/' + id)
+        }
+        
+    },    
     mobileNavClicked(id){
         this.toggleMobileMenu()
-        this.$router.push('/' + id)
+        this.menuItemClicked(id)
     },
     toggleMobileMenu(){
       this.showMobileMenu=!this.showMobileMenu
@@ -178,15 +194,6 @@ export default {
           this.setUserName(this.$auth.username())
         }
         this.isAuth=isAuth
-    },
-    userFuctionSelected(id){
-        if(id==1){
-           this.logout()
-        }else if(id==2){
-           this.$router.push('/user/profiles')
-        }else if(id==3){
-           this.$router.push('/user/change-password')
-        }
     },
     logout(){
        this.$auth.logout()

@@ -3,10 +3,10 @@ import MomentTimeZone from 'moment-timezone'
 
 class Helper {
     static getBackUrl(){
-        return 'http://tsc-master'
+        return 'http://203.64.37.90:9000'
     }
     static getUrl(url){
-        return 'http://tsc-master' + url
+        return this.getBackUrl()+ url
     }
     static  buildURL(url,params,searchParams) {
         url= this.getUrl(url) + '?'
