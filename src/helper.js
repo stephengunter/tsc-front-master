@@ -3,7 +3,8 @@ import MomentTimeZone from 'moment-timezone'
 
 class Helper {
     static getBackUrl(){
-        return 'http://203.64.37.90:9000'
+         // return 'http://203.64.37.90:9000'
+        return 'http://tsc-master'
     }
     static getUrl(url){
         return this.getBackUrl()+ url
@@ -28,9 +29,7 @@ class Helper {
         return {
             grant_type: 'password',
             client_id: 2,
-
-            //client_secret: 'AzUbjsNJMkKvLBrI59d4hOVxdQDVxma35i2EvHjH',
-            client_secret: '0rPgpOkrLpMV7eaaymyHkNMXlvTerCV83EXn7a6U',
+            client_secret: 'AzUbjsNJMkKvLBrI59d4hOVxdQDVxma35i2EvHjH',
 
             username: '',
             password: '',
@@ -207,8 +206,6 @@ class Helper {
         if (!begin || !end) return ''
         return begin + ' ~ ' + end
     }
-   
-   
     
 }
 

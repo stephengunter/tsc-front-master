@@ -5,9 +5,11 @@ import App from './App.vue'
 
 router.beforeEach(
     (to, from, next)=>{
+
+        let hasToken=Vue.auth.hasToken()
         if(to.matched.some(record=>record.meta.forVisitors)){
 
-            if(Vue.auth.hasToken()){
+            if(hasToken){
                 next({
                     path: '/'
                 })
@@ -15,14 +17,27 @@ router.beforeEach(
 
         }else if(to.matched.some(record=>record.meta.forAuth)){
 
-            if(!Vue.auth.hasToken()){
+            if(!hasToken){
                 next({
-                    path: '/login'
+                    path: '/login',                    
                 })
-            }else next()
+            }else{
+                let authenticated=Vue.auth.isAuthenticated()
+                authenticated.then(() => {
+                    next()
+                }).catch(error => {
+                    Vue.auth.logout()
+                    next({
+                        path: '/login',                    
+                     })
+                })
+               
+            }
 
         }
-        else next()
+        else{
+           next()
+        } 
            
     }
         

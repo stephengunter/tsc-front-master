@@ -17,7 +17,7 @@
 
 <script>
 
-import Card from '../../components/course/Card.vue'
+import Card from '../../components/course/card.vue'
 
     export default {
         name:'CourseIndex',

@@ -99,8 +99,8 @@
 </template>
 
 <script>
-import LargeCard from  '../../components/course/LargeCard.vue'
-import TeacherCard from  '../../components/course/Teacher.vue'
+import LargeCard from  '../../components/course/large-card.vue'
+import TeacherCard from  '../../components/course/teacher.vue'
 
 export default {
    name:'CourseDetails',

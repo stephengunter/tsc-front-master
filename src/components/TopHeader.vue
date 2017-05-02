@@ -127,50 +127,14 @@ export default {
   },
   methods:{
     init(){
-       this.isAuth=this.$auth.hasToken()
-       this.setUserName(this.$auth.username())
-       if(this.$route.meta.forAuth){
-         alert('forAuth')
-       }
+       this.setAuth(this.$auth.hasToken())
+       
        if(this.userMenuItems.length==1){
            this.userMenuItems = this.userMenuItems.concat(this.userFuctions);
        }
     },
-    checkAuth(){
-        this.isAuth=this.$auth.isAuthenticated()   
-        if(this.isAuth){
-          this.setUserName(this.$auth.username())
-          var token = this.refreshToken()
-                token.then(() => {
-                
-          })
-        }
-    },
-    refreshToken(){
-      return new Promise((resolve, reject) => {
-                     let refreshToken=this.$auth.getRefreshToken()
-                     let data=Helper.getRefreshTokenFormData(refreshToken)
-                     let form=new Form(data)
-                     let url=Helper.getUrl('/oauth/token') 
-                     form.post(url)
-                     .then(response => {
-                    
-                        let token=response.access_token
-                        let expiration=response.expires_in + Date.now()
-                        let refreshToken=response.refresh_token
-                        this.$auth.setToken(token , expiration,refreshToken)
-                        axios.defaults.headers.common.Authorization='Bearer ' + this.$auth.getToken()
-
-                        this.isAuth=true
-                        resolve(true);
-                     })
-                     .catch(error => {
-                        reject(error.response);
-                     })
-                });
-    },
     setUserName(name){
-      this.username=name
+       this.username=name
        this.userMenuItems[0].name=name
     },
     menuItemClicked(id){
@@ -191,13 +155,16 @@ export default {
     },
     setAuth(isAuth){
         if(isAuth){
-          this.setUserName(this.$auth.username())
+          
+           this.setUserName(this.$auth.username())
+        }else{
+           this.setUserName('')
         }
         this.isAuth=isAuth
     },
     logout(){
        this.$auth.logout()
-       this.isAuth=false
+       this.setAuth(false)
        this.$notify.open({
                         content: '您已成功登出',
                         type: 'success',

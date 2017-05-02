@@ -1,3 +1,6 @@
+
+
+
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import axios from 'axios';
@@ -14,9 +17,12 @@ import Auth from './packages/auth/Auth.js'
 
 import Course from './scripts/course.js'
 import Teacher from './scripts/teacher.js'
+import User from './scripts/user.js'
 
 // require('font-awesome/css/font-awesome.css');
  //require('./assets/css/bulma.css')
+
+require('./assets/css/site.css')
 
 
 
@@ -45,3 +51,4 @@ window.Helper = Helper
 
 window.Course = Course
 window.Teacher = Teacher
+window.User = User

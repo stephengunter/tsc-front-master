@@ -4,18 +4,17 @@
     <h2 class="title is-3">課程報名</h2>
    
     <steps :show-footer="false" :current="currentStep" type="pills">
-        <step title="報名須知"  >
+        <step title="報名須知"  >        
             <notice @nextStep="nextStep" @cancel="cenceled"></notice>
         </step>
         <step title="確認資料">
-            <confirm :course="course" :active="confirmActive" @nextStep="nextStep" @cancel="cenceled"></confirm>
+            <confirm :course="course" :discounts="discounts" :active="confirmActive" @created="signupCreated" @cancel="cenceled"></confirm>
+       
         </step>
         <step title="完成報名" >
            
         </step>
     </steps>
-
-    <button @click="showModal=true">cc</button>
 
     <modal :show-header="false" :show-footer="false" :on-cancel="cenceled"  :is-show="showModal" @close="showModal=false">
      
@@ -40,8 +39,8 @@
 </template>
 
 <script>
-    import SignupNotice from  '../../components/signup/Notice.vue'
-    import SignupConfirm from  '../../components/signup/Confirm.vue'
+    import SignupNotice from  '../../components/signup/notice.vue'
+    import SignupConfirm from  '../../components/signup/confirm.vue'
     export default {
         name:'CreateSignup',
         components:{
@@ -55,6 +54,8 @@
             return{
                 loaded:false,
                 course:{},
+                discounts:[],
+                signup:{},
                 currentStep:0,
                 showModal:false,
             }
@@ -69,9 +70,7 @@
             
         },
         methods:{
-            test(){
-                alert('canceled')
-            },
+            
             getCourseId(){
                 if(this.course) return this.course.id
                     return 0
@@ -80,15 +79,22 @@
                 this.currentStep += 1
             },
             init(){
-              let courseId=this.$route.query.course
-              if(!courseId) {
-                 this.$router.push('/courses')
-                 return false
-              }
+                let courseId=this.$route.query.course
+                if(!courseId) {
+                   this.$router.push('/courses')
+                   return false
+                }
 
-              this.currentStep=0
+                this.getCourse(courseId)
+                this.getDiscounts()
 
-              let url=Helper.getUrl('/api/courses/details/' + courseId )          
+                this.currentStep=0
+
+             
+           
+            },
+            getCourse(courseId){
+               let url=Helper.getUrl('/api/courses/details/' + courseId )          
                 axios.get(url)
                 .then(response => {
                     let course=response.data.course
@@ -99,10 +105,24 @@
                        this.loaded=true
                     }
                 })
-                .catch(function(error) {
-                   this.cenceled()
+                .catch( error => {
+                    this.onError()
                 })
-           
+            },
+            getDiscounts(){
+                let url=Helper.getUrl('/api/discounts/active-discounts')          
+                axios.get(url)
+                .then(response => {
+                  this.discounts=response.data.discountList
+                 
+                 
+                })
+                .catch(error => {
+                   this.onError()
+                })
+            },
+            signupCreated(signup){
+                this.signup=signup
             },
             cenceled(){
                 let courseId=this.getCourseId()
@@ -113,6 +133,16 @@
                 }
                
             },
+            onError(){
+               
+                this.$notify.open({
+                        content: '系統暫時無回應，請稍後再試',
+                        type: 'danger',
+                        placement: 'top-center',
+                        duration: 1500,
+                      })
+                this.cenceled()
+            }
             
         },
        

@@ -47,7 +47,6 @@ export default function(Vue){
         },
         getUser(){
             return new Promise((resolve, reject) => {
-                    
                      let url=Helper.getUrl('/api/user') 
                      axios.get(url)
                      .then(response => {
@@ -80,32 +79,32 @@ export default function(Vue){
         },
         refreshToken(){
               return new Promise((resolve, reject) => {
-                             let refreshToken=this.getRefreshToken()
-                             let form=new Form({
-                                grant_type: 'refresh_token',
-                                client_id: 2,
-                                client_secret: 'AzUbjsNJMkKvLBrI59d4hOVxdQDVxma35i2EvHjH',
+                         let refreshToken=this.getRefreshToken()
+                         let form=new Form({
+                            grant_type: 'refresh_token',
+                            client_id: 2,
+                            client_secret: 'AzUbjsNJMkKvLBrI59d4hOVxdQDVxma35i2EvHjH',
 
-                                refresh_token: refreshToken,
-                                scope: ''
-                             })
-                             let url=Helper.getUrl('/oauth/token') 
-                             form.post(url)
-                             .then(response => {
+                            refresh_token: refreshToken,
+                            scope: ''
+                         })
+                         let url=Helper.getUrl('/oauth/token') 
+                         form.post(url)
+                         .then(response => {
 
-                                let token=response.access_token
-                                let expiration=response.expires_in + Date.now()
-                                let refreshToken=response.refresh_token
-                                this.setToken(token , expiration,refreshToken)
-                                axios.defaults.headers.common.Authorization='Bearer ' + token
+                            let token=response.access_token
+                            let expiration=response.expires_in + Date.now()
+                            let refreshToken=response.refresh_token
+                            this.setToken(token , expiration,refreshToken)
+                            axios.defaults.headers.common.Authorization='Bearer ' + token
 
-                                resolve(true);
-                             })
-                             .catch(error => {
-                                reject(error.response);
-                             })
-                        });
-            },
+                            resolve(true);
+                         })
+                         .catch(error => {
+                            reject(error.response);
+                         })
+                    });
+        },
         getRefreshToken(){
            return localStorage.getItem('refresh_token')
         },
@@ -120,13 +119,17 @@ export default function(Vue){
                 return true
         },
         isAuthenticated() {
-            if(!this.getToken())  return false
-            var token = this.refreshToken()
-            token.then(() => {
-                 return true
-             }).catch(error => {
-                    return false
-             })
+
+             return new Promise((resolve, reject) =>{
+                if(!this.getToken()) reject(error) 
+
+                 let token = this.refreshToken()
+                 token.then(() => {
+                     resolve(true)
+                 }).catch(error => {
+                     reject(error) 
+                 })
+            })
         },
 
         setAuthenticatedUser(user){
@@ -136,12 +139,15 @@ export default function(Vue){
         },
 
         email(){
+            if(!this.hasToken) return null
            return localStorage.getItem('email')
         },
         username(){
+            if(!this.hasToken) return null
            return localStorage.getItem('username')
         },
         user_id(){
+            if(!this.hasToken) return null
            return localStorage.getItem('user_id')
         },
         

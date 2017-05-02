@@ -88,14 +88,9 @@
                 let login=this.$auth.login(username,password)
                 login.then(() => {
                      Bus.$emit('authChanged', true) 
-                    
-                     this.$notify.open({
-                        content: '登入成功',
-                        type: 'success',
-                        placement: 'top-center',
-                        duration: 1500,
-                      })
-
+                     
+                     Bus.$emit('okmsg', '登入成功')
+                     
                      this.redirect()
                      
                 }).catch(error => {

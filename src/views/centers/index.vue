@@ -15,7 +15,7 @@
 
 <script>
 
-import Card from '../../components/center/Card.vue'
+import Card from '../../components/center/card.vue'
     
  export default{
     name:'CenterIndex',
