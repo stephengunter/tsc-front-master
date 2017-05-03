@@ -3,6 +3,7 @@ export default function(Vue){
     Vue.auth={
         login(username,password){
             return new Promise((resolve, reject) =>{
+            
                 let token = this.passwordLogin(username,password)
                 token.then(() => {
                     let user=this.getUser()

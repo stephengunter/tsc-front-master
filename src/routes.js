@@ -63,6 +63,13 @@ let routes = [
             meta: { 'forAuth':true },
            
         },
+        {
+            path:'/user/signups',
+            component: require('./views/user/signups.vue'),
+            name: 'signups',
+            meta: { 'forAuth':true },
+           
+        },
 
     ]
 

@@ -2,6 +2,9 @@ import Moment from 'moment'
 import MomentTimeZone from 'moment-timezone'
 
 class Helper {
+    static getCurrentUrl(url){
+        return 'http://localhost:8080/#' + url
+    }
     static getBackUrl(){
          // return 'http://203.64.37.90:9000'
         return 'http://tsc-master'
@@ -51,6 +54,9 @@ class Helper {
     static tpeTime(datetime) {
         return MomentTimeZone.utc(datetime).tz("Asia/Taipei").format('YYYY-MM-DD HH:mm:ss')
 
+    }
+    static tpeDate(datetime){
+          return MomentTimeZone.utc(datetime).tz("Asia/Taipei").format('YYYY-MM-DD')
     }
     static activeText(active){
          if(parseInt(active)) return '上架中'
@@ -205,6 +211,10 @@ class Helper {
     static periodFormat(begin, end) {
         if (!begin || !end) return ''
         return begin + ' ~ ' + end
+    }
+    static getCourseDetailsUrl(course){
+        let url='/courses/' + course
+        return this.getCurrentUrl(url)
     }
     
 }

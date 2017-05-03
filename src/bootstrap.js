@@ -18,6 +18,7 @@ import Auth from './packages/auth/Auth.js'
 import Course from './scripts/course.js'
 import Teacher from './scripts/teacher.js'
 import User from './scripts/user.js'
+import Signup from './scripts/signup.js'
 
 // require('font-awesome/css/font-awesome.css');
  //require('./assets/css/bulma.css')
@@ -36,9 +37,6 @@ window.Bus = new Vue({});
 
 window.axios = axios;
 
-// window.axios.defaults.headers.common = {   
-//     'X-Requested-With': 'XMLHttpRequest' 
-// };
 
 window.axios.defaults.headers.common = {   
     'Authorization' : 'Bearer ' + Vue.auth.getToken() ,
@@ -52,3 +50,4 @@ window.Helper = Helper
 window.Course = Course
 window.Teacher = Teacher
 window.User = User
+window.Signup = Signup

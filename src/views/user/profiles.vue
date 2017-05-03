@@ -83,31 +83,5 @@
 
 
 <style>
-.info-description {
-    font-size:17px;
-}
-.panel-title{
-  font-size: 1.7rem;
-}
-
-.info {
-    font-size:17px;
-}
-.order-td{
-    width: 10%;
-    text-align: center;
-}
-.heading {
-    display: -webkit-box;
-    display: -ms-flexbox;
-   display: flex;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-     -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-}
-
     
 </style>

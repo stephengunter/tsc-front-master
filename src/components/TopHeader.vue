@@ -101,6 +101,7 @@ export default {
         ],
         userFuctions:[
           { id:'logout', name:'登出', icon:'fa fa-sign-out' },
+          { id:'user/signups', name:'報名紀錄', icon:'fa fa-file-text-o' },
           { id:'user/profiles', name:'個人資訊', icon:'fa fa-id-card' },
           { id:'user/change-password', name:'變更密碼', icon:'fa fa-key' }
         ]

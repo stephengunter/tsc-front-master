@@ -107,7 +107,7 @@
                 }).catch(error => {
                    this.isAuth=false
                    this.$auth.logout()
-                   let returnUrl="signup/create?course=" + this.course.id
+                   let returnUrl="/signup/create?course=" + this.course.id
                    this.$router.push('/login?return=' + returnUrl)
                 })
 
@@ -162,9 +162,8 @@
                 this.form.signup.discount= this.discountId
                 let url = Helper.getUrl('/api/signups')
                 this.form.post(url)
-                    .then(data => {
-                       let signup=data.signup
-
+                    .then(signup => {
+                        
                        this.$emit('created',signup)
 
                        Bus.$emit('okmsg','線上報名成功')
@@ -172,7 +171,12 @@
                        
                     })
                     .catch(error => {
-                        Bus.$emit('errors',error,'線上報名失敗')
+                        let msg='線上報名失敗. '
+                         if(error.msg){
+                            msg += error.msg
+                         }
+                       
+                        Bus.$emit('errors',error, msg)
                     })
 
             },

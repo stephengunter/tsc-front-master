@@ -8,11 +8,13 @@
             <notice @nextStep="nextStep" @cancel="cenceled"></notice>
         </step>
         <step title="確認資料">
-            <confirm :course="course" :discounts="discounts" :active="confirmActive" @created="signupCreated" @cancel="cenceled"></confirm>
+            <confirm :course="course" :discounts="discounts" :active="confirmActive" 
+            @created="signupCreated" @cancel="cenceled"></confirm>
        
         </step>
         <step title="完成報名" >
-           
+        
+           <completed :signup="signup"></completed>
         </step>
     </steps>
 
@@ -41,11 +43,14 @@
 <script>
     import SignupNotice from  '../../components/signup/notice.vue'
     import SignupConfirm from  '../../components/signup/confirm.vue'
+    import SignupCompleted from  '../../components/signup/completed.vue'
+   
     export default {
         name:'CreateSignup',
         components:{
           'notice':SignupNotice,
-          'confirm':SignupConfirm
+          'confirm':SignupConfirm,
+          'completed' : SignupCompleted
         },
         watch: {
             '$route': 'init',
@@ -122,7 +127,8 @@
                 })
             },
             signupCreated(signup){
-                this.signup=signup
+                this.signup = new Signup(signup)
+                this.nextStep()
             },
             cenceled(){
                 let courseId=this.getCourseId()

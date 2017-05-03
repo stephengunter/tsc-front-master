@@ -105,7 +105,7 @@
             redirect(){
                let returnUrl=this.$route.query.return
                if(returnUrl){
-                  this.$router.push('/' + returnUrl)
+                  this.$router.push(returnUrl)
                }else{
                   this.$router.push('/')
                }
