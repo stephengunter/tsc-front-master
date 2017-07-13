@@ -1,4 +1,4 @@
-<template>
+\<template>
     <div class="columns is-vcentered login">
         <div class="column is-4 is-offset-4">
             <h1 class="title">
@@ -43,7 +43,8 @@
       name: 'Login',
       data() {
           return {
-              form:{}
+              form:{},
+             
           }
       },
       beforeMount() {          
@@ -94,11 +95,20 @@
                      this.redirect()
                      
                 }).catch(error => {
-                   let errors={
-                      login:['登入失敗']
-                   }
-                  
-                   this.form.onFail(errors)
+                   
+                    // if(error.status==439){
+                    //    Helper.redirect('/email-unconfirmed/' + this.form.username)
+                    // }
+                    if(error.status==422){
+                       
+                    }else{
+                         let errors={
+                            login:['登入失敗']
+                         }
+                    
+                         this.form.onFail(errors)
+                    } 
+                   
                    
                 })
             },

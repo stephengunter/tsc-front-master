@@ -32,9 +32,16 @@
         </div>
         <div class="columns">
             <div class="column">                          
-                 課程費用：<span v-html="course.formatCostDetails()"></span>         
+                 課程費用：{{ course.formatTuition() }}         
             </div>
-            <div v-if="course.credit_count>0" class="column">                          
+            <div v-if=" course.hasCost()" class="column">                          
+                 材料費：{{ course.formatCostDetails() }}       
+            </div>
+            
+        </div>
+        <div v-if="course.hasCreditCount()"  class="columns">
+            
+            <div class="column">                          
                  學分數：{{ course.credit_count }}       
             </div>
             
@@ -65,7 +72,7 @@
      <teacher-card v-for="teacher in teachers" :teacher="teacher"></teacher-card>
 
     <div v-show="course.schedules.length" id="course-schedules">
-     <h1 class="title">課程進度</h1>
+      <h1 class="title">課程進度</h1>
       <table class="table" style="width: 95%;font-size:17px;">
           <thead> 
               <tr> 
@@ -133,20 +140,19 @@ export default {
         this.fetchData()
       },
       fetchData(){
-        let url=Helper.getUrl('/api/courses/details/' + this.id)          
-          axios.get(url)
-              .then(response => {
-                  this.course = new Course(response.data.course)
-                
-                  for (var i = 0; i < this.course.teachers.length; i++) {
-                      this.teachers.push(new Teacher(this.course.teachers[i]))
-                  }
-                 
-                  this.loaded=true
-              })
-              .catch(function(error) {
-                  console.log(error)
-              })
+            let getData=Course.show(this.id)  
+            getData.then(data => {
+                this.course = new Course(data.course)
+              
+                for (var i = 0; i < this.course.teachers.length; i++) {
+                    this.teachers.push(new Teacher(this.course.teachers[i]))
+                }
+               
+                this.loaded=true
+            })
+            .catch(error=> {
+                Bus.$emit('errors',error)
+            })
       }
      
    },

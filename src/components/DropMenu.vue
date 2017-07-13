@@ -21,8 +21,20 @@
 
 export default {
   name: 'DropMenu',  
-  props: ['items',"default_id",'static'],
- 
+  props: {
+      items: {
+         type: Array,
+         default: []
+      },
+      default_id:{
+         type: Number,
+         default: 0
+      },
+      static:{
+         type: Boolean,
+         default: false
+      }
+  },
   data () {
     return {
       selectedId:0,

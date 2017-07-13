@@ -19,7 +19,7 @@
               <li class="item">上課時間：<span v-html="course.classTimesText()"></span>  </li>
               <li class="item">開課日期：{{ course.begin_date }}</li>
               <li class="item">課程時數：{{  course.hoursText }}&nbsp;{{  course.weeksText }}</li>
-              <li class="item">課程費用：<span v-html="course.formatCost()"></span> </li>
+              <li class="item">課程費用：<span v-html="course.formatTuition()"></span> </li>
              </ul> 
              </div>
           </div>
@@ -32,7 +32,20 @@
 <script>
   export default {
       name:'CourseCard',
-      props:['course'],
+      props: {
+          entity:{
+             type: Object,
+             default: {}
+          },
+      },
+      data () {
+        return {
+            course:{}
+        }
+      },
+      beforeMount(){
+           this.course=new Course(this.entity)
+      },
       
   }
 

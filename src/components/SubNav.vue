@@ -20,7 +20,16 @@
 <script>
 export default {
   name: 'Subnav',
-  props: ['items',"default_id"],
+  props: {
+      items: {
+         type: Array,
+         default: []
+      },
+      default_id:{
+         type: Number,
+         default: 0
+      }
+  },
   data () {
      return {
        selected : this.default_id,

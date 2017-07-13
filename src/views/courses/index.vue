@@ -1,15 +1,12 @@
 <template>
 
-<div>
    <div class="columns is-multiline">
 
-    <div v-for="course in courses" class="column is-one-quater-mobile is-half-tablet is-half-desktop">
-       <course-card :course="course"></course-card>
-    </div>
+      <div v-for="course in courses" class="column is-one-quater-mobile is-half-tablet is-half-desktop">
+         <course-card :entity="course"></course-card>
+      </div>
     
-    </div>
-
-</div>
+   </div>
 
 
 
@@ -26,10 +23,22 @@ import Card from '../../components/course/card.vue'
             'course-card':Card
         },
         watch: {
-            '$route': 'init'
+            params: {
+              handler: function () {
+                 if(this.ready) this.fetchData() 
+                 
+              },
+              deep: true
+            },
+            $route: function () {
+               this.init()
+            }
+           
         },
+       
         data(){
             return{
+                ready:false,
                 center:0,
                 category:0,
                 courses:[]
@@ -46,21 +55,22 @@ import Card from '../../components/course/card.vue'
               
                 this.courses=[]
                 this.fetchData()
+
+                this.ready=true
            
             },
             fetchData(){
-                let url=Helper.getUrl('/api/courses/details/2' )          
-                axios.get(url)
-                .then(response => {
-                  let course=response.data.course
-                  for (var i = 0; i < 6; i++) {
-                      this.courses.push(new Course(course))
-                  }
-                 
-                  this.loaded=true
+                this.courses=[]
+                let params={
+                    category:this.params.category,
+                    center:this.params.center
+                }
+                let getData=Course.index(params)
+                getData.then(data => {
+                    this.courses=data.courses                 
                 })
-                .catch(function(error) {
-                  console.log(error)
+                .catch(error=> {
+                    Bus.$emit('errors')
                 })
             }
         },

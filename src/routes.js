@@ -44,6 +44,12 @@ let routes = [
             meta: { 'forVisitors':true },
         },
         {
+            path:'/email-confirmation',
+            component: require('./views/email-confirmation.vue'),
+            name: 'email-confirmation',
+            meta: { 'forVisitors':true },
+        },
+        {
             path:'/login',
             component: require('./views/login.vue'),
             name: 'login',

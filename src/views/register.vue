@@ -1,4 +1,5 @@
 <template>
+<div>
    <div class="columns is-vcentered register">
       <div class="column is-4 is-offset-4">
             <h1 class="title">
@@ -36,13 +37,23 @@
                   <hr>
                   <p class="control">
                     <button type="submit" class="button is-primary" :disabled="form.errors.any()">確認送出</button>
-                    
+                    <p class="help is-danger" v-if="failed">建立新帳號失敗</p>
                   </p>
                 </form>
             </div>
             
       </div>
     </div>
+
+    <modal title="為確保您的Email正確無誤，系統已發送會員認證信到您的電子信箱" :backdrop-closable="false"  :width="confirmSettings.width" 
+        :is-show="confirmSettings.show" transition="fadeDown" @close="onConfirmed"
+         ok-text="確定" :show-cancel="false">
+     
+      
+      <p class="title is-5">請至您註冊的電子信箱 <span v-text="confirmSettings.user.email"></span> 開啟我們mail給您的會員認證信來完成認證.</p>
+      <p class="title is-5 help is-info">※您必須完成Email認證才可開通會員權限</p>
+    </modal>
+</div>    
 </template>
 
 
@@ -61,35 +72,37 @@
                     },
                     
                 }),
-              
+               failed:false,
+               confirmSettings:{
+                   show:false,
+                   width:600,
+                   user:{}
+               }
+               
             }
         },
+       
         methods: {
             clearErrorMsg(name) {
-                this.form.errors.clear(name);
+                this.form.errors.clear(name)
+                this.failed = this.form.errors.any()
             },
             onSubmit(){
-
-                let url=Helper.getUrl('/api/users/register')
-               
+                
+                let url=Helper.getApiUrl('/register')
                 this.form.post(url)
                 .then((user) => {
-                     this.$notify.open({
-                        content: '成功建立新帳號',
-                        type: 'success',
-                        placement: 'top-center',
-                        duration: 1500,
-                      })
-
-                      this.redirect()
+                    this.confirmSettings.user=user
+                    Bus.$emit('okmsg','成功建立新帳號')
+                    this.confirmSettings.show=true
                      
                 }).catch(error => {
-                   let errors={
-                      login:['註冊失敗']
-                   }
-                  
-                   this.form.onFail(errors)
+                    this.failed=true
                 })
+            },
+            onConfirmed(){
+              this.redirect()
+              //this.confirmSettings.show=false
             },
             redirect(){
                this.$router.push('/')

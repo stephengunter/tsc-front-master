@@ -33,18 +33,16 @@ import Card from '../../components/center/card.vue'
     },
     methods:{
       fetchData(){   
-          
-          let url=Helper.getUrl('/api/centers/activeCenters') 
-          axios.get(url)
-              .then(response => {
-                  this.centers = response.data.centers
-                  
-                  this.loaded=true
-               
-              })
-              .catch(function(error) {
-                  console.log(error)
-              })
+          let getData=Center.index()
+          getData.then(data => {
+                    this.centers = data.centers
+                    this.loaded=true
+                    
+                })
+                .catch(error=> {
+                    Bus.$emit('errors')                 
+                    this.loaded=false
+                })
       }
 
       

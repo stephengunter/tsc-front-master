@@ -156,7 +156,6 @@ export default {
     },
     setAuth(isAuth){
         if(isAuth){
-          
            this.setUserName(this.$auth.username())
         }else{
            this.setUserName('')

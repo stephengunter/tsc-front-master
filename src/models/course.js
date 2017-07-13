@@ -18,52 +18,113 @@ class Course {
         this.period=Helper.periodFormat(this.begin_date,this.end_date)
         this.canJoin=Helper.inPeriod(this.open_date,this.close_date)
 
-        this.canNetSignup=false
-         if(this.net_signup && this.canSignup) this.canNetSignup=true
+        
 
+        if(this.class_times){
+            this.class_times.sort( ( a, b) => {
+              return a.weekday_id > b.weekday_id
+            });
+        }
+        
 
-        this.class_times.sort( ( a, b) => {
-            return a.weekday_id > b.weekday_id
-        });
-        this.schedules.sort( ( a, b) => {
-            return a.order > b.order
-        });
+        if(this.schedules){
+            this.schedules.sort( ( a, b) => {
+                return a.order > b.order
+            })
+        }
+        
         
     }
-   
+    static source(){
+        return '/courses'
+    }
+    
+    static showUrl(id){
+         return this.source() + '/' + id
+    }
+    static index(params){
+        return new Promise((resolve, reject) => {
+            let url =Helper.getApiUrl(this.source()) 
+            url=Helper.buildQuery(url,params)
+            axios.get(url)
+                .then(response => {
+                   resolve(response.data)
+                })
+                .catch(error=> {
+                     reject(error);
+                })
+           
+        })
+    }
+    static show(id){
+        return new Promise((resolve, reject) => {
+            let url =Helper.getApiUrl(this.showUrl(id)) 
+           
+            axios.get(url)
+                .then(response => {
+                   resolve(response.data)
+                })
+                .catch(error=> {
+                     reject(error);
+                })
+           
+        })
+    }
+    canNetSignup(){
+        return true
+        return (this.net_signup && this.canSignup) 
+    }
+    hasCost(){
+        if(!this.cost) return false
+        return Number(this.cost) > 0
+    }
+    hasCreditCount(){
+        if(!this.credit_count) return false
+        return Number(this.credit_count) > 0
+    }
    
     formatLocation(){
         return this.center.contactInfo.addressA.fullText + '&nbsp;(' + this.center.name + ')'
     }
-    formatCost(){
+    formatTuition(){
         let tuition=Number(this.tuition)
+        return Helper.formatMoney(this.tuition) + ' 元'
+    }
+    formatCost(){
         let cost=Number(this.cost)
-        if(cost<=0) return Helper.formatMoney(this.tuition) + '元'
+        if(cost>0){
+             return Helper.formatMoney(this.cost) + ' 元'
+        }else{
+            return ''
+        }
+         
+        // }
+        // if(cost<=0) return Helper.formatMoney(this.tuition) + '元'
 
-        let total=tuition+cost
-        let materilaText='(含材料費' + Helper.formatMoney(this.cost) + '元)'
-        return Helper.formatMoney(total.toString()) + '元&nbsp;' + materilaText
+        // let total=tuition+cost
+        // let materilaText='(含材料費' + Helper.formatMoney(this.cost) + '元)'
+        // return Helper.formatMoney(total.toString()) + '元&nbsp;' + materilaText
+        // }
 
 
         
     }
     formatCostDetails(){
-        let tuition=Number(this.tuition)
-        let cost=Number(this.cost)
-        if(cost<=0) return Helper.formatMoney(this.tuition) + '元'
+        
+        let formattedCost=this.formatCost()
+        if(!formattedCost) return ''
 
-        let total=tuition+cost
-        let materilaText=' / 含材料費' + Helper.formatMoney(this.cost) + '元'
+        let materilaText=''
         if(this.materials){
             materilaText += '(' + this.materials  + ')'
         }
-        return Helper.formatMoney(total.toString()) + '元&nbsp;' + materilaText
+        return formattedCost + ' ' + materilaText
         
         
     }
     formatHours(){
         if(this.hours){
-          return  this.hours + '小時'
+          return  this.hours + ' 小時'
         }else{
             return ''
         }
@@ -119,9 +180,10 @@ class Course {
     getPhoto() {
         let path=this.photo.path
         this.photo={
-             path:Helper.getBackUrl() + path
+             path: Config.apiUrl() +  path 
         } 
     }
+   
     
     
 

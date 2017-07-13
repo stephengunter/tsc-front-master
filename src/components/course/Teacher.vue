@@ -33,7 +33,12 @@
 <script>
     export default {
         name:'TeacherCard',
-        props:[ 'teacher' ],
+        props: {
+          teacher:{
+             type: Object,
+             default: {}
+          },
+    },
 
     }
 </script>

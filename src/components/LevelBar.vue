@@ -25,7 +25,25 @@ import DropMenu from './DropMenu.vue'
 
 export default {
   name: 'Levelbar',  
-  props: ['centers','default_center',"categories",'default_category'],
+  props: {
+      centers: {
+         type: Array,
+         default: []
+      },
+      default_center:{
+         type: Number,
+         default: 0
+      },
+      categories: {
+         type: Array,
+         default: []
+      },
+      default_category:{
+         type: Number,
+         default: 0
+      },
+  },
+  
   components: {
     'drop-menu':DropMenu
   },

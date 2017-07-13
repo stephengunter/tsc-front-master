@@ -66,9 +66,9 @@
        },
        
        getPhoto() {
-          let path=this.center.photo.path
+          let path=Center.getPhotoUrl(this.center.photo.path)
           this.photo={
-             path:Helper.getBackUrl() + path
+             path:  path
           }     
        },
      }

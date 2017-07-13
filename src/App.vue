@@ -24,7 +24,7 @@
                :categories="levelNav.categories" :default_category="levelNav.default_category">
                
              </level-bar>
-             <router-view :params="params"></router-view>
+             <router-view v-if="loaded" :params="params"></router-view>
 
 
         
@@ -46,6 +46,7 @@ export default {
   name: 'app',
   data () {
     return {
+       loaded:false,
        mobileMenu:false,
        mainNav:{
           show:false,
@@ -95,6 +96,7 @@ export default {
   },
   methods:{
       init(){
+         this.loaded=false
          this.subNav={
             show:false,
             key:'',
@@ -123,7 +125,7 @@ export default {
               default_category:0
             }
             
-
+            this.loaded=true
             return 
          }
          
@@ -166,6 +168,8 @@ export default {
 
                 this.params.center=this.mainNav.selected
                 this.params.category=this.subNav.selected
+
+                this.loaded=true
                
              })
 
@@ -177,30 +181,30 @@ export default {
       
       getCenters(){
         return new Promise((resolve, reject) => {
-               let url=Helper.getUrl('/api/centers/activeCenters') 
+               let url =Helper.getApiUrl('/centers') 
                axios.get(url)
-              .then(response => {
-                  let centers = response.data.centers
-                  let items=[]
-                  for(let i=0; i<centers.length; i++){
-                     let item={
-                         name:centers[i].name,
-                         id:centers[i].id
-                     }
-                      items.push(item)
-                  }
-                  resolve(items);
-              })
-              .catch(error => {
-                  reject(error.response);
-              })
+                    .then(response => {
+                        let centers = response.data.centers
+                        let items=[]
+                        for(let i=0; i<centers.length; i++){
+                           let item={
+                               name:centers[i].name,
+                               id:centers[i].id
+                           }
+                            items.push(item)
+                        }
+                        resolve(items);
+                    })
+                    .catch(error => {
+                        reject(error.response);
+                    })
           })   //End Promise
         
             
       },
       getCategories(){
          return new Promise((resolve, reject) => {
-              let url=Helper.getUrl('/api/categories/activeCategories') 
+              let url =Helper.getApiUrl('/categories') 
               axios.get(url)
               .then(response => {
                   let items=[]

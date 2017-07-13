@@ -5,52 +5,21 @@ class Helper {
     static getCurrentUrl(url){
         return 'http://localhost:8080/#' + url
     }
-    static getBackUrl(){
-         // return 'http://203.64.37.90:9000'
-        return 'http://tsc-master'
+    static getApiUrl(url){
+        return  Config.apiUrl() + '/api' + url
     }
-    static getUrl(url){
-        return this.getBackUrl()+ url
-    }
-    static  buildURL(url,params,searchParams) {
-        url= this.getUrl(url) + '?'
-        if(searchParams){
-            for (let field in this.searchParams) {
+    static buildQuery(url, searchParams) {
+        url += '?'
+        for (let field in searchParams) {
 
-              let value=this.searchParams[field]
-              url += field + '=' + value + '&'
+            let value = searchParams[field]
+            url += field + '=' + value + '&'
 
-            }
         }
-        var p = params
-        url += `column=${p.column}&direction=${p.direction}&per_page=${p.per_page}&page=${p.page}&search_column=${p.search_column}&search_operator=${p.search_operator}&search_query_1=${p.search_query_1}&search_query_2=${p.search_query_2}`
-     
-        return url
+        return url.substr(0, url.length - 1);
 
     }
-    static getLoginFormData() {
-        return {
-            grant_type: 'password',
-            client_id: 2,
-            client_secret: 'AzUbjsNJMkKvLBrI59d4hOVxdQDVxma35i2EvHjH',
-
-            username: '',
-            password: '',
-            scope: ''
-        }
-    } 
-    static getRefreshTokenFormData(refreshToken) {
-        return {
-            grant_type: 'refresh_token',
-            client_id: 2,
-            //client_secret: 'AzUbjsNJMkKvLBrI59d4hOVxdQDVxma35i2EvHjH',
-            client_secret: '0rPgpOkrLpMV7eaaymyHkNMXlvTerCV83EXn7a6U',
-
-            refresh_token: refreshToken,
-            scope: ''
-        }
-    }   
-    
+   
     static tpeTime(datetime) {
         return MomentTimeZone.utc(datetime).tz("Asia/Taipei").format('YYYY-MM-DD HH:mm:ss')
 

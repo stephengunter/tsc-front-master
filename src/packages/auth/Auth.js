@@ -3,7 +3,6 @@ export default function(Vue){
     Vue.auth={
         login(username,password){
             return new Promise((resolve, reject) =>{
-            
                 let token = this.passwordLogin(username,password)
                 token.then(() => {
                     let user=this.getUser()
@@ -21,16 +20,17 @@ export default function(Vue){
         },
         passwordLogin(username,password){
              return new Promise((resolve, reject) => {
+                     let settings=Config.apiClientSettings()
                      let form=new Form({
                         grant_type: 'password',
-                        client_id: 2,
-                        client_secret: 'AzUbjsNJMkKvLBrI59d4hOVxdQDVxma35i2EvHjH',
+                        client_id: settings.id,
+                        client_secret: settings.secret ,
 
                         username: username,
                         password: password,
                         scope: ''
                      })
-                     let url=Helper.getUrl('/oauth/token') 
+                     let url= Config.apiUrl() + '/oauth/token' 
                      form.post(url)
                      .then(response => {
                         let token=response.access_token
@@ -48,7 +48,7 @@ export default function(Vue){
         },
         getUser(){
             return new Promise((resolve, reject) => {
-                     let url=Helper.getUrl('/api/user') 
+                     let url=Helper.getApiUrl('/user') 
                      axios.get(url)
                      .then(response => {
                         let user=response.data
@@ -80,16 +80,16 @@ export default function(Vue){
         },
         refreshToken(){
               return new Promise((resolve, reject) => {
-                         let refreshToken=this.getRefreshToken()
+                         let settings=Config.apiClientSettings()
                          let form=new Form({
                             grant_type: 'refresh_token',
-                            client_id: 2,
-                            client_secret: 'AzUbjsNJMkKvLBrI59d4hOVxdQDVxma35i2EvHjH',
+                            client_id: settings.id,
+                            client_secret: settings.secret ,
 
-                            refresh_token: refreshToken,
+                            refresh_token: this.getRefreshToken(),
                             scope: ''
                          })
-                         let url=Helper.getUrl('/oauth/token') 
+                         let url= Config.apiUrl() + '/oauth/token' 
                          form.post(url)
                          .then(response => {
 

@@ -159,7 +159,8 @@
             },
             onSubmit(){
                 this.form.signup.course_id = this.course.id
-                this.form.signup.discount= this.discountId
+				this.form.signup.user_id = this.this.$auth.user_id()
+                this.form.signup.discount_id= this.discountId
                 let url = Helper.getUrl('/api/signups')
                 this.form.post(url)
                     .then(signup => {
