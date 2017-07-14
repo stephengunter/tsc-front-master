@@ -63,21 +63,21 @@ let routes = [
         },
         {
             path:'/user/profiles',
-            component: require('./views/user/profiles.vue'),
+            component: require('./views/users/profiles.vue'),
             name: 'profiles',
             meta: { 'forAuth':true },
            
         },
         {
             path:'/user/change-password',
-            component: require('./views/user/change-password.vue'),
+            component: require('./views/passwords/change.vue'),
             name: 'change-password',
             meta: { 'forAuth':true },
            
         },
         {
             path:'/user/signups',
-            component: require('./views/user/signups.vue'),
+            component: require('./views/users/signups.vue'),
             name: 'signups',
             meta: { 'forAuth':true },
            

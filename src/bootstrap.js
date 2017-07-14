@@ -16,6 +16,7 @@ import 'vue-blu/dist/css/vue-blu.css'
 
 import Auth from './packages/auth/Auth.js'
 
+import Password from './models/password.js'
 import Course from './models/course.js'
 import Teacher from './models/teacher.js'
 import User from './models/user.js'
@@ -48,6 +49,7 @@ window.Form = Form;
 window.Config = Config
 window.Helper = Helper
 
+window.Password=Password
 window.Course = Course
 window.Teacher = Teacher
 window.User = User

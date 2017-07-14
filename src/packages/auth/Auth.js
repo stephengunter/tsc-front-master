@@ -107,7 +107,6 @@ export default function(Vue){
                          let url= Config.apiUrl() + '/oauth/token' 
                          form.post(url)
                          .then(response => {
-
                             let token=response.access_token
                             let expiration=response.expires_in + Date.now()
                             let refreshToken=response.refresh_token
@@ -173,7 +172,8 @@ export default function(Vue){
             localStorage.removeItem('user_id')
             localStorage.removeItem('email')
             axios.defaults.headers.common.Authorization=null
-        }
+        },
+
     }
    
 

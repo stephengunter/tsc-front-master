@@ -27,8 +27,9 @@
                   <hr>
                   <p class="control">
                     <button type="submit" class="button is-primary" :disabled="form.errors.any()">確認送出</button>
-                      <p class="help is-danger" v-if="form.errors.has('submit')" >變更失敗</p>
+                      <p class="help is-danger" v-if="failed" >變更失敗</p>
                   </p>
+
                 </form>
             </div>
             
@@ -49,7 +50,9 @@
       },
       data(){
           return{
-            form:{}
+             form:{},
+             failed:false,
+             redirect:'/'
           }
       },
       methods:{
@@ -59,83 +62,29 @@
                      password:'',
                      password_confirmation:'',
                })
+
+
           }, 
           clearErrorMsg(name) {
-                this.form.errors.clear(name);
-
-                if(this.form.errors.has('password')) return
-                if(this.form.errors.has('current_password')) return
-                if(this.form.errors.has('password_confirmation')) return
-
-                this.form.errors.clear()
-          },
-          checkAuth(){
-              return new Promise((resolve, reject) =>{
-                  let authenticated=this.$auth.isAuthenticated()
-                  authenticated.then(()=>{
-                      resolve(true)
-                       
-                  }).catch(error => {
-                        reject(error) 
-                  })
-              
-              })
+                this.form.errors.clear(name)
+                this.failed = this.form.errors.any()
           },
           onSubmit(){
-               let checkAuth=this.checkAuth()
-               checkAuth.then(() => {
-                    this.postForm()
-                })
-                .catch(error => {
-                   this.authFailed()
-                       
-                })
-           
-          },
-          authFailed(){
-            this.$auth.logout()
-            let returnUrl=this.$route.path
-            this.$router.push('/login?return=' + returnUrl)
-          },
-          postForm(){
-              let method='post'
-              let url=Helper.getUrl('/api/password/change')  
-              let password=this.form.password
-              this.form.submit(method,url)
-                  .then(user => {
-                     let username=user.email
-                     this.$auth.logout()
+                let password=this.form.password
+                let store=Password.change(this.form)
+                store.then(user => {
+                   
                      Bus.$emit('okmsg', '密碼已變更')
+                     
+                     user.password=password
 
-                     this.login(username,password)
+                     Bus.$emit('re-login', user , this.redirect)
+                    
                   })
                   .catch(error => {
-                      let errors={
-                        submit:['變更失敗']
-                      }
-                  
-                      this.form.onFail(errors)
-                    
-                         
+                      this.failed=true
                   })
           },
-          login(username,password){
-                let login=this.$auth.login(username,password)
-                login.then(() => {
-                     Bus.$emit('authChanged', true) 
-                     
-                     this.redirect()
-                     
-                }).catch(error => {
-                   this.$router.push('/login')
-                   
-                })
-          },
-          redirect(){
-              this.$router.push('/')
-          }
-        
-         
 
       }
   }  

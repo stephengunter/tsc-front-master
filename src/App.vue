@@ -92,7 +92,9 @@ export default {
   },
   created() {
       Bus.$on('errors',this.showErrorMsg)
-      Bus.$on('okmsg',this.showSuccessMsg)       
+      Bus.$on('okmsg',this.showSuccessMsg)
+      Bus.$on('auth-failed',this.onAuthFailed)
+      Bus.$on('re-login',this.onReLogin)       
   },
   methods:{
       init(){
@@ -250,6 +252,23 @@ export default {
                           duration: 1500,
                        }) 
       },
+      onAuthFailed(returnUrl){
+          this.$auth.logout()
+          this.$router.push('/login?return=' + returnUrl)
+      },
+      onReLogin(user,url){
+          this.$auth.logout()
+          let login=this.$auth.login(user.email,user.password)
+          login.then(() => {
+               Bus.$emit('authChanged', true) 
+               
+               this.$router.push(returnUrl)
+               
+          }).catch(error => {
+               this.$router.push('/login')
+             
+          })
+      }
 
       
   }///end methods

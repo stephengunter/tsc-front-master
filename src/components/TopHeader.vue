@@ -165,12 +165,13 @@ export default {
     logout(){
        this.$auth.logout()
        this.setAuth(false)
-       this.$notify.open({
-                        content: '您已成功登出',
-                        type: 'success',
-                        placement: 'top-center',
-                        duration: 1500,
-                      })
+       Bus.$emit('okmsg','您已成功登出')
+       // this.$notify.open({
+       //                  content: '您已成功登出',
+       //                  type: 'success',
+       //                  placement: 'top-center',
+       //                  duration: 1500,
+       //                })
     }
   }
 

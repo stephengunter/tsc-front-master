@@ -11,7 +11,8 @@ router.beforeEach(
 
             if(hasToken){
                 next({
-                    path: '/'
+                    path: '/',
+                  
                 })
             }else next()
 
@@ -19,7 +20,8 @@ router.beforeEach(
 
             if(!hasToken){
                 next({
-                    path: '/login',                    
+                    path: '/login',       
+                    query:{ return:to.path}             
                 })
             }else{
                 let authenticated=Vue.auth.isAuthenticated()
@@ -28,7 +30,8 @@ router.beforeEach(
                 }).catch(error => {
                     Vue.auth.logout()
                     next({
-                        path: '/login',                    
+                        path: '/login',     
+                        query:{ return:to.path}                     
                      })
                 })
                
