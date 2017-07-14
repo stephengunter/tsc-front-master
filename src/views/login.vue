@@ -1,4 +1,4 @@
-\<template>
+<template>
     <div class="columns is-vcentered login">
         <div class="column is-4 is-offset-4">
             <h1 class="title">
@@ -19,9 +19,8 @@
                     </p>
                     <hr>
                     <p class="control">
-                      <button type="submit" class="button is-primary" :disabled="form.errors.any()">確定</button>
-                                    
-                      <p class="help is-danger" v-if="form.errors.has('login')" >登入失敗</p>
+                        <button type="submit" class="button is-primary" :disabled="form.errors.any()">確定</button>
+                        <p class="help is-danger" v-if="failed">登入失敗</p>    
                     </p>
 
               
@@ -29,7 +28,7 @@
             </div>
             <p class="has-text-centered" style="margin-top: 20px;">
             還沒有帳號?&nbsp;
-              <a @click="$router.push('/register')">註冊</a>&nbsp;|&nbsp;<a href="#">無法登入?</a> 
+              <a @click="$router.push('/register')">註冊</a>&nbsp;|&nbsp;<a @click="$router.push('/forgot-password')">忘記密碼</a> 
               
               
             </p>
@@ -44,7 +43,7 @@
       data() {
           return {
               form:{},
-             
+              failed:false,
           }
       },
       beforeMount() {          
@@ -59,11 +58,7 @@
             }, 
             clearErrorMsg(name) {
                 this.form.errors.clear(name);
-               
-                if(this.form.errors.has('password')) return
-                if(this.form.errors.has('username')) return
-
-                this.form.errors.clear()
+                this.failed = this.form.errors.any()
 
             },
             checkInput(){
@@ -95,18 +90,20 @@
                      this.redirect()
                      
                 }).catch(error => {
-                   
-                    // if(error.status==439){
-                    //    Helper.redirect('/email-unconfirmed/' + this.form.username)
-                    // }
-                    if(error.status==422){
-                       
-                    }else{
-                         let errors={
-                            login:['登入失敗']
-                         }
-                    
-                         this.form.onFail(errors)
+                    if(error && error.status==439){
+                        let user=error.user 
+                        let params={}
+                        if(!Helper.isTrue(user.email_confirmed)){
+                           if(user.email) params.email=user.email
+                        }  
+                        if(!Helper.isTrue(user.phone_confirmed)){
+                           if(user.phone) params.phone=user.phone
+                        }                     
+                        let url=Register.unConfirmedUrl()
+                        this.$router.push(Helper.buildQuery(url,params))
+                    }
+                    else{
+                        this.failed=true
                     } 
                    
                    

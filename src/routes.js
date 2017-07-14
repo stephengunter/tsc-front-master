@@ -39,14 +39,20 @@ let routes = [
         },           
         {
             path:'/register',
-            component: require('./views/register.vue'),
+            component: require('./views/registers/store.vue'),
             name: 'register',
             meta: { 'forVisitors':true },
         },
         {
             path:'/email-confirmation',
-            component: require('./views/email-confirmation.vue'),
+            component: require('./views/registers/email-confirmation.vue'),
             name: 'email-confirmation',
+            meta: { 'forVisitors':true },
+        },
+        {
+            path:'/register-unconfirmed',
+            component: require('./views/registers/unconfirmed.vue'),
+            name: 'register-unconfirmed',
             meta: { 'forVisitors':true },
         },
         {

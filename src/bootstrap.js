@@ -19,6 +19,7 @@ import Auth from './packages/auth/Auth.js'
 import Course from './models/course.js'
 import Teacher from './models/teacher.js'
 import User from './models/user.js'
+import Register from './models/register.js'
 import Signup from './models/signup.js'
 import Center from './models/center.js'
 
@@ -50,5 +51,6 @@ window.Helper = Helper
 window.Course = Course
 window.Teacher = Teacher
 window.User = User
+window.Register=Register
 window.Signup = Signup
 window.Center=Center

@@ -52,14 +52,29 @@ export default function(Vue){
                      axios.get(url)
                      .then(response => {
                         let user=response.data
-                        this.setAuthenticatedUser(user)
-                        resolve(true);
+                        let confirmed=this.userConfirmed(user)                       
+                        if(confirmed){
+                            this.setAuthenticatedUser(user)
+                            resolve(true)
+                        }else{
+                            this.logout()
+                            reject({
+                                status:439,
+                                user:user
+                            })
+                        }
+                        
                      })
                      .catch(error => {
                         this.logout()
-                        reject(error.response);
+                        reject(error.response)
                      })
                 });
+        },
+        userConfirmed(user){
+            if(Helper.isTrue(user.email_confirmed)) return true
+            if(Helper.isTrue(user.phone_confirmed)) return true
+                return false
         },
         setToken(token , expiration , refresh_token) {
             localStorage.setItem('token' , token)

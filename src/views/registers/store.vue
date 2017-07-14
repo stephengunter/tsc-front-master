@@ -102,7 +102,6 @@
             },
             onConfirmed(){
               this.redirect()
-              //this.confirmSettings.show=false
             },
             redirect(){
                this.$router.push('/')
