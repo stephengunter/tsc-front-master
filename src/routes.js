@@ -76,6 +76,19 @@ let routes = [
            
         },
         {
+            path:'/forgot-password',
+            component: require('./views/passwords/forgot.vue'),
+            name: 'forgot-password',
+            meta: { 'forVisitors':true },
+           
+        },
+        {
+            path:'/reset-password',
+            component: require('./views/passwords/reset.vue'),
+            name: 'reset-password',
+            meta: { 'forVisitors':true },
+        },
+        {
             path:'/user/signups',
             component: require('./views/users/signups.vue'),
             name: 'signups',
