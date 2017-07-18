@@ -44,7 +44,7 @@ class Course {
     }
     static index(params){
         return new Promise((resolve, reject) => {
-            let url =Helper.getApiUrl(this.source()) 
+            let url = Helper.getApiUrl(this.source()) 
             url=Helper.buildQuery(url,params)
             axios.get(url)
                 .then(response => {
@@ -60,6 +60,19 @@ class Course {
         return new Promise((resolve, reject) => {
             let url =Helper.getApiUrl(this.showUrl(id)) 
            
+            axios.get(url)
+                .then(response => {
+                   resolve(response.data)
+                })
+                .catch(error=> {
+                     reject(error);
+                })
+           
+        })
+    }
+    static latest(){
+        return new Promise((resolve, reject) => {
+            let url =Helper.getApiUrl('/latest-courses') 
             axios.get(url)
                 .then(response => {
                    resolve(response.data)

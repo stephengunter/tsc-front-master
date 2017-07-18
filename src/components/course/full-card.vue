@@ -1,14 +1,10 @@
 <template>
-<div class="card">
-   <p class="card-header-title">
-      <!-- <span class="course-title">  <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp; {{ course.center.name }}</span> -->
-    
-
-       <span  class="nav-item ">
-       <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp; {{ course.center.name }} </span>
-    </p>
     <div class="box">
- 
+        <div>
+           <span class="course-center"  >
+              <i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp; {{ course.center.name }}
+           </span>
+        </div>
         <div class="media">
              <div class="media-left is-hidden-mobile">
                  <div class="status">
@@ -41,15 +37,26 @@
               </div>
              
         </div>
-    </div> <!--  end box -->
-       
-</div>    <!--  end Card -->
+    </div>  <!-- end box -->
 </template>
 
 <script>
   export default {
       name:'CourseFullCard',
-      props:['course'],
+      props: {
+          entity:{
+             type: Object,
+             default: {}
+          },
+      },
+      data () {
+        return {
+            course:{}
+        }
+      },
+      beforeMount(){
+           this.course=new Course(this.entity)
+      },
   }
 
 
@@ -57,8 +64,10 @@
    
 
 <style scoped>
-.card-header-title{
-   padding: 0.3rem;
+.course-center{
+   display: flex;
+   align-items: center;
+   font-size:1.2em
 }
 .status{
   text-align:center;

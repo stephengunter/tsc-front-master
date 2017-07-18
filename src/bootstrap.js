@@ -23,6 +23,7 @@ import User from './models/user.js'
 import Register from './models/register.js'
 import Signup from './models/signup.js'
 import Center from './models/center.js'
+import Notice from './models/notice.js'
 
 // require('font-awesome/css/font-awesome.css');
  //require('./assets/css/bulma.css')
@@ -35,18 +36,19 @@ Vue.use(VueRouter)
 Vue.use(VueBlu)
 Vue.use(Auth)
 
-window.Vue = Vue;
+window.Vue = Vue
+window.Config = Config
 
 window.Bus = new Vue({});
 
-window.axios = axios;
+window.axios = axios
 window.axios.defaults.headers.common = {   
     'Authorization' : 'Bearer ' + Vue.auth.getToken() ,
     'X-Requested-With': 'XMLHttpRequest' 
-};
+}
 
 window.Form = Form;
-window.Config = Config
+
 window.Helper = Helper
 
 window.Password=Password
@@ -56,3 +58,4 @@ window.User = User
 window.Register=Register
 window.Signup = Signup
 window.Center=Center
+window.Notice=Notice
