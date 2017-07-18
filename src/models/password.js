@@ -37,7 +37,7 @@ class Password {
                     resolve(data);
                 })
                 .catch(error => {
-                    console.log(error)
+                   
                     reject(error);
                 })
         })

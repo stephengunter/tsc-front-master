@@ -11,8 +11,9 @@
 
 
 <script>
-  import Profile from  '../../components/user/profile.vue'
-  import EditProfile from  '../../components/user/edit-profile.vue'
+  import Profile from '../../components/user/profile.vue'
+  import EditProfile from '../../components/user/edit-profile.vue'
+  
   export default {
       name:'ProfilesView',
       components:{

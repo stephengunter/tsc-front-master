@@ -35,6 +35,11 @@ class Helper {
       
         return false
     }
+    static inputsError(error){
+        if(!error.response) return false
+        if(!error.response.status) return false
+            return (error.response.status==422)
+    }
     static tpeTime(datetime) {
         return MomentTimeZone.utc(datetime).tz("Asia/Taipei").format('YYYY-MM-DD HH:mm:ss')
 

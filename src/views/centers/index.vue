@@ -24,6 +24,7 @@ import Card from '../../components/center/card.vue'
     },
     data(){
       return {
+        err:{},
         loaded:false,
         centers: []
       }
