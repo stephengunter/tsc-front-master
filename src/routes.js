@@ -10,6 +10,16 @@ let routes = [
             name: 'home',
         },
         {
+            path:'/notices',
+            component: require('./views/notices/index.vue'),
+            name: 'notices',
+        },
+        {
+            path:'/notices/:id',
+            name: 'notice-details',
+            component: require('./views/notices/details.vue'),
+        },
+        {
             path:'/centers',
             component: require('./views/centers/index.vue'),
             name: 'centers',

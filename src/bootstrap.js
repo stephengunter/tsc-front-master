@@ -11,7 +11,7 @@ import Helper from './helper.js'
 import VueBlu from 'vue-blu'
 import 'vue-blu/dist/css/vue-blu.css'
 
-
+//Vue.component('pager', require('./components/Pager') )
 
 
 import Auth from './packages/auth/Auth.js'
@@ -26,7 +26,7 @@ import Center from './models/center.js'
 import Notice from './models/notice.js'
 
 // require('font-awesome/css/font-awesome.css');
- //require('./assets/css/bulma.css')
+//require('./assets/css/bulma.css')
 
 require('./assets/css/site.css')
 

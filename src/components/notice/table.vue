@@ -1,32 +1,54 @@
 <template>
-<table class="table">
-    <tbody>
-      <tr>
-        <td>81</td>
-        <td>Qualification for the <a href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Group_stage" title="2016–17 UEFA Champions League">Champions League group stage</a></td>
-      </tr>
-     
-    </tbody>
-</table>
 
+<div>
 
+  <table v-if="hasNotices" class="table" style="font-size:1.2em">
+      <tbody>
+        <tr v-for="notice in model.data">
+          <td>{{ notice.date }}</td>
+          <td>
+            <a @click.prevent="onSelected(notice.id)" :title="notice.title">
+               {{ notice.title }}
+            </a>
+          </td>
+        </tr>
+       
+      </tbody>
+      
+  </table>
+
+  <pager :total="model.total"></pager> 
+  
+</div>
 </template>
 
 <script>
+    import Pager from '../../components/Pager.vue'
     export default {
         name:'NoticeTable',
+        components:{
+            'pager':Pager
+        },
         props: {
           latest:{
              type: Boolean,
              default: false
           },
-      },
+        },
         beforeMount(){
             this.fetchData()
         },
         data(){
             return{
-                notices:[]
+                model:{
+                  total:0,
+                }
+            }
+        },
+        computed: {
+            hasNotices() {
+               
+               return this.model.total > 0 
             }
         },
         methods:{
@@ -43,11 +65,16 @@
                    getData=Notice.index()
                 }
                 getData.then(data => {
-                    this.notices=data.notices                 
+                    this.model=data.model  
+                    this.$emit('loaded',this.model.total)               
                 })
                 .catch(error=> {
                     Bus.$emit('errors')
+                    this.$emit('loaded',0)    
                 })
+            },
+            onSelected(id){
+               this.$emit('selected',id)    
             }
         },
         
