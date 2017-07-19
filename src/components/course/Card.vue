@@ -12,7 +12,7 @@
               <ul class="info">                    
               <li class="title">
                  <span v-if="course.canJoin" class="tag is-success">招生中</span> 
-                 <a @click="$router.push('/courses/' + course.id)"> 
+                 <a @click="onSelected"> 
                     {{ course.name}}
                  </a>
               </li> 
@@ -46,6 +46,11 @@
       beforeMount(){
            this.course=new Course(this.entity)
       },
+      methods:{
+          onSelected(){
+             this.$emit('selected',this.course.id)
+          }
+      }
       
   }
 

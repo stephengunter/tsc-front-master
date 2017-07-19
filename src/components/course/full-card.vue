@@ -30,7 +30,7 @@
                           <li class="item">課程時數：{{  course.hoursText }}&nbsp;{{  course.weeksText }}</li>
                           <li class="item">課程費用：<span v-html="course.formatCost()"></span> </li>
                       </ul> 
-                       <!-- <p>{{ course.description }}</p> -->
+                       <p>{{ course.description }}</p>
                           
                           
                   

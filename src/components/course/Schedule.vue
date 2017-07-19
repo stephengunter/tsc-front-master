@@ -1,37 +1,43 @@
 <template>
-     <table class="table">
-            <tbody>
-              <tr>
-                <td class="order-td">
-                  <strong>1</strong>
-                </td>
-                <td>針氈－認識羊毛氈初步說明、圓球吊飾製作</td>
-              </tr>
-               <tr>
-                <td class="order-td">
-                  <strong>2</strong>
-                </td>
-                <td>針氈－認識羊毛氈初步說明、圓球吊飾製作</td>
-              </tr>
-               <tr>
-                <td class="order-td">
-                  <strong>3</strong>
-                </td>
-                <td>針氈－認識羊毛氈初步說明、圓球吊飾製作</td>
-              </tr>
-               <tr>
-                <td class="order-td">
-                  <strong>4</strong>
-                </td>
-                <td>針氈－認識羊毛氈初步說明、圓球吊飾製作</td>
-              </tr>
-            </tbody>
-          </table>
+  <table v-show="hasData" class="table" style="width: 95%;font-size:17px;">
+      <thead> 
+          <tr> 
+              <th></th> 
+              <th style="width:45%">課目大綱</th> 
+              <th style="width:45%">內容</th>                   
+          </tr> 
+      </thead>
+      <tbody>
+          <tr v-for="schedule in course.schedules">
+            <td class="order-td">
+              {{schedule.order}}
+            </td>
+            <td>
+              {{schedule.title}}
+            </td>
+            <td>
+              {{schedule.content}}
+            </td>
+          </tr>              
+      </tbody>
+  </table>
 </template>
 
 <script>
     export default {
-
+        name:'CourseSchedule',
+        props: {
+          course:{
+             type: Object,
+             default: {}
+          },
+        },
+        computed: {
+            hasData(){
+                if(!this.course.schedule) return false
+                return this.course.schedules.length > 0
+            },
+        },
     }
 </script>
 

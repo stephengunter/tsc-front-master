@@ -1,12 +1,19 @@
 <template>
+  
 
-   <div class="columns is-multiline">
+    <course-view  v-if="selected" :id="selected" @back="onBack"></course-view>
+    
+  
+    <div v-else class="columns is-multiline">
 
       <div v-for="course in courses" class="column is-one-quater-mobile is-half-tablet is-half-desktop">
-         <course-card :entity="course"></course-card>
+         <course-card :entity="course"
+             @selected="onSelected">
+         </course-card>
       </div>
     
-   </div>
+    </div>
+
 
 
 
@@ -14,34 +21,28 @@
 
 <script>
 
-import Card from '../../components/course/card.vue'
+    import CourseCard from '../../components/course/card.vue'
+    import CourseView from  '../../components/course/view.vue'
 
     export default {
         name:'CourseIndex',
         props: ['params'],
         components:{
-            'course-card':Card
+            'course-card':CourseCard,
+            'course-view':CourseView
         },
         watch: {
             params: {
               handler: function () {
-                 if(this.ready) this.fetchData() 
-                 
+                 this.init()                  
               },
               deep: true
             },
-            $route: function () {
-               this.init()
-            }
-           
         },
-       
         data(){
             return{
-                ready:false,
-                center:0,
-                category:0,
-                courses:[]
+                courses:[],
+                selected:0,
             }
         },
         beforeMount(){
@@ -49,15 +50,8 @@ import Card from '../../components/course/card.vue'
         },
         methods:{
             init(){
-                let query=this.$route.query
-                this.center=query.center
-                this.category=query.category
-              
-                this.courses=[]
+                this.selected=0
                 this.fetchData()
-
-                this.ready=true
-           
             },
             fetchData(){
                 this.courses=[]
@@ -65,13 +59,20 @@ import Card from '../../components/course/card.vue'
                     category:this.params.category,
                     center:this.params.center
                 }
+                
                 let getData=Course.index(params)
                 getData.then(data => {
-                    this.courses=data.courses                 
+                    this.courses=data.courses                             
                 })
                 .catch(error=> {
                     Bus.$emit('errors')
                 })
+            },
+            onSelected(id){
+                this.selected=id
+            },
+            onBack(){
+                this.init()
             }
         },
        
