@@ -3,7 +3,7 @@
 <div v-if="loaded">
     <h2 class="title is-3">課程報名</h2>
    
-    <steps :show-footer="false" :current="currentStep" type="pills">
+    <!-- <steps :show-footer="false" :current="currentStep" type="pills">
         <step title="報名須知"  >        
             <notice @nextStep="nextStep" @cancel="cenceled"></notice>
         </step>
@@ -16,7 +16,7 @@
         
            <completed :signup="signup"></completed>
         </step>
-    </steps>
+    </steps> -->
 
     <modal :show-header="false" :show-footer="false" :on-cancel="cenceled"  :is-show="showModal" @close="showModal=false">
      
@@ -90,30 +90,32 @@
                    return false
                 }
 
-                this.getCourse(courseId)
-                this.getDiscounts()
+                this.fetchData(courseId)
+                //this.getDiscounts()
 
                 this.currentStep=0
 
              
            
             },
-            getCourse(courseId){
-               let url=Helper.getUrl('/api/courses/details/' + courseId )          
-                axios.get(url)
-                .then(response => {
-                    let course=response.data.course
+            fetchData(courseId){
+                let userId=0
+                let getData=Signup.create(courseId,userId) 
+               
+                getData.then(data => {
+                    let course=data.course
                     if(!course.canSignup){
                          this.showModal=true
                     }else{
-                       this.course = new Course(response.data.course)
+                       this.course = new Course(course)
                        this.loaded=true
                     }
                 })
                 .catch( error => {
-                    this.onError()
+                    this.onError(error)
                 })
             },
+            
             getDiscounts(){
                 let url=Helper.getUrl('/api/discounts/active-discounts')          
                 axios.get(url)
@@ -139,14 +141,8 @@
                 }
                
             },
-            onError(){
-               
-                this.$notify.open({
-                        content: '系統暫時無回應，請稍後再試',
-                        type: 'danger',
-                        placement: 'top-center',
-                        duration: 1500,
-                      })
+            onError(error){
+                Bus.$emit('errors',error)
                 this.cenceled()
             }
             

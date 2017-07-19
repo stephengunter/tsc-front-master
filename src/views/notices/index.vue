@@ -1,9 +1,7 @@
 <template>
 <div>
     <h1 class="title">{{ title }}</h1>
-    <h2 class="subtitle">
-      A single class to handle WYSIWYG generated content, where only <strong>HTML tags</strong> are available
-    </h2>
+
     <div v-show="!hasSelected">
         
 
@@ -17,7 +15,7 @@
 
     <show-notice v-if="hasSelected" :id="noticeTable.selected"
      :show_title="noticeDetails.show_title" 
-     @back="noticeTable.selected=0"
+     @back="init"
      @loaded="onNoticeLoaded">
         
     </show-notice>
@@ -72,6 +70,10 @@
             },
             onNoticeLoaded(notice){
                 this.title='公告訊息：' + notice.title
+            },
+            init(){
+                this.title='公告訊息'
+                this.noticeTable.selected=0
             }
         },
         

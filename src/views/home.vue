@@ -5,10 +5,19 @@
 
         
 
-        <notice-table :latest="noticeTable.latest" @loaded="onNoticesLoaded"></notice-table> 
+        <notice-table :latest="noticeTable.latest" 
+          @loaded="onNoticesLoaded"
+          @selected="onNoticesSelected">
+              
+        </notice-table> 
 
         <div style="clear: both;text-align:right;">
-            <a @click.prevent="moreNotices" style="font-size:1.2em;">>>更多訊息</a>
+            <a @click.prevent="moreNotices" class="button is-primary is-outlined">
+                <span class="icon is-small">
+                 <i class="fa fa-angle-double-right">
+                </span>
+                <span>更多訊息</span>
+            </a>
         </div>
             
       
@@ -82,6 +91,9 @@
             },
             moreNotices(){
                  this.$router.push('/notices')
+            },
+            onNoticesSelected(id){
+                this.$router.push('/notices/' + id)
             }
         },
         

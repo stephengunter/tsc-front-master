@@ -1,18 +1,25 @@
 <template>
     <div>
-       
-        <!-- <div>
-            
-        </div> -->
-        <h1 v-if="show_title" class="title">{{ notice.title }}</h1>
+        <h1 v-if="show_title" class="title" v-text="title"></h1>
+        <p v-if="show_title"></p>
         <h2 class="subtitle">
             {{ notice.date }}
         </h2>
-        <div style="clear: both;text-align:right;">
-            <a @click.prevent="onBack" style="font-size:1.2em;" v-text="back"></a>
+        <hr>
+        <div class="content" style="font-size:1.2em;" >
+            {{ notice.content }}
         </div>
+        <div style="clear: both;text-align:right;">
+             <a @click.prevent="onBack" class="button is-primary is-outlined">
+                <span class="icon is-small">
+                 <i class="fa fa-angle-double-left">
+                </span>
+                <span>返回</span>
+             </a>
+           
+        </div>
+    
     </div>
-
 </template>
 
 <script>
@@ -34,6 +41,7 @@
         },
         data(){
             return{
+                title:'公告訊息',
                 notice:{},
                 back:'<<返回'
                 
@@ -45,6 +53,7 @@
                 let getData=Notice.show(this.id)
                 getData.then(data => {
                     this.notice=data.notice  
+                    this.title='公告訊息：' + this.notice.title
                     this.$emit('loaded',this.notice)               
                 })
                 .catch(error=> {

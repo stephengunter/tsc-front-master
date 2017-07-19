@@ -19,6 +19,33 @@ class Signup {
         
 
     }
+    static source(){
+        return '/signups'
+    }
+    static createUrl(){
+        return '/signups/create'
+    }
+    static create(course,user){
+         return new Promise((resolve, reject) => {
+            let url =Helper.getApiUrl(this.createUrl()) 
+            let params={
+                course:course,
+                user:0
+            }
+            if(user) params.user=user
+
+            url= Helper.buildQuery(url,params)
+           
+            axios.get(url)
+                .then(response => {
+                   resolve(response.data)
+                })
+                .catch(error=> {
+                     reject(error);
+                })
+           
+        })
+    }
     formatTuition(){
         let formated_tuition = Helper.formatMoney(this.tuition) + ' 元'
         if(!this.discount) return formated_tuition

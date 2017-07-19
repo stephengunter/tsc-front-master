@@ -1,53 +1,45 @@
 <template>
-    <div>
-        <h1 class="title">公告訊息</h1>
-
-        <notice-table :latest="noticeTable.latest" @selected="onSelected"></notice-table> 
-
-        <div style="clear: both;text-align:right;">
-            <a href="#" style="font-size:1.2em;">>>更多訊息</a>
-        </div>
-    </div>
+    <show-notice v-if="id" :id="id"
+     @back="onBack" >
+     
+        
+    </show-notice>
 
 </template>
 
 <script>
 
-    import NoticeTable from '../../components/notice/table.vue'
+    import ShowNotice from '../../components/notice/show.vue'
   
     export default {
         name:'NoticeDetailsView',
         components:{
-            'notice-table':NoticeTable
-        },
-        beforeMount(){
-            this.fetchData()
+             'show-notice':ShowNotice
         },
         data(){
             return{
-                
-                noticeTable:{
-                    selected:0,
-                    latest:false
-                },
-                
+                id:0,
+
             }
         },
-        computed: {
-          hasSelected() {
-              let id=Number(this.noticeTable.selected)
-              return id > 0 
-          }
+        watch: {
+            '$route': 'init'
+        },
+        beforeMount(){
+            this.init()
         },
         methods:{
-            fetchData(){
-                this.getCourses()
-
-            },
-            
-            onSelected(id){
-                this.noticeTable.selected=id
+            init(){
+                this.id=0
+                let id=this.$route.params.id
+                if(id)this.id=Number(id)
+                
+               
+            },  
+            onBack(){
+                 this.$router.push('/notices')
             }
+           
         },
         
     }
