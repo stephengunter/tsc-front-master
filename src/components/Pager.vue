@@ -1,15 +1,25 @@
 <template>
     <nav v-show="total" class="pagination is-right">
-        <a class="pagination-previous" v-show="maxPage>1"  :disabled="interCurrent==1">上一頁</a>
-        <a class="pagination-next" v-show="maxPage>1" :disabled="interCurrent<maxPage">下一頁</a>
+        <a @click="interCurrent-=1" class="pagination-previous" :disabled="interCurrent<=1"  >上一頁</a>
+        <a @click="interCurrent+=1" class="pagination-next"  :disabled="interCurrent>=maxPage">下一頁</a>
         <ul class="pagination-list">
-            <li><a class="pagination-link">1</a></li>
-            <li><span class="pagination-ellipsis">&hellip;</span></li>
-            <li><a class="pagination-link">45</a></li>
-            <li><a class="pagination-link is-current">46</a></li>
-            <li><a class="pagination-link">47</a></li>
-            <li><span class="pagination-ellipsis">&hellip;</span></li>
-            <li><a class="pagination-link">86</a></li>
+            <li v-if="hasLess" @click="interCurrent=1" ><a class="pagination-link">1</a></li>
+            <li v-if="hasLess">
+               
+                <a v-if="showLess" @click="onShowLess" @mouseleave="showLess=!showLess" class="button is-primary is-inverted"  style="font-size: 0.9rem;">
+                    <i class="fa fa-angle-double-left" ></i>
+                </a>
+                <a v-else @mouseover="showLess=!showLess" ><span class="pagination-ellipsis">&hellip;&hellip;</span></a>
+            </li>
+            <li v-for="item in items"  @click="interCurrent=item.page" ><a :class="item.class">{{ item.page }}</a></li>          
+            <li v-if="hasMore">
+               
+                <a v-if="showMore" @click="onShowMore" @mouseleave="showMore=!showMore" class="button is-primary is-inverted"  style="font-size: 0.9rem;">
+                    <i class="fa fa-angle-double-right" ></i>
+                </a>
+                <a v-else @mouseover="showMore=!showMore" ><span class="pagination-ellipsis">&hellip;&hellip;</span></a>
+            </li>
+            <li v-if="hasMore"><a class="pagination-link" @click="interCurrent=maxPage" >{{ maxPage }}</a></li>
         </ul>
     </nav>
 </template>
@@ -31,7 +41,6 @@
               type: Number,
               default: 0,
             },
-            size: String,
             simple: {
               type: Boolean,
               default: false,
@@ -42,44 +51,46 @@
             },
         },
         beforeMount(){
-          //  this.init()
+           
         },
         data(){
             return{
                 interCurrent: 1,
                 interPageSize: 10,
-                pageCount:0,
+                // pageCount:0,
                 maxPage:0,
 
                 items:[],
+                hasMore:false,
+                hasLess:false,
+
+                showMore:false,
+                showLess:false,
             }
         },
         watch: {
             current(val) {
                if (val !== this.interCurrent) {
-                  this.handleChangePage(val);
+                  this.interCurrent=val
                }
+            },
+            interCurrent(val){
+                this.$emit('page-change',val)
+                this.onCurrentPageChanged()
             },
             page_size(val) {
                if (val !== this.interPageSize) {
-                  // this.handleChangePage(val);
+                  this.interPageSize=val
                }
-          
             },
+            total(){
+                this.maxPage=this.calcTotalPage()
+                 this.createItems()
+            }
         },
         mounted() {
             this.interPageSize=this.page_size
             this.interCurrent=this.current
-            this.maxPage=this.calcTotalPage()
-            //this.handleChangePage(this.current);
-
-            this.items=[]
-            for(let i=0; i<5; i++){
-                let className='pagination-link'
-                let item={
-                    class:className,
-                }
-            }
         },
         computed: {
             showFirstPage(){
@@ -90,33 +101,60 @@
             },
         },
         methods:{
-            fetchData(){
-                this.getNotices()
-
-            },
             calcTotalPage() {
                return Math.floor((this.total - 1) / this.interPageSize) + 1;
             },
-            handleChangePage(p) {
-                  if (p !== this.interCurrent) {
-                    this.interCurrent = p;
-                    //this.change(p);
-                  }
+            onCurrentPageChanged() {
+
+                this.createItems()
+                  
             },
-            hasPrev() {
-              return this.interCurrent > 1;
+            createItems(){
+                
+                let curren=this.interCurrent
+                let min=curren-2
+                if(min < 1) min=1
+                let max=min+4
+                if(max > this.maxPage) max=this.maxPage
+                this.items=[]
+                for(let i=min; i<=max; i++){
+                   
+                    let className='pagination-link'
+                    if(i==curren) className+= ' is-current'
+                    let item={
+                        class:className,
+                        page:i
+                    }
+                    this.items.push(item)
+                   
+                }
+
+                this.hasMore=max<this.maxPage
+                this.hasLess=min>1
+
+                
             },
-            hasNext() {
-              return this.interCurrent < this.totalPage;
+            onShowMore(){
+                 let curren=this.interCurrent
+                 curren += 5
+                 if(curren>this.maxPage) curren=this.maxPage
+                 this.interCurrent=curren
             },
-            handlePrev() {
-              this.handleChangePage(this.interCurrent - 1);
-            },
-            handleNext() {
-              this.handleChangePage(this.interCurrent + 1);
-            },
+            onShowLess(){
+                 let curren=this.interCurrent
+                 curren -= 5
+                 if(curren<1) curren=1
+                 this.interCurrent=curren
+            }
+            
         },
         
     }
 
 </script>
+
+<style>
+   .pagination.is-medium {
+    font-size: 1.25rem;
+}
+</style>

@@ -1,12 +1,15 @@
 <template>
     <div>
        
-        <div>
+        <!-- <div>
             
-        </div>
-      
+        </div> -->
+        <h1 v-if="show_title" class="title">{{ notice.title }}</h1>
+        <h2 class="subtitle">
+            {{ notice.date }}
+        </h2>
         <div style="clear: both;text-align:right;">
-            <a href="#" style="font-size:1.2em;" v-text="back"></a>
+            <a @click.prevent="onBack" style="font-size:1.2em;" v-text="back"></a>
         </div>
     </div>
 
@@ -20,6 +23,10 @@
             id: {
               type: Number,
               default: 0
+            },
+            show_title:{
+              type: Boolean,
+              default: true
             },
         },
         beforeMount(){
@@ -46,8 +53,8 @@
 
             },
             
-            onSelected(id){
-                this.noticeTable.selected=id
+            onBack(){
+                this.$emit('back')    
             }
         },
         

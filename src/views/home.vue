@@ -3,10 +3,12 @@
     <div v-show="hasNotices">
         <h1 class="title">公告訊息</h1>
 
+        
+
         <notice-table :latest="noticeTable.latest" @loaded="onNoticesLoaded"></notice-table> 
 
         <div style="clear: both;text-align:right;">
-            <a href="#" style="font-size:1.2em;">>>更多訊息</a>
+            <a @click.prevent="moreNotices" style="font-size:1.2em;">>>更多訊息</a>
         </div>
             
       
@@ -77,6 +79,9 @@
             },
             onNoticesLoaded(rows){
                 this.noticeTable.rows=rows
+            },
+            moreNotices(){
+                 this.$router.push('/notices')
             }
         },
         

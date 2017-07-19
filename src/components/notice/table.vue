@@ -1,7 +1,7 @@
 <template>
 
 <div>
-
+   
   <table v-if="hasNotices" class="table" style="font-size:1.2em">
       <tbody>
         <tr v-for="notice in model.data">
@@ -16,9 +16,11 @@
       </tbody>
       
   </table>
-
-  <pager :total="model.total"></pager> 
   
+  <pager v-if="!latest" :total="model.total" :page_size="model.per_page"
+      @page-change="onPageChanged">
+    
+  </pager>
 </div>
 </template>
 
@@ -40,8 +42,11 @@
         },
         data(){
             return{
+                current_page:1,
                 model:{
-                  total:0,
+                   total:0,
+                   per_page:10,
+
                 }
             }
         },
@@ -62,7 +67,7 @@
                 if(this.latest){
                    getData=Notice.latest()
                 }else{
-                   getData=Notice.index()
+                   getData=Notice.index(this.current_page,this.model.per_page)
                 }
                 getData.then(data => {
                     this.model=data.model  
@@ -72,6 +77,10 @@
                     Bus.$emit('errors')
                     this.$emit('loaded',0)    
                 })
+            },
+            onPageChanged(page){
+               this.current_page=page
+               this.getNotices()
             },
             onSelected(id){
                this.$emit('selected',id)    

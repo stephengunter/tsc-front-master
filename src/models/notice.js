@@ -13,9 +13,14 @@ class Notice {
     static showUrl(id){
          return this.source() + '/' + id
     }
-    static index(){
+    static index(page,per_page){
         return new Promise((resolve, reject) => {
             let url = Helper.getApiUrl(this.source()) 
+            let params={
+                page:page,
+                per_page:per_page
+            }
+            url=Helper.buildQuery(url, params)
             axios.get(url)
                 .then(response => {
                    resolve(response.data)
@@ -42,7 +47,9 @@ class Notice {
     }
     static latest(){
         return new Promise((resolve, reject) => {
-            let url =Helper.getApiUrl('/latest-notices') 
+            let count=8
+            let url =Helper.getApiUrl('/latest-notices')
+            url+='?count=' + count 
             axios.get(url)
                 .then(response => {
                    resolve(response.data)

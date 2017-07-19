@@ -26,7 +26,7 @@ import Center from './models/center.js'
 import Notice from './models/notice.js'
 
 // require('font-awesome/css/font-awesome.css');
-//require('./assets/css/bulma.css')
+// require('./assets/css/bulma.css')
 
 require('./assets/css/site.css')
 
