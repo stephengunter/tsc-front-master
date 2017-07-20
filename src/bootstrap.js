@@ -24,6 +24,7 @@ import Register from './models/register.js'
 import Signup from './models/signup.js'
 import Center from './models/center.js'
 import Notice from './models/notice.js'
+import Photo from './models/photo.js'
 
 // require('font-awesome/css/font-awesome.css');
 // require('./assets/css/bulma.css')
@@ -59,3 +60,4 @@ window.Register=Register
 window.Signup = Signup
 window.Center=Center
 window.Notice=Notice
+window.Photo=Photo

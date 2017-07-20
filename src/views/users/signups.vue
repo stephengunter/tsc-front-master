@@ -1,8 +1,11 @@
 <template>
-<div>
+<div v-show="loaded">
   <h2 class="title is-3">報名繳費紀錄</h2>
-  <card v-for="signup in signupList" :signup="signup" @cencel="confirmCancellation"></card>
-  
+  <div v-if="!noData">
+     <card v-for="signup in signupList" :entity="signup"
+      @cencel="onCancelClick">
+     </card>
+  </div>
   <div v-show="noData" class="box">
         <div class="columns is-multiline info" style="width:100%">
             <div :class="columnClass">
@@ -12,8 +15,10 @@
         </div>
   </div>
 
-  <div>
-    <modal  :show-header="false"  :is-show="showConfirm" :on-ok="cancelSignup" ok-text="確定" cancel-text="取消" @close="showConfirm=false">     
+  
+    <modal  :show-header="false"  :is-show="confirmSettings.show" 
+           :on-ok="cancelSignup" ok-text="確定" cancel-text="取消"
+            @close="confirmSettings.show=false">     
          <article class="message is-danger">
             <div class="message-header">
                 <p style="font-weight: bold;font-size:19px">
@@ -22,11 +27,11 @@
                 </p>
             </div>
             <div class="message-body info">
-               確定要取消報名？
+               確定要取消報名『{{ confirmSettings.msg  }}』？
             </div>
           </article>
     </modal>
-  </div>
+  
 </div>
 </template>
 
@@ -40,14 +45,26 @@
     },
     data(){
        return {
+          loaded:false,
           userId:0,
           deleteId:0,
           signupList:[],
-          noData:false,
-          showConfirm:false,
+
+          confirmSettings:{
+            show:false,
+            msg:''
+          },
           columnClass:'column is-one-quater-mobile is-half-tablet is-half-desktop'
          
+
+
        }
+    },
+    computed:{
+        noData(){
+            return this.signupList.length < 1
+        },
+            
     },
     beforeMount() {
          this.init()
@@ -74,24 +91,16 @@
             this.$router.push('/login?return=' + returnUrl)
         },
         fetchData() {
-            let url =Helper.getUrl('/api/signups/getByUser/' + this.userId)                
-            axios.get(url)
-                .then(response => {
-                    let signupList = response.data.signupList
-                    this.signupList=[]
-                    for (var i = 0; i < signupList.length; i++) {
-                       this.signupList.push(new Signup(signupList[0]))
-                    }
-                    this.checkData()
-                })
-                .catch(function(error) {
-                   Bus.$emit('errors',error)
-                })
+            let getData=Signup.records()
+            getData.then(data => {
+                this.signupList=data.signupList
+                this.loaded=true
+            })
+            .catch(error=> {
+               Bus.$emit('errors',error)
+            })
         },  
-        checkData(){
-            if(this.signupList.length) this.noData=false
-              else this.noData=true
-        },
+        
         checkAuth(){
             return new Promise((resolve, reject) =>{
                 let authenticated=this.$auth.isAuthenticated()
@@ -107,25 +116,24 @@
         cencelEdit(){
            this.$emit('cencelEdit')
         },
-        confirmCancellation(id) {
-           this.deleteId=id
-           this.showConfirm=true
-           
+        onCancelClick(values) {
+
+           this.deleteId=values.id
+           this.confirmSettings.msg=values.name
+           this.confirmSettings.show=true
         },
         cancelSignup(){
             let checkAuth=this.checkAuth()
             checkAuth.then(() => {
-                 let url = Helper.getUrl('/api/signups/' + this.deleteId)
-                 let form=new Form()
-                 form.delete(url)
-                 .then(result => {
+                 let cancel =Signup.delete(this.deleteId)                 
+                 cancel.then(result => {
                     this.init()
                     Bus.$emit('okmsg','報名已取消')
                  })
                  .catch(error => {
                     let msg='取消報名失敗. '
-                    if(error.msg){
-                       msg += error.msg
+                    if(error.response.data.msg){
+                       msg += error.response.data.msg
                     }
                     Bus.$emit('errors',error, msg)
                        

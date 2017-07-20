@@ -1,23 +1,23 @@
 <template>
-    <div v-if="isAuth">
-        
-          <profile :user="user"  v-if="isReadonly"  @beginEdit="isReadonly=false"></profile>
-          <edit-profile :id="user.id" v-if="!isReadonly" @cencelEdit="isReadonly=true"
-            @saved="onUserSaved" @photoChanged="onPhotoChanged"></edit-profile>
+    
+    
+      <show-profile v-if="readonly"  :id="user_id"   @edit="readonly=false"></show-profile>
+      <edit-profile v-else :id="user_id"  @cencel="readonly=true"
+        @saved="onUserSaved" ></edit-profile>
          
           
-    </div>  
+   
 </template>
 
 
 <script>
-  import Profile from '../../components/user/profile.vue'
-  import EditProfile from '../../components/user/edit-profile.vue'
+  import ShowProfile from '../../components/profile/show.vue'
+  import EditProfile from '../../components/profile/edit.vue'
   
   export default {
       name:'ProfilesView',
       components:{
-         Profile,
+         'show-profile':ShowProfile,
          'edit-profile':EditProfile,
          
       },
@@ -26,55 +26,26 @@
       },
       data(){
           return{
-              isAuth:false,
-              isReadonly:true,
-              user:{},
+             
+              readonly:true,
+              user_id:0
           }
       },
       methods:{
           init(){
-              this.isReadonly=true
-              this.isAuth=false
-              this.getUser()
-          },
-          getUser(){
-                let user=this.$auth.getUser()
-                user.then(()=>{
-                      let user_id=this.$auth.user_id()
-                      let url=Helper.getUrl('/api/users/') + user_id + '/edit'          
-                      axios.get(url)
-                      .then(response => {
-                          this.user =new User(response.data.user)
-                          this.isAuth=true
-                      })
-                      .catch(function(error) {
-                         this.isAuth=false
-                        
-                      })
-                     
-                }).catch(error => {
-                      this.isAuth=false
-                    
-                })
+              this.readonly=true
               
-            },
+              let userId=this.$auth.user_id()
+              if(userId){
+                  this.user_id=Number(userId)
+              }
+          },
+          
           beginEdit(){
               this.isReadonly=false
           },
-          onSubmit(){
-
-          },
-          onPhotoChanged(photo){
-               let updatePhoto=this.user.updatePhoto(photo)
-                updatePhoto.then(result => {
-                   
-                 })
-                 .catch(error => {
-                   
-                 })
-          },
           onUserSaved(user){
-             this.init()
+             this.readonly=true
           }
          
 

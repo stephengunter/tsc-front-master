@@ -1,43 +1,30 @@
 <template>
-
-<div v-if="loaded">
-    <h2 class="title is-3">課程報名</h2>
-   
-    <!-- <steps :show-footer="false" :current="currentStep" type="pills">
-        <step title="報名須知"  >        
-            <notice @nextStep="nextStep" @cancel="cenceled"></notice>
-        </step>
-        <step title="確認資料">
-            <confirm :course="course" :discounts="discounts" :active="confirmActive" 
-            @created="signupCreated" @cancel="cenceled"></confirm>
-       
-        </step>
-        <step title="完成報名" >
-        
-           <completed :signup="signup"></completed>
-        </step>
-    </steps> -->
-
-    <modal :show-header="false" :show-footer="false" :on-cancel="cenceled"  :is-show="showModal" @close="showModal=false">
+  <div v-if="loaded">
+      <h2 class="title is-3">課程報名</h2>
      
-          <article class="message is-danger">
-          <div class="message-header">
-              <p>
-                  <strong>此課程目前無法報名</strong>
-              </p>
-          </div>
-          <div class="message-body">
-             您所查詢的課程：<strong>咖啡鑑賞班</strong>
-             <p>
-               目前無法報名，請查詢其他課程。
-             </p>
-          </div>
-        </article>
-    </modal>
-</div>
+      <steps :show-footer="false" :current="currentStep" type="pills">
+          <step title="報名須知"  >        
+              <notice @nextStep="nextStep" @cancel="cenceled"></notice>
+          </step>
+          <step title="確認資料">
+              <confirm :course="course" :discounts="discounts" :active="confirmActive" 
+              @created="onSignupCreated" @cancel="cenceled"></confirm>
+         
+          </step>
+          <step title="完成報名" >
+          
+             <completed :signup_id="signup.id"></completed>
+          </step>
+      </steps>
 
-
-
+      <modal title="此課程目前無法報名" :backdrop-closable="false"  :width="confirmSettings.width" 
+        :is-show="confirmSettings.show" transition="fadeDown" @close="cenceled"
+         ok-text="確定" :show-cancel="false">
+         <p class="title is-5">您所查詢的課程： <strong>{{ course.number }}&nbsp;{{ course.name }}</strong>  目前無法報名，請查詢其他課程。</p>
+     
+      </modal>
+  </div>
+ 
 </template>
 
 <script>
@@ -60,9 +47,16 @@
                 loaded:false,
                 course:{},
                 discounts:[],
-                signup:{},
+                signup:{
+                  id:0
+                },
                 currentStep:0,
-                showModal:false,
+
+                confirmSettings:{
+                   show:false,
+                   width:600,
+                   user:{}
+               }
             }
         },
         beforeMount(){
@@ -75,7 +69,6 @@
             
         },
         methods:{
-            
             getCourseId(){
                 if(this.course) return this.course.id
                     return 0
@@ -91,7 +84,6 @@
                 }
 
                 this.fetchData(courseId)
-                //this.getDiscounts()
 
                 this.currentStep=0
 
@@ -104,32 +96,22 @@
                
                 getData.then(data => {
                     let course=data.course
-                    if(!course.canSignup){
-                         this.showModal=true
-                    }else{
-                       this.course = new Course(course)
-                       this.loaded=true
-                    }
+                    this.course = new Course(course)
+
+                    this.discounts=data.discounts
+                    this.loaded=true
+                    // if(!course.canSignup){
+                    //      this.confirmSettings.show=true
+                    // }
                 })
                 .catch( error => {
                     this.onError(error)
                 })
             },
             
-            getDiscounts(){
-                let url=Helper.getUrl('/api/discounts/active-discounts')          
-                axios.get(url)
-                .then(response => {
-                  this.discounts=response.data.discountList
-                 
-                 
-                })
-                .catch(error => {
-                   this.onError()
-                })
-            },
-            signupCreated(signup){
-                this.signup = new Signup(signup)
+           
+            onSignupCreated(signup){
+                this.signup = signup
                 this.nextStep()
             },
             cenceled(){
@@ -144,7 +126,8 @@
             onError(error){
                 Bus.$emit('errors',error)
                 this.cenceled()
-            }
+            },
+            
             
         },
        

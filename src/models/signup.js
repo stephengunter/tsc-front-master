@@ -22,8 +22,17 @@ class Signup {
     static source(){
         return '/signups'
     }
+    static showUrl(id){
+         return this.source() + '/' + id
+    }
+    static storeUrl(){
+         return this.source()
+    }
     static createUrl(){
         return '/signups/create'
+    }
+    static deleteUrl(id){
+         return this.source() + '/' + id
     }
     static create(course,user){
          return new Promise((resolve, reject) => {
@@ -44,6 +53,60 @@ class Signup {
                      reject(error);
                 })
            
+        })
+    }
+    static store(form){
+        let url =Helper.getApiUrl(this.storeUrl()) 
+        return new Promise((resolve, reject) => {
+             axios.post(url, form)
+                .then(response => {
+                     resolve(response.data);
+                })
+                .catch(error => {
+                     reject(error);
+                })
+          
+        })
+    }
+    static show(id){
+        return new Promise((resolve, reject) => {
+            let url =Helper.getApiUrl(this.showUrl(id)) 
+           
+            axios.get(url)
+                .then(response => {
+                   resolve(response.data)
+                })
+                .catch(error=> {
+                     reject(error);
+                })
+           
+        })
+    }
+    static records(){
+        return new Promise((resolve, reject) => {
+            let url =Helper.getApiUrl(this.source()) 
+           
+            axios.get(url)
+                .then(response => {
+                   resolve(response.data)
+                })
+                .catch(error=> {
+                     reject(error);
+                })
+           
+        })
+    }
+    static delete(id) {
+        return new Promise((resolve, reject) => {
+            let url =Helper.getApiUrl(this.deleteUrl(id) ) 
+            let form = new Form()
+            form.delete(url)
+                .then(response => {
+                    resolve(true);
+                })
+                .catch(error => {
+                    reject(error);
+                })
         })
     }
     formatTuition(){

@@ -39,7 +39,22 @@
 
 <script>
     export default {
-        props: ['width', 'height', 'user'],
+       
+        props: {
+            width: {
+              type: Number,
+              default: 200
+            },
+            height:{
+               type: Number,
+               default: 200
+            },
+            user_id:{
+               type: Number,
+               default: 0
+            },
+           
+        },
         data() {
             return {
                 image: '',
@@ -89,27 +104,26 @@
                 let form = new FormData();
                 form.append('width',this.width);
                 form.append('height',this.height);
-                if(this.user){
-                    form.append('user_id',this.user);
+                if(this.user_id){
+                    form.append('user_id',this.user_id);
                 }
 
                 for (let i = 0; i < this.files.length; i++) {
                     form.append('image_file', this.files[i]);
                 }
 
-                let url=Helper.getUrl('/api/photoes')
-                axios.post(url, form)
-                    .then(response => {
-                        let photo = response.data
-                        this.$emit('uploaded', photo)
-                        this.removeImage()
-                        this.submitting = false
-                    })
-                    .catch(error => {
-                        this.removeImage()
-                        Bus.$emit('errors',error)
-                        this.submitting = false
-                    })
+                let store=Photo.store(form)
+                store.then(photo => {
+                  
+                    this.$emit('uploaded', photo)
+                    this.removeImage()
+                    this.submitting = false
+                })
+                .catch(error => {
+                    this.removeImage()
+                    Bus.$emit('errors',error)
+                    this.submitting = false
+                })
             }
         }
 

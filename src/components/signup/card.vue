@@ -17,12 +17,18 @@
             <div :class="columnClass">
                  狀態： {{  signup.statusText }}    &nbsp;&nbsp;
 
-                 <a v-if="signup.canCancel" @click.prevent="cancel" class="button is-small is-danger is-outlined">
+               <!--  <a v-if="signup.canCancel" @click.prevent="cancel" class="button is-small is-danger is-outlined">
                     <span>取消</span>
                     <span class="icon is-small">
                       <i class="fa fa-times"></i>
                     </span>
-                  </a>
+                </a> -->
+                <a  @click.prevent="cancel" class="button is-small is-danger is-outlined">
+                    <span>取消</span>
+                    <span class="icon is-small">
+                      <i class="fa fa-times"></i>
+                    </span>
+                </a>
             </div>
         </div>
     </div>
@@ -33,16 +39,31 @@
   
   export default {
         name:'SignupCard',
-        props:['signup'],
+        props:{
+            entity:{
+                type:Object,
+                default:{}
+            }
+        },
         data(){
            return {
-              columnClass:'column is-one-quater-mobile is-half-tablet is-half-desktop'
-             
+               columnClass:'column is-one-quater-mobile is-half-tablet is-half-desktop',
+               signup:{}
            }
         },
+        beforeMount() {
+           this.init()
+        }, 
         methods: {
+            init(){
+                this.signup=new Signup(this.entity)
+            },
             cancel(){
-                this.$emit('cencel',this.signup.id)
+                let values={
+                    id:this.signup.id,
+                    name:this.signup.course.name
+                }
+                this.$emit('cencel',values)
             }
         }
   }

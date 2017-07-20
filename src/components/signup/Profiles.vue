@@ -31,8 +31,10 @@
     </div>   <!--  end panel -->
     
    <modal :width="1000"  :show-footer="false"  :is-show="showConfirm" @close="endEdit">     
-        <edit-profile :id="user.id" v-if="!isReadonly" @cencelEdit="endEdit"
-           :edit_photo="false" @saved="onUserSaved" ></edit-profile>
+        <edit-profile :id="user.id" v-if="!isReadonly" @cencel="endEdit"
+           :edit_photo="false" @saved="onUserSaved" >
+             
+         </edit-profile>
    </modal>
    
          
@@ -41,11 +43,11 @@
 
 
 <script>
-    import EditProfile from  '../../components/user/edit-profile.vue'
+    import EditProfile from  '../../components/profile/edit.vue'
     export default {
         name:'SignupProfile',
         components:{
-         'edit-profile':EditProfile,
+           'edit-profile':EditProfile,
         },        
         data(){
             return{
@@ -65,23 +67,25 @@
                this.getUser()
             },
             getUser(){
-                let user_id=this.$auth.user_id()
-                let url=Helper.getUrl('/api/users/'+ user_id + '/edit')           
-                      axios.get(url)
-                      .then(response => {
-                          this.setUser(response.data.user)
-                          this.isAuth=true
-                      })
-                      .catch(error => {
-                         this.isAuth=false
-                         this.$emit('onError')
-                       
-                      })
+                let user_id=Number(this.$auth.user_id())
+                if(!user_id) {
+                   this.isAuth=false
+                   return false
+                }
+
+                let getData=User.show(user_id) 
+                getData.then(data => {
+                    this.setUser(data.user)
+                    this.isAuth=true
+                })
+                .catch(error => {
+                   this.isAuth=false
+                   this.$emit('error')
+                })
               
             },
             setUser(user){
                 this.user =new User(user)
-                
             },
             beginEdit(){
                 this.showConfirm=true
@@ -90,9 +94,6 @@
             endEdit(){
                 this.showConfirm=false
                 this.isReadonly=true
-            },
-            onSubmit(){
-
             },
             onUserSaved(user){
                this.setUser(user)

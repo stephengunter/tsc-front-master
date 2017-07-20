@@ -2,7 +2,7 @@
 
 <div>
        
-    <div class="panel">
+    <div v-if="hasCourse" class="panel">
        <div class="panel-heading panel-title heading" >
         課程資訊
        </div>
@@ -44,7 +44,7 @@
        </div>
     </div>   <!--  end panel -->
     <div v-if="isAuth">
-         <profiles @onError="onError" ></profiles>
+         <profiles @error="onError" ></profiles>
          
          <div style="margin-top: 12px;">
             <form @submit.prevent="onSubmit">
@@ -64,11 +64,18 @@
                 <button type="submit" :disabled="form.errors.any()"class="button is-primary is-medium">確認報名</button>
                 &nbsp;&nbsp;&nbsp;
                 <a class="button is-outlined is-medium" @click.prevent="cancel">取消</a>
-          
-             </form> 
-          </div>  
-    </div>   
-  </div>
+                <p v-if="errMsg" class="help is-danger" style="font-size:1.2em">{{  errMsg  }}</p>   
+            </form> 
+         </div>  
+    </div>
+
+    <modal title="請先登入" :backdrop-closable="false"  :width="confirmSettings.width" 
+        :is-show="confirmSettings.show" transition="fadeDown" @close="onAuthFailed"
+         ok-text="確定" :show-cancel="false">
+         <p class="title is-5">進行線上報名需要登入，若您還沒有帳號可以註冊新帳號。</p>
+     
+    </modal>   
+</div>
 
 </template>
 
@@ -76,12 +83,27 @@
     import Profiles from  '../../components/signup/Profiles.vue'
     export default {
         name:'SignupConfirm',
-        props:['active','course','discounts'],
+        props: {
+            active: {
+              type: Boolean,
+              default: false
+            },
+            course:{
+               type: Object,
+               default: {}
+            },       
+            discounts:{
+               type: Array,
+               default: []
+            }   
+           
+        },
         components:{
            Profiles
         },
         data(){
             return{
+                errMsg:'',
                 discountId:0,
                 discountOptions:[],
                 form: new Form({
@@ -91,8 +113,19 @@
                   }
                 }),
                 isAuth:false,
-                columnClass:'column is-one-quater-mobile is-half-tablet is-half-desktop'
+                columnClass:'column is-one-quater-mobile is-half-tablet is-half-desktop',
+                confirmSettings:{
+                   show:false,
+                   width:600,
+               }
             }
+        },
+        computed: {
+            hasCourse() {
+                if(this.course.id) return true
+                    return false
+            },
+            
         },
         watch: {
           'active': 'init'
@@ -105,10 +138,9 @@
                 checkAuth.then(() => {
                    this.isAuth=true
                 }).catch(error => {
-                   this.isAuth=false
-                   this.$auth.logout()
-                   let returnUrl="/signup/create?course=" + this.course.id
-                   this.$router.push('/login?return=' + returnUrl)
+                    this.isAuth=false
+                    this.confirmSettings.show=true
+                    return false
                 })
 
               
@@ -140,7 +172,17 @@
                 
                 })
             },
-            
+            onAuthFailed(){
+                
+                this.$auth.logout()
+                if(this.hasCourse){
+                    let returnUrl="/signup/create?course=" + this.course.id
+                    this.$router.push('/login?return=' + returnUrl)
+                }else{
+                    this.$router.push('/login')
+                }
+                
+            },            
             discountSelected(id){ 
                
                 this.discountId=id
@@ -159,26 +201,20 @@
             },
             onSubmit(){
                 this.form.signup.course_id = this.course.id
-				this.form.signup.user_id = this.this.$auth.user_id()
+				this.form.signup.user_id = this.$auth.user_id()
                 this.form.signup.discount_id= this.discountId
-                let url = Helper.getUrl('/api/signups')
-                this.form.post(url)
-                    .then(signup => {
-                        
-                       this.$emit('created',signup)
-
-                       Bus.$emit('okmsg','線上報名成功')
-                       
-                       
-                    })
-                    .catch(error => {
-                        let msg='線上報名失敗. '
-                         if(error.msg){
-                            msg += error.msg
-                         }
-                       
-                        Bus.$emit('errors',error, msg)
-                    })
+                let save = Signup.store(this.form)
+              
+                save.then(signup => {
+                    
+                   this.$emit('created',signup)
+                   Bus.$emit('okmsg','線上報名成功')
+                   
+                })
+                .catch(error => {
+                    this.errMsg=error.response.data.msg
+                    Bus.$emit('errors',error, '線上報名失敗')
+                })
 
             },
             
@@ -187,12 +223,7 @@
             },
             onError(){
                 this.isAuth=false
-                this.$notify.open({
-                        content: '系統暫時無回應，請稍後再試',
-                        type: 'danger',
-                        placement: 'top-center',
-                        duration: 1500,
-                      })
+                Bus.$emit('errors')
                 this.cancel()
             }
 
