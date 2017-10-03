@@ -166,12 +166,9 @@ export default {
        this.$auth.logout()
        this.setAuth(false)
        Bus.$emit('okmsg','您已成功登出')
-       // this.$notify.open({
-       //                  content: '您已成功登出',
-       //                  type: 'success',
-       //                  placement: 'top-center',
-       //                  duration: 1500,
-       //                })
+       if(this.$route.meta.forAuth){
+          this.$router.push('/')
+       }
     }
   }
 
