@@ -1,11 +1,11 @@
-class Teacher {
-    constructor(teacher) {
+class Resume {
+    constructor(resume) {
         this['photo']={
             path:''
         }
        
-        for (let property in teacher) {
-            this[property] = teacher[property];
+        for (let property in resume) {
+            this[property] = resume[property];
         }
 
         this.experiences = this.experiences.split('<br>')      
@@ -13,9 +13,8 @@ class Teacher {
         this.getPhoto()
        
     }
-    
     static source(){
-        return '/teachers'
+        return '/resumes'
     }
     static createUrl(){
         return this.source() + '/create' 
@@ -23,38 +22,21 @@ class Teacher {
     static storeUrl(){
          return this.source()
     }
-    static editUrl(id){
-        return this.source() + '/' + id +  '/edit' 
-    }
-    static updateUrl(id){
-        return this.showUrl(id)
-    }
-    static edit(id){
+   
+    static index(){
         return new Promise((resolve, reject) => {
-            let url =Helper.getApiUrl(this.editUrl(id))
+            let url =Helper.getApiUrl(this.source())
             axios.get(url)
                 .then(response => {
                    resolve(response.data)
                 })
                 .catch(error=> {
-                     reject(error);
+                     reject(error)
                 })
            
         })
     }
-    static update(form , id){
-         let url =Helper.getApiUrl(this.updateUrl(id))
-         let method='put'
-        return new Promise((resolve, reject) => {
-            form.submit(method,url)
-                .then(data => {
-                    resolve(data);
-                })
-                .catch(error => {
-                    reject(error);
-                })
-        })
-    }
+    
     static store(form){
         let url =Helper.getApiUrl(this.storeUrl())
         
@@ -87,4 +69,4 @@ class Teacher {
 }
 
 
-export default Teacher;
+export default Resume;

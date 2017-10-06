@@ -20,6 +20,11 @@ let routes = [
             component: require('./views/notices/details.vue'),
         },
         {
+            path:'/wanted',
+            component: require('./views/wanted/index.vue'),
+            name: 'wanted',
+        },
+        {
             path:'/centers',
             component: require('./views/centers/index.vue'),
             name: 'centers',
@@ -104,6 +109,19 @@ let routes = [
             name: 'signups',
             meta: { 'forAuth':true },
            
+        },
+        {
+            path:'/resumes',
+            component: require('./views/resumes/edit.vue'),
+            name: 'resume',
+            meta: { 'forAuth':true },
+           
+        },
+        {
+            path:'/teachers',
+            name: 'teacher.edit',
+            component: require('./views/teachers/edit.vue'),
+            meta: { 'forAuth':true  },
         },
 
     ]

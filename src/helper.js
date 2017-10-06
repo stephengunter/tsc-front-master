@@ -11,6 +11,12 @@ class Helper {
     static getApiUrl(url){
         return  Config.apiUrl() + '/api' + url
     }
+    static onError(err,msg){
+        Bus.$emit('errors',err,msg)
+    }
+    static backToHome(){
+        
+    }
     static buildQuery(url, searchParams) {
         url += '?'
         for (let field in searchParams) {
@@ -23,7 +29,7 @@ class Helper {
 
     }
     static isTrue(val){
-        if(typeof val=='number'){
+         if(typeof val=='number'){
              return val > 0
         }else if(typeof val=='string'){
             if(val.toLowerCase()=='true') return true

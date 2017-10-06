@@ -2,7 +2,7 @@
 <div v-if="loaded">
  <div class="panel">
     <div class="panel-heading panel-title heading" >
-        個人資訊
+        個人履歷
     </div>
     <div class="panel-block">
         <div class="tile is-ancestor">
@@ -31,33 +31,7 @@
                     
                     <div class="tile is-parent is-vertical show-data">
                         <form @submit.prevent="onSubmit" @keydown="clearErrorMsg($event.target.name)">
-                        <div class="columns" >
-                          <div class="column" >
-                              <label class="label label-title">使用者名稱</label>                             
-                              <p class="control">
-                                  <input name="user.name" v-model="user.name" class="input" type="text" >
-                                  <p class="help is-danger" v-if="form.errors.has('user.name')" v-text="form.errors.get('user.name')"></p>
-                              </p>
-                              
-                          </div>
-                          <div class="column" >
-                             <label class="label label-title">Email</label>
-                             
-                              <p class="control">
-                                  <input name="user.email" v-model="user.email"  class="input" type="text" >
-                                  <p class="help is-danger" v-if="form.errors.has('user.email')" v-text="form.errors.get('user.email')"></p>
-                              </p>
-                          </div>
-                          <div class="column" >
-                              <label class="label label-title">電話</label>
-                             
-                              <p class="control">
-                                  <input name="user.phone" v-model="user.phone"  class="input" type="text" >
-                                  <p class="help is-danger" v-if="form.errors.has('user.phone')" v-text="form.errors.get('user.phone')"></p>
-                              </p>
-                          </div>
-                  
-                        </div>   <!--  End Row -->
+                       
                         <div class="columns" >
                             <div class="column" >
                                 <label class="label label-title">姓名</label>
@@ -80,6 +54,7 @@
                                 
                                 <p class="control">
                                     <datepicker  v-model="user.profile.dob" :options="datePickerOption" class="is-grouped"></datepicker>
+                                    <p class="help is-danger" v-if="form.errors.has('user.profile.dob')" v-text="form.errors.get('user.profile.dob')"></p>
                                 </p>
                             </div>
                         </div>  <!--  End Row -->
@@ -92,18 +67,96 @@
                               </p>
                           </div>
                           <div class="column" >
+                             <label class="label label-title">Email</label>
+                             
+                              <p class="control">
+                                  <input name="user.email" v-model="user.email"  class="input" type="text" :disabled="!canEditEmail">
+                                 
+                                  <p class="help is-danger" v-if="form.errors.has('user.email')" v-text="form.errors.get('user.email')"></p>
+                              </p>
                               
                           </div>
                           <div class="column" >
-                              
+                              <label class="label label-title">電話</label>
+                             
+                              <p class="control">
+                                  <input name="user.phone" v-model="user.phone"  class="input" type="text" :disabled="!canEditPhone">
+                                  <p class="help is-danger" v-if="form.errors.has('user.phone')" v-text="form.errors.get('user.phone')"></p>
+                              </p>
                           </div>
                         </div>  <!--  End Row -->
-
+                        <div class="columns" >
+                           <div class="column" >
+                              <label class="label label-title">專長</label>
+                             
+                              <p class="control">
+                                  <input type="text" name="resume.specialty"  class="input"  v-model="resume.specialty"  >
+                                  <p class="help is-danger" v-if="form.errors.has('resume.specialty')" v-text="form.errors.get('resume.specialty')"></p>
+                              </p>
+                           </div>
+                           <div class="column" >
+                              <label class="label label-title">最高學歷</label>
+                             
+                              <p class="control">
+                                  <input type="text" name="resume.education"  class="input"  v-model="resume.education"  >
+                                  <p class="help is-danger" v-if="form.errors.has('resume.education')" v-text="form.errors.get('resume.education')"></p>
+                              </p>
+                           </div>
+                           <div class="column" >
+                              <label class="label label-title">教師證書號</label>
+                             
+                              <p class="control">
+                                  <input type="text" name="resume.certificate"  class="input"  v-model="resume.certificate"  >
+                                  <p class="help is-danger" v-if="form.errors.has('resume.certificate')" v-text="form.errors.get('resume.certificate')"></p>
+                              </p>
+                           </div>
+                        </div>  <!--  End Row -->
+                        <div class="columns">
+                            <div class="column" >
+                              <label class="label label-title">現職</label>
+                             
+                              <p class="control">
+                                  <input type="text" name="resume.job"  class="input"  v-model="resume.job"  >
+                                  <p class="help is-danger" v-if="form.errors.has('resume.job')" v-text="form.errors.get('resume.job')"></p>
+                              </p>
+                            </div>
+                            <div class="column" >
+                              <label class="label label-title">職稱</label>
+                             
+                              <p class="control">
+                                  <input type="text" name="resume.jobtitle"  class="input"  v-model="resume.jobtitle"  >
+                                  <p class="help is-danger" v-if="form.errors.has('resume.jobtitle')" v-text="form.errors.get('resume.jobtitle')"></p>
+                              </p>
+                            </div>
+                            <div class="column">
+                            
+                            </div>
+                        </div>  <!--  End Row -->
+                        <div class="columns">
+                           <div class="column">
+                              <label class="label label-title">學經歷</label>
+                               <p class="control">
+                                  <textarea type="text" name="resume.experiences"  class="textarea"  v-model="resume.experiences"  >
+                                  </textarea>
+                                  <p class="help is-danger" v-if="form.errors.has('resume.experiences')" v-text="form.errors.get('resume.experiences')"></p>
+                                  <p v-else class="help">多項經歷請換行分隔</p>
+                              </p> 
+                           </div> 
+                           <div class="column">
+                              <label class="label label-title">個人簡介</label>
+                               <p class="control">
+                                  <textarea name="resume.description"  class="textarea"  v-model="resume.description"  >
+                                  </textarea>
+                                  <p  v-if="form.errors.has('resume.description')" class="help is-danger" v-text="form.errors.get('resume.description')"></p>
+                                 
+                              </p> 
+                           </div> 
+                        </div>  <!--  End Row -->
                         <div class="columns">
                           <div class="column" >
                               <button type="submit" class="button is-primary" :disabled="form.errors.any()">確定送出</button>
                               &nbsp;
-                              <a @click.prevent="cencelEdit" class="button is-outlined">取消</a>
+                              <a v-if="allow_cancel" @click.prevent="cencelEdit" class="button is-outlined">取消</a>
                               
                           </div>
                           
@@ -122,7 +175,7 @@
   <modal title="上傳圖片" :show-footer="false" :is-show="photoUploadSettings.show" @close="photoUploadSettings.show=false">     
       <photo-upload :width="photoUploadSettings.width"
          :height="photoUploadSettings.height" 
-         :user_id="id" @uploaded="onPhotoUploaded">
+         :user_id="photoUploadSettings.user_id" @uploaded="onPhotoUploaded">
       </photo-upload>
   </modal>
   <modal  :show-header="false"  :is-show="showConfirm" :on-ok="deletePhoto" ok-text="確定" cancel-text="取消" @close="showConfirm=false">     
@@ -146,16 +199,17 @@
   import { zh } from 'flatpickr/dist/l10n/zh';
   import PhotoUpload from  '../../components/photo/upload.vue'
   export default {
-    name:'EditProfile',
+    name:'EditResume',
     components:{
          PhotoUpload
     },
     props: {
-            id: {
-              type: Number,
-              default: 0
-            },
+           
             edit_photo:{
+               type: Boolean,
+               default: true
+            },   
+            allow_cancel:{
                type: Boolean,
                default: true
             },   
@@ -165,6 +219,7 @@
        return {
           loaded:false,
           user:{},
+          resume:{},
           form:{},
          
           datePickerOption: {
@@ -173,10 +228,14 @@
           },
 
           photoUploadSettings:{
+              user_id:0,
               width:200,
               height:200,
               show:false,
           },
+
+          canEditEmail:false,
+          canEditPhone:true,
 
           
           showConfirm:false
@@ -190,21 +249,51 @@
             hasPhoto() {
                 return this.user.hasPhoto()
             },
+            hasDOB(){
+                if(!this.user.profile) return false
+                if(!this.user.profile.dob) return false
+                return true
+            }
+     },
+     watch:{
+        user: {
+              handler: function () {
+                 if(this.hasDOB){
+                    this.clearErrorMsg('user.profile.dob')
+                 }
+              },
+              deep: true
+            },
+
      },
      methods:{
         init(){
-           this.form = new Form({})
+           this.form = new Form({ })
+
+           this.canEditEmail=false
+           this.canEditPhone=true
+
            this.loaded=false
 
            this.fetchData()
                 
         },
         fetchData() {
-            let getData =User.edit(this.id)                
+            let getData =Resume.index()                
            
             getData.then(data => {
-                let user = data.user
-                this.user =new User(user)
+                this.user =new User(data.user)
+                this.resume=data.resume
+                this.photoUploadSettings.user_id=this.user.id
+
+                if(data.user.email){
+
+                }else{
+                   this.canEditEmail=true
+                   this.canEditPhone=false
+                }
+
+                
                 this.loaded=true
             })
             .catch(error=> {
@@ -231,21 +320,19 @@
         },
         onSubmit(){
             this.form=new Form({
-               user:this.user
+               user:this.user,
+               resume:this.resume
             })
-            let update=User.update(this.form, this.id)
-            update.then(user => {
-             
-               // this.$auth.setAuthenticatedUser(user)
-             
-               // this.$emit('saved',user)
-               // Bus.$emit('okmsg','更新成功')
-               // Bus.$emit('authChanged', true)
+            
+            let save=Resume.store(this.form)
+            save.then(user => {
                
-               alert('ok')
+               Bus.$emit('okmsg','存檔成功')
+               this.$emit('saved',user)  
+               
             })
             .catch(error => {
-                Bus.$emit('errors',error,'更新失敗')
+                Bus.$emit('errors',error,'存檔失敗')
             })
         },
         deletePhoto() {

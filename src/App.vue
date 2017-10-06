@@ -111,7 +111,14 @@ export default {
            course:0
          }
 
-         if(this.$route.name!='courses'){
+         if(this.$route.name=='courses'){
+             this.loadCourseMenus()
+         }else if(this.isTeacherRoutes()){
+             this.loadTeacherMenus()
+              this.loaded=true
+         }else if(this.$route.name=='students'){
+
+         }else{
              this.mainNav={
               show:false,
               key:'',
@@ -128,9 +135,16 @@ export default {
             }
             
             this.loaded=true
-            return 
-         }
-         
+           
+         }  
+       
+      },
+      isTeacherRoutes(){
+        if(!this.$route.name) return false
+        var names = this.$route.name.split('.');
+        return names.includes('teacher')
+      },
+      loadCourseMenus(){
           this.mainNav.show=true
           this.mainNav.key='courses'
 
@@ -175,12 +189,14 @@ export default {
                
              })
 
-          });
-
-              
-       
+          })
       },
-      
+      loadTeacherMenus(){
+          let menus=new Menus()
+          let items=menus.getTeacherMenuItems()
+            this.mainNav.items=items
+             this.levelNav.show=true
+      },      
       getCenters(){
         return new Promise((resolve, reject) => {
                let url =Helper.getApiUrl('/centers') 

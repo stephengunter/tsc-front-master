@@ -18,6 +18,15 @@
             <router-link to="/courses" class="nav-item is-tab">     
                <i class="fa fa-book" aria-hidden="true"></i>&nbsp; 課程總覽 
             </router-link>
+            <router-link to="/students" class="nav-item is-tab">     
+               <i class="fa fa-user-o" aria-hidden="true"></i>&nbsp; 學員專區 
+            </router-link>
+            <router-link to="/teachers" class="nav-item is-tab">     
+               <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp; 教師專區 
+            </router-link>
+            <router-link to="/wanted" class="nav-item is-tab">     
+               <i class="fa fa-address-card-o" aria-hidden="true"></i>&nbsp; 徵才訊息 
+            </router-link>
         </div>
 
         <span @click.prevent="toggleMobileMenu" id="nav-toggle" :class="[navClass,activeClass]" >
