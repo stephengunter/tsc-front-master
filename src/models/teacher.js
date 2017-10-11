@@ -42,19 +42,21 @@ class Teacher {
            
         })
     }
-    static update(form , id){
-         let url =Helper.getApiUrl(this.updateUrl(id))
-         let method='put'
-        return new Promise((resolve, reject) => {
-            form.submit(method,url)
-                .then(data => {
-                    resolve(data);
+    static index(){
+        
+         return new Promise((resolve, reject) => {
+            let url =Helper.getApiUrl(this.source())
+            axios.get(url)
+                .then(response => {
+                   resolve(response.data)
                 })
-                .catch(error => {
-                    reject(error);
+                .catch(error=> {
+                     reject(error);
                 })
+           
         })
     }
+    
     static store(form){
         let url =Helper.getApiUrl(this.storeUrl())
         
@@ -67,6 +69,20 @@ class Teacher {
                 .catch(error => {
                     reject(error);
                 })
+        })
+    }
+    static courses(){
+        let url=this.source() + '/courses'
+         return new Promise((resolve, reject) => {
+            url =Helper.getApiUrl(url)
+            axios.get(url)
+                .then(response => {
+                   resolve(response.data)
+                })
+                .catch(error=> {
+                     reject(error);
+                })
+           
         })
     }
     

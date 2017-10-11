@@ -73,7 +73,7 @@
         },
         methods:{
             fetchData(){
-                this.getCourses()
+               this.getCourses()
 
             },
             getCourses(){

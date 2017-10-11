@@ -14,9 +14,7 @@ class Helper {
     static onError(err,msg){
         Bus.$emit('errors',err,msg)
     }
-    static backToHome(){
-        
-    }
+   
     static buildQuery(url, searchParams) {
         url += '?'
         for (let field in searchParams) {

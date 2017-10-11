@@ -26,7 +26,6 @@ import Center from './models/center.js'
 import Notice from './models/notice.js'
 import Photo from './models/photo.js'
 import Resume from './models/resume.js'
-import Menus from './services/menus.js'
 
 // require('font-awesome/css/font-awesome.css');
 // require('./assets/css/bulma.css')
@@ -64,4 +63,16 @@ window.Center=Center
 window.Notice=Notice
 window.Photo=Photo
 window.Resume = Resume
-window.Menus = Menus
+
+
+Vue.filter('reviewedLabel', function (reviewed) {
+    
+     let style='tag is-danger is-medium'
+     let text='未審核'
+    if (parseInt(reviewed)){
+        style = 'tag is-success is-medium'
+        text='已審核'
+    } 
+   
+    return `<span class="${style}" > ${text} </span>`
+})

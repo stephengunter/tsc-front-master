@@ -3,11 +3,16 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
  
-let routes = [        
+let routes = [  
         {
             path:'/',
             component: require('./views/home.vue'),
             name: 'home',
+        },
+        {
+            path:'/errors',
+            component: require('./views/errors.vue'),
+            name: 'errors',
         },
         {
             path:'/notices',
@@ -118,9 +123,15 @@ let routes = [
            
         },
         {
-            path:'/teachers',
-            name: 'teacher.edit',
-            component: require('./views/teachers/edit.vue'),
+            path:'/teacher',
+            name: 'teacher.index',
+            component: require('./views/teachers/index.vue'),
+            meta: { 'forAuth':true  },
+        },
+        {
+            path:'/teacher/courses',
+            name: 'teacher.courses',
+            component: require('./views/teachers/courses.vue'),
             meta: { 'forAuth':true  },
         },
 

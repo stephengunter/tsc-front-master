@@ -7,7 +7,8 @@
 
           <hero></hero>
 
-          <navbar v-if="mainNav.show" :default_id="mainNav.selected" :items="mainNav.items"></navbar>
+          <navbar v-if="mainNav.show" :default_id="mainNav.selected" 
+          :items="mainNav.items" :router_link="mainNav.router_link"></navbar>
 
         </section>
     
@@ -52,7 +53,8 @@ export default {
           show:false,
           key:'',
           selected:0,
-          items:[]
+          items:[],
+          router_link:false
        },
        subNav:{
           show:false,
@@ -94,7 +96,8 @@ export default {
       Bus.$on('errors',this.showErrorMsg)
       Bus.$on('okmsg',this.showSuccessMsg)
       Bus.$on('auth-failed',this.onAuthFailed)
-      Bus.$on('re-login',this.onReLogin)       
+      Bus.$on('re-login',this.onReLogin) 
+      Bus.$on('menu-loaded',this.onMenuLoaded)       
   },
   methods:{
       init(){
@@ -113,12 +116,8 @@ export default {
 
          if(this.$route.name=='courses'){
              this.loadCourseMenus()
-         }else if(this.isTeacherRoutes()){
-             this.loadTeacherMenus()
-              this.loaded=true
-         }else if(this.$route.name=='students'){
-
          }else{
+         
              this.mainNav={
               show:false,
               key:'',
@@ -139,13 +138,10 @@ export default {
          }  
        
       },
-      isTeacherRoutes(){
-        if(!this.$route.name) return false
-        var names = this.$route.name.split('.');
-        return names.includes('teacher')
-      },
+      
       loadCourseMenus(){
           this.mainNav.show=true
+          this.mainNav.router_link=false
           this.mainNav.key='courses'
 
           this.levelNav.show=true
@@ -191,12 +187,12 @@ export default {
 
           })
       },
-      loadTeacherMenus(){
-          let menus=new Menus()
-          let items=menus.getTeacherMenuItems()
-            this.mainNav.items=items
-             this.levelNav.show=true
-      },      
+      onMenuLoaded(items){          
+          this.mainNav.router_link=true
+          this.mainNav.items=items
+          this.mainNav.show=true
+      },
+      
       getCenters(){
         return new Promise((resolve, reject) => {
                let url =Helper.getApiUrl('/centers') 
