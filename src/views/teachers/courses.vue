@@ -1,34 +1,28 @@
 <template>
-    <table v-show="loaded" class="table">
-        <thead>
-            <tr>
-                <th>開課中心</th>
-                <th>編號</th>
-                <th>名稱</th>
-                <th>課程日期</th>
-                <th>上課時間</th>
-                <th>狀態</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="course in courses">
-                <td>{{ course.center.name }}</td>
-                <td>{{ course.number }}</td>
-                <td>{{ course.name }}</td>
-                <td>{{ course.period }}</td>
-                <td v-html="course.classTimesText()"></td>
-            </tr>
-        </tbody>
-    </table>
+   <course-list v-if="!selected" @selected="onCourseSelected"></course-list>  
+   <div v-else class="panel">
+      <div class="panel-heading panel-title heading" >
+          課程資訊
+      </div>
+      <course-view :id="selected"></course-view>
+        
+   </div>
+
+ </div>    
 </template>
 
 <script>
+    import CoursesList from '../../components/teacher/course-list.vue'
+    import CoursesView from '../../components/teacher/course.vue'
     export default {
         name:'TeacherCoursesView',
+        components:{
+           'course-list':CoursesList,
+           'course-view':CoursesView,
+        },
         data(){
             return {
-                loaded:false,
-                courses:[]
+                selected:0,
             }
         },
         beforeMount() {
@@ -36,33 +30,12 @@
         },
         methods:{
             init(){
-                this.fetchData()
+                this.selected=0
             },
-            fetchData(){
-                this.courses=[]
-                let getData=Teacher.courses()
-                getData.then(data=>{
-                    if(data.menus){
-                        Bus.$emit('menu-loaded',data.menus)
-                    } 
-                    for(let i=0; i<data.courses.length;i++){
-                        this.courses.push( new Course(data.courses[i]) )
-                    }
-                   
-                    this.loaded=true
-                }).catch(error => {
-                     if(error.response.data.code==401){
-                        let msg=error.response.data.msg
-                        
-                        this.$router.push({ name: 'errors', params: { msg: msg }})
-                     }else{   
-                        Bus.$emit('errors',error)
-                     }
-                })
-            },
-            classTimeText(course){
-                return classTimesText(course)
-            },
+            onCourseSelected(id){
+                this.selected=id
+            }
+           
         }
     }
 </script>

@@ -4,7 +4,7 @@
     <div class="container">
         <nav v-if="hasData"  class="tabs is-boxed">
             <ul v-if="router_link">
-              <li v-for="item in items" :class="{'is-active': item.active }">
+              <li @click="itemSelected(item.id, item.key)" v-for="item in items" :class="{'is-active': item.id==selected }">
                  <router-link :to="item.to" style="font-size:16px" >     
                    {{  item.text  }} 
                  </router-link>
@@ -55,7 +55,7 @@ export default {
     },
   },
   beforeMount(){
-     
+     this.init()
   },
   watch: {
       default_id () {
@@ -63,9 +63,17 @@ export default {
       }
   },
   methods:{
-      itemSelected(id){
-          this.selected=id
-          this.$router.push('/courses?center=' + id)
+      init(){
+
+      }, 
+
+      itemSelected(id,key){
+        this.selected=id
+        if(!key){
+           this.$router.push('/courses?center=' + id)
+        }
+          
+          
       },
     
   },

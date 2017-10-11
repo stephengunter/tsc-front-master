@@ -23,6 +23,7 @@ import CommonService from './services/common.js'
 
 import Password from './models/password.js'
 import Course from './models/course.js'
+import CourseStatus from './models/course-status.js'
 import Teacher from './models/teacher.js'
 import User from './models/user.js'
 import Register from './models/register.js'
@@ -65,6 +66,7 @@ window.CommonService = CommonService
 
 window.Password=Password
 window.Course = Course
+window.CourseStatus = CourseStatus
 window.Teacher = Teacher
 window.User = User
 window.Register=Register
@@ -77,11 +79,22 @@ window.Resume = Resume
 
 Vue.filter('reviewedLabel', function (reviewed) {
     
-     let style='tag is-danger is-medium'
+     let style='tag is-danger'
      let text='未審核'
     if (parseInt(reviewed)){
-        style = 'tag is-success is-medium'
+        style = 'tag is-success'
         text='已審核'
+    } 
+   
+    return `<span class="${style}" > ${text} </span>`
+})
+Vue.filter('activeLabel', function (active) {
+    
+     let style='tag is-danger'
+     let text='已下架'
+    if (parseInt(active)){
+        style = 'tag is-success'
+        text='上架中'
     } 
    
     return `<span class="${style}" > ${text} </span>`

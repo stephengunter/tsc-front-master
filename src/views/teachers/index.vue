@@ -6,7 +6,6 @@
      
      <edit v-else :user="user" :teacher="teacher"
        @saved="onSaved">
-         
      </edit>    
   </div>
 </template>

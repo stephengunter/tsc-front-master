@@ -187,8 +187,20 @@ export default {
 
           })
       },
-      onMenuLoaded(items){          
+      onMenuLoaded(items){    
+          if(!items.length) return   
+
           this.mainNav.router_link=true
+          let selectedItem=items.find((item)=>{
+              if(Helper.isTrue(item.active)){
+                 return item
+              }
+          })
+          if(selectedItem){
+              this.mainNav.selected=selectedItem.id
+          }else{
+              this.mainNav.selected=items[0].id
+          }
           this.mainNav.items=items
           this.mainNav.show=true
       },
