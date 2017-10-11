@@ -1,3 +1,5 @@
+import Moment from 'moment'
+import MomentTimeZone from 'moment-timezone'
 
 
 import Vue from 'vue'
@@ -15,6 +17,9 @@ import 'vue-blu/dist/css/vue-blu.css'
 
 
 import Auth from './packages/auth/Auth.js'
+
+import TimeService from './services/time.js'
+import CommonService from './services/common.js'
 
 import Password from './models/password.js'
 import Course from './models/course.js'
@@ -40,6 +45,8 @@ Vue.use(Auth)
 
 window.Vue = Vue
 window.Config = Config
+window.Moment = Moment;
+window.MomentTimeZone = MomentTimeZone;
 
 window.Bus = new Vue({});
 
@@ -49,9 +56,12 @@ window.axios.defaults.headers.common = {
     'X-Requested-With': 'XMLHttpRequest' 
 }
 
-window.Form = Form;
-
+window.Form = Form
 window.Helper = Helper
+
+window.TimeService = TimeService
+window.CommonService = CommonService
+
 
 window.Password=Password
 window.Course = Course

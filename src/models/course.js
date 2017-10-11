@@ -15,7 +15,7 @@ class Course {
         this.hoursText=this.formatHours()
         this.weeksText=this.formatWeeks()
 
-        this.period=Helper.periodFormat(this.begin_date,this.end_date)
+        this.period=Helper.period(this.begin_date,this.end_date)
         this.canJoin=Helper.inPeriod(this.open_date,this.close_date)
 
         
@@ -23,7 +23,9 @@ class Course {
         if(this.class_times){
             this.class_times.sort( ( a, b) => {
               return a.weekday_id > b.weekday_id
-            });
+            })
+
+          
         }
         
 
@@ -156,6 +158,14 @@ class Course {
         let html=''
         for (var i = 0; i < teachers.length; i++) {
             html += teachers[i].name + '&nbsp;'
+        }
+        return html
+    }
+    categoriesText(categories){
+        if (!categories.length) return ''
+        let html=''
+        for (var i = 0; i < categories.length; i++) {
+            html += categories[i].name + '&nbsp;'
         }
         return html
     }

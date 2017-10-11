@@ -12,7 +12,11 @@
         </thead>
         <tbody>
             <tr v-for="course in courses">
-                <td></td>
+                <td>{{ course.center.name }}</td>
+                <td>{{ course.number }}</td>
+                <td>{{ course.name }}</td>
+                <td>{{ course.period }}</td>
+                <td v-html="course.classTimesText()"></td>
             </tr>
         </tbody>
     </table>
@@ -35,11 +39,16 @@
                 this.fetchData()
             },
             fetchData(){
+                this.courses=[]
                 let getData=Teacher.courses()
                 getData.then(data=>{
                     if(data.menus){
                         Bus.$emit('menu-loaded',data.menus)
-                     } 
+                    } 
+                    for(let i=0; i<data.courses.length;i++){
+                        this.courses.push( new Course(data.courses[i]) )
+                    }
+                   
                     this.loaded=true
                 }).catch(error => {
                      if(error.response.data.code==401){
@@ -50,7 +59,10 @@
                         Bus.$emit('errors',error)
                      }
                 })
-            }
+            },
+            classTimeText(course){
+                return classTimesText(course)
+            },
         }
     }
 </script>
