@@ -15,11 +15,9 @@ class Teacher {
     }
     
     static source(){
-        return '/teachers'
+        return '/teacher'
     }
-    static createUrl(){
-        return this.source() + '/create' 
-    }
+    
     static storeUrl(){
          return this.source()
     }
@@ -71,36 +69,7 @@ class Teacher {
                 })
         })
     }
-    static courses(){
-        let url=this.source() + '/courses'
-         return new Promise((resolve, reject) => {
-            url =Helper.getApiUrl(url)
-            axios.get(url)
-                .then(response => {
-                   resolve(response.data)
-                })
-                .catch(error=> {
-                     reject(error);
-                })
-           
-        })
-    }
-
-    static showCourse(id){
-        let url=this.source() + '/courses'
-        url += '?id=' + id
-         return new Promise((resolve, reject) => {
-            url =Helper.getApiUrl(url)
-            axios.get(url)
-                .then(response => {
-                   resolve(response.data)
-                })
-                .catch(error=> {
-                     reject(error);
-                })
-           
-        })
-    }
+    
     
    
     getPhoto() {

@@ -93,7 +93,7 @@ export default {
      this.init()
   },
   created() {
-      Bus.$on('errors',this.showErrorMsg)
+      Bus.$on('errors',this.onErrors)
       Bus.$on('okmsg',this.showSuccessMsg)
       Bus.$on('auth-failed',this.onAuthFailed)
       Bus.$on('re-login',this.onReLogin) 
@@ -256,18 +256,24 @@ export default {
      toggleMobileMenu(val){
         this.mobileMenu=val
      },
-     showErrorMsg(error,msg) {
-          console.log(error)
-          if(!msg){
+     onErrors(error,msg){
+        console.log(error)
+        if(!msg){
              msg='系統暫時無回應，請稍後再試'
-          }
-           this.$notify.open({
+        }
+        if(error.response.data.code==401){
+            if(error.response.data.error) msg=error.response.data.error
+            this.$router.push({ name: 'errors', params: { msg: msg }})
+        }else{   
+            this.$notify.open({
                           content: msg,
                           type: 'danger',
                           placement: 'top-center',
                           duration: 1500,
                        }) 
-      },
+        }
+        
+     },
       showSuccessMsg(msg) {
            this.$notify.open({
                           content: msg,

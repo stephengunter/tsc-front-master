@@ -59,7 +59,7 @@
             },
             fetchData(){
                 this.courses=[]
-                let getData=Teacher.courses()
+                let getData=TeacherCourses.index()
                 getData.then(data=>{
                     if(data.menus){
                         Bus.$emit('menu-loaded', data.menus)

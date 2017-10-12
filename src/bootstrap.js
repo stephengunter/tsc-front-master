@@ -25,6 +25,8 @@ import Password from './models/password.js'
 import Course from './models/course.js'
 import CourseStatus from './models/course-status.js'
 import Teacher from './models/teacher.js'
+import Schedule from './models/schedule.js'
+import TeacherCourses from './models/teacher-courses.js'
 import User from './models/user.js'
 import Register from './models/register.js'
 import Signup from './models/signup.js'
@@ -68,6 +70,8 @@ window.Password=Password
 window.Course = Course
 window.CourseStatus = CourseStatus
 window.Teacher = Teacher
+window.Schedule = Schedule
+window.TeacherCourses = TeacherCourses
 window.User = User
 window.Register=Register
 window.Signup = Signup

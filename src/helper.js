@@ -14,7 +14,10 @@ class Helper {
     static onError(err,msg){
         Bus.$emit('errors',err,msg)
     }
-   
+    static tryParseInt(val){
+        if(!val) return 0
+        return parseInt(val)
+    }
     static buildQuery(url, searchParams) {
         url += '?'
         for (let field in searchParams) {
@@ -77,6 +80,10 @@ class Helper {
     static inPeriod(begin_date,end_date)
     {
       return TimeService.inPeriod(begin_date,end_date)
+    }
+    static numberOptions(min, max, desc) {
+
+        return CommonService.numberOptions(min, max, desc)
     }
     
     static getCourseDetailsUrl(course){

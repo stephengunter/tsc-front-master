@@ -129,11 +129,11 @@
             this.fetchData()
         },  
         fetchData(){
-            let getData=Teacher.showCourse(this.id)
+            let getData=TeacherCourses.show(this.id)
             getData.then(data=>{
-                 this.course=new Course(data.course)
-               
+                 this.course=new Course(data.course)               
                  this.loaded=true
+                 this.$emit('loaded',this.course)
             }).catch(error => {
                  Bus.$emit('errors',error)
             })

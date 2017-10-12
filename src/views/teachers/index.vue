@@ -64,13 +64,7 @@
                      this.loaded=true
                 })
                 .catch(error=> {
-                     if(error.response.data.code==401){
-                        let msg=error.response.data.msg
-                        
-                        this.$router.push({ name: 'errors', params: { msg: msg }})
-                     }else{   
-                        Bus.$emit('errors',error)
-                     }
+                     Bus.$emit('errors',error)
                 })
 
             }
