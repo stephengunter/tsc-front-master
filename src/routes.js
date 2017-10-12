@@ -5,6 +5,11 @@ Vue.use(VueRouter)
  
 let routes = [  
         {
+            path:'/test',
+            component: require('./views/test.vue'),
+            name: 'test',
+        },
+        {
             path:'/',
             component: require('./views/home.vue'),
             name: 'home',

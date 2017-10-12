@@ -4,13 +4,13 @@
     <div class="panel-heading panel-title heading" >
         課程預定進度
         <div>
-            <a class="button is-primary" @click.prevent="beginImport">
+            <a :disabled="!indexMode"  class="button is-primary" @click.prevent="beginImport">
                <span class="icon">
                  <i class="fa fa-upload" aria-hidden="true"></i>
                </span> 
                <span>匯入</span>
             </a>
-            <a class="button is-info is-outlined" @click.prevent="beginCreate">
+            <a :disabled="!indexMode"  class="button is-info is-outlined" @click.prevent="beginCreate">
                <span class="icon">
                  <i class="fa fa-plus" aria-hidden="true"></i>
                </span> 
@@ -35,7 +35,7 @@
                 </edit>  
 
                 <edit  v-for="schedule in scheduleList"  :entity="schedule" 
-                     :editting="!indexMode"
+                    :can_edit="indexMode"
                     @editting="onEditting" @canceled="onEditCanceled"
                     @saved="onUpdated"  @btn-delete-clicked="beginDelete" >
                 </edit>
@@ -45,7 +45,8 @@
  </div>      
 
 
-<modal  :show-header="false"  :is-show="deleteConfirm.show" :on-ok="deleteSchedule" ok-text="確定" cancel-text="取消" @close="deleteConfirm.show=false">     
+<modal  :is-show="deleteConfirm.show" :show-header="false"  
+:on-ok="deleteSchedule" ok-text="確定" cancel-text="取消" @close="deleteConfirm.show=false">     
    <article class="message is-danger">
       <div class="message-header">
           <p style="font-weight: bold;font-size:19px">
@@ -58,19 +59,22 @@
       </div>
     </article>
 </modal>
+<modal  :is-show="importSettings.show" :show-header="true" :show-footer="false" 
+ :width="importSettings.width" @close="importSettings.show=false">     
 
-
+    <importor v-if="importSettings.show" :course_id="course_id" @success="onImportSuccess" @failed="onImportFailed"></importor>
+</modal>
 </div>
 </template>
 
 <script>
     import Edit from './edit.vue'
-    //import Importor from '../../components/schedule/importor.vue'
+    import Importor from './import.vue'
     export default {
         name: 'ScheduleView',
         components: {
              Edit,
-      //       Importor
+             Importor
         },
         props: {
             course_id: {
@@ -89,7 +93,10 @@
             },
             indexMode(){
                 if(this.creating) return false
-                if(this.seleted) return false
+                if( Helper.isTrue(this.editting)){
+                    return false
+                }
+               
                     return true
             }
         },
@@ -97,7 +104,7 @@
             return {
                 loaded:false,
                 creating:false,
-                seleted:0,
+                editting:0,
                 scheduleList:[],
 
                 deleteConfirm:{
@@ -120,7 +127,7 @@
                 this.loaded=false
 
                 this.creating=false
-                this.seleted=0
+                this.editting=0
                 
                 this.deleteConfirm={
                     id:0,
@@ -140,7 +147,6 @@
             fetchData() {
                 let getData=Schedule.index(this.course_id)
                     getData.then(data => {
-                      
                        this.scheduleList=data.scheduleList
                        this.loaded = true
                         
@@ -152,15 +158,16 @@
             
             beginCreate(){
                 this.creating=true
+
             },
             endCreate(){
                  this.creating=false
             },
             onEditting(id){
-                this.seleted=id
+                this.editting=id
             },
             OnEditCanceled(){
-                this.seleted=0
+                this.editting=0
             },
             cancelCreate(){
                this.creating=false
@@ -176,24 +183,22 @@
                 this.deleteConfirm.show=false
             },
             deleteSchedule(){
-                 let id = this.deleteConfirm.id 
-                 alert(id)
-                 return false
+                let id = this.deleteConfirm.id 
                 let remove= Schedule.delete(id)
                 remove.then(result => {
-                    Helper.BusEmitOK('刪除成功')
+                    Bus.$emit('okmsg','刪除成功')                   
                     this.init()
-                    this.$emit('deleted')
+                    
                 })
                 .catch(error => {
-                    Helper.BusEmitError(error,'刪除失敗')
+                    Bus.$emit('errors',error,'存檔失敗')
                     this.closeConfirm()   
                 })
             },
 
             onCreated(schedule){    
                 this.init()
-                this.$emit('created',schedule)
+               
             },
             onCreateCanceled(){
                 this.init()
@@ -203,9 +208,10 @@
             },
             onUpdated(schedule){ 
                  this.init()
-                 this.$emit('updated',schedule)
+                 
             },
             beginImport(){
+                
                 this.importSettings.course_id=this.course_id
                 this.importSettings.show=true
             },
@@ -214,13 +220,15 @@
             },
             onImportSuccess(){
                 this.importSettings.show=false
-                Helper.BusEmitOK('匯入成功')
+                Bus.$emit('okmsg','匯入成功')
                 this.init()
             },
-            onImportFailed(error){
-                this.importSettings.show=false
-                Helper.BusEmitError(error,'匯入失敗')
-            }
+            onImportFailed(error,msg){
+               this.importSettings.show=false
+               let message='匯入失敗'
+               if(msg) message= msg
+               Bus.$emit('errors',error,message)
+            },
             
            
         },

@@ -4,6 +4,13 @@
       <div class="panel">
         <div class="panel-heading panel-title heading" >
             課程資訊
+            <a @click.prevent="selected=0" class="button is-info is-outlined">
+              <span class="icon">
+                <i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
+              </span> 
+              <span>返回</span>
+            </a>
+            
         </div>
         <show-course :id="selected" @loaded="onCourseLoaded"></show-course>
              
@@ -12,10 +19,11 @@
         <div class="panel-heading panel-title heading" >
             <div class="tabs is-medium">
               <ul>
-                <li class="is-active"><a>預定進度</a></li>
-                <li><a>Music</a></li>
-                <li><a>Videos</a></li>
-                <li><a>Documents</a></li>
+                 <li v-for="item in tabs" :class="{ 'is-active': item.id==tabIndex }">
+                     <a @click.prevent="tabIndex=item.id">{{ item.text }}</a>
+                 </li>
+                
+                
               </ul>
             </div>
             
@@ -23,11 +31,8 @@
         
         <div v-if="loaded" class="panel-block">
             <div style="width:99%"> 
-                <schedule-view :course_id="selected"></schedule-view>
+                <schedule-view v-if="tabIndex==1" :course_id="selected"></schedule-view>
             </div>
-           
-
-              
         </div>     
       </div>
    </div>    
@@ -47,7 +52,12 @@
         data(){
             return {
                 selected:0,
+                tabIndex:1,
                 loaded:false,
+                tabs:[
+                   { id:1 ,  text:'預定進度' },
+                   { id:2 ,  text:'課堂紀錄表' },
+                ],
             }
         },
         beforeMount() {

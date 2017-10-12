@@ -7,13 +7,13 @@
        
      <td>
        
-        <a class="button is-small is-info is-outlined" @click.prevent="beginEdit()">
+        <a v-show="can_edit" class="button is-small is-info is-outlined" @click.prevent="beginEdit">
            <span class="icon">
              <i class="fa fa-pencil" aria-hidden="true"></i>
            </span> 
                           
         </a>
-        <a class="button is-small is-danger" @click.prevent="btnDeleteClicked()">
+        <a v-show="can_edit" class="button is-small is-danger" @click.prevent="btnDeleteClicked">
            <span class="icon">
              <i class="fa fa-trash" aria-hidden="true"></i>
            </span> 
@@ -23,32 +23,45 @@
      </td> 
 </tr>
 <tr v-else>
-    <td v-if="loaded">
-        <select  v-model="schedule.order"  class="form-control" >
-             <option v-for="item in orderOptions" :value="item.value" v-text="item.text"></option>
-        </select>
+    <td  v-if="loaded">
+        <div class="control">
+          <div class="select">
+            <select v-model="schedule.order" >
+               <option v-for="item in orderOptions" :value="item.value" v-text="item.text"></option>
+            </select>
+          </div>
+        </div>
     </td>
     <td v-if="loaded">
-        <input type="text" name="schedule.title" @keydown="clearErrorMsg('schedule.title')" class="form-control" v-model="schedule.title">
-        <small class="text-danger" v-if="form.errors.has('schedule.title')" v-text="form.errors.get('schedule.title')"></small>
+        <textarea name="schedule.title" class="textarea" v-model="schedule.title"></textarea>
+        <p class="help is-danger" v-if="form.errors.has('schedule.title')" v-text="form.errors.get('schedule.title')"> </p>
+        
     </td>  
     <td v-if="loaded">
-          <textarea rows="5" cols="50" class="form-control" name="schedule.content"  v-model="schedule.content">
-          </textarea>
+        
+         <textarea name="schedule.content" class="textarea" v-model="schedule.content"></textarea>
+        
+    
     </td> 
     <td v-if="loaded">
-         <textarea rows="5" cols="50" name="schedule.materials" class="form-control" v-model="schedule.materials"> </textarea>
-    </td>
+        <textarea name="schedule.materials" class="textarea" v-model="schedule.materials"></textarea>
+        
     
-   
+    </td> 
     <td v-if="loaded">
          
-        <!-- <button @click.prevent="onSubmit"  class="btn btn-success btn-xs">
-            <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
-        </button>  
-         <button  class="btn btn-default btn-xs" @click.prevent="cancelEdit">
-             <span aria-hidden="true" class="glyphicon glyphicon-refresh"></span>
-        </button> -->
+        <a @click.prevent="onSubmit" :disabled="form.errors.any()"  class="button is-small is-success is-outlined" >
+           <span class="icon">
+             <i class="fa fa-floppy-o" aria-hidden="true"></i>
+           </span> 
+                          
+        </a>
+        <a @click.prevent="cancelEdit"  class="button is-small is-light" >
+           <span class="icon">
+             <i class="fa fa-refresh" aria-hidden="true"></i>
+           </span> 
+                          
+        </a>
     </td> 
 </tr>  
 </template>
@@ -66,10 +79,11 @@
                type:Number,
                default:0
             },
-            editting:{
-               type: Boolean,
-               default: false
-            }
+            can_edit:{
+               type:Boolean,
+               default:true
+            },
+            
             
         },
         data() {
@@ -101,7 +115,7 @@
                 return 0
             },            
             init(){  
-                if(this.schedule){
+                if(this.entity){
                     this.readOnly=true                  
                 }else{
                     this.loaded=false
@@ -112,6 +126,9 @@
                           
             },
             fetchData(){
+                this.form=new Form({
+                    schedule:{}
+                })
                 this.orderOptions= Helper.numberOptions(1,60)  
                 let getData=null
                 let id=this.getId()
@@ -121,14 +138,8 @@
                     getData=Schedule.create(this.course_id)
                 }
                 getData.then(data => {
-                    let schedule= data.schedule
-                 
-                    this.form=new Form({
-                        schedule: schedule
-                    }) 
-                   
-                    this.loaded=true
-                    
+                    this.schedule = data.schedule
+                    this.loaded=true                    
                 })
                 .catch(error=> {
                     Helper.BusEmitError(error)
@@ -141,14 +152,14 @@
                 this.readOnly=false
                 this.fetchData()
 
-                this.$emit('editting', this.schedule.id)
+                this.$emit('editting', this.getId())
             },
             cancelEdit(){
                 this.$emit('canceled')
                
             },      
             btnDeleteClicked(){
-               
+
                 let values={
                     id:this.getId(),
                     name:this.entity.title
@@ -163,6 +174,7 @@
                 this.submitForm()
             },
             submitForm() {
+                this.form.schedule=this.schedule
                 let save = null
                 let id=this.getId()
                 if(id){
@@ -172,13 +184,13 @@
                 }
              
                 save.then(result => {
-                   Helper.BusEmitOK()
+                   Bus.$emit('okmsg','存檔成功')
                    this.readOnly=true;
                   
                    this.$emit('saved')
                 })
                 .catch(error => {
-                    Helper.BusEmitError(error,'存檔失敗')
+                    Bus.$emit('errors',error,'存檔失敗')
                 })
             },
             
