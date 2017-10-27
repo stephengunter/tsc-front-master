@@ -1,3 +1,7 @@
+require('font-awesome/css/font-awesome.css');
+require('./assets/css/bulma.css')
+require('./assets/css/site.css')
+
 import Moment from 'moment'
 import MomentTimeZone from 'moment-timezone'
 
@@ -37,9 +41,7 @@ import Notice from './models/notice.js'
 import Photo from './models/photo.js'
 import Resume from './models/resume.js'
 
-require('font-awesome/css/font-awesome.css');
-require('./assets/css/bulma.css')
-require('./assets/css/site.css')
+
 
 
 

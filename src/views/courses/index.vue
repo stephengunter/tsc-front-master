@@ -6,7 +6,7 @@
   
     <div v-else class="columns is-multiline">
 
-      <div v-for="course in courses" class="column is-one-quater-mobile is-half-tablet is-half-desktop">
+      <div v-for="(course,index) in courses" :key="index" class="column is-one-quater-mobile is-half-tablet is-half-desktop">
          <course-card :entity="course"
              @selected="onSelected">
          </course-card>
