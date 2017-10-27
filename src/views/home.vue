@@ -14,7 +14,7 @@
         <div style="clear: both;text-align:right;">
             <a @click.prevent="moreNotices" class="button is-primary is-outlined">
                 <span class="icon is-small">
-                 <i class="fa fa-angle-double-right">
+                 <i class="fa fa-angle-double-right"></i>
                 </span>
                 <span>更多訊息</span>
             </a>
@@ -27,7 +27,7 @@
         <h1 class="title">最新課程</h1>
         <div class="columns is-multiline">
 
-            <div v-for="course in courses" class="column is-one-quater-mobile is-half-tablet is-half-desktop">
+            <div v-for="(course,index) in courses" :key="index" class="column is-one-quater-mobile is-half-tablet is-half-desktop">
                <course-card :entity="course"></course-card>
             </div>
         

@@ -8,20 +8,17 @@
                 </figure>
             </div>
             <div class="column is-3">
-            <h1 class="title">{{ teacher.name }}</h1>
-              <p>
-
-              
-              <ul style="list-style-type: disc;margin-left: 0; padding-left: 20px;">
-                <li v-for="item in teacher.experiences"  style="font-size: 16px;" v-text="item"></li>
-              <ul>
-             
-              </p>
+                <h1 class="title">{{ teacher.name }}</h1>
+                <p>
+                    <ul style="list-style-type: disc;margin-left: 0; padding-left: 20px;">
+                        <li v-for="(item,index) in teacher.experiences" :key="index"  style="font-size: 16px;" v-text="item"></li>
+                    </ul>
+                </p>
             </div>
             <div class="column">
-               <p style="font-size: 18px;">
+                <p style="font-size: 18px;">
                    {{ teacher.description }}
-               </p>
+                </p>
            
             </div>
         </div>

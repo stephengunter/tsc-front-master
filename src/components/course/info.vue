@@ -1,12 +1,12 @@
 <template>
-      <div class="course-info">
+    <div class="course-info">
         <div class="columns">
-          <div class="column">
-               上課地點：<span v-html="course.formatLocation()"></span>          
-          </div>
-          <div class="column">
-               聯絡電話：{{ course.center.contactInfo.tel }}
-          </div>
+            <div class="column">
+                上課地點：<span v-html="course.formatLocation()"></span>          
+            </div>
+            <div class="column">
+                聯絡電話：{{ course.center.contactInfo.tel }}
+            </div>
           
         </div>
 
@@ -62,7 +62,7 @@
             </div>
           
         </div>
-      <div>  <!--  End Course-Info -->
+    </div>  <!--  End Course-Info -->
 </template>
 
 <script>

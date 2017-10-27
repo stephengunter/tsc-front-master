@@ -6,12 +6,14 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import axios from 'axios';
 
+import VueBlu from 'vue-blu'
+
 import Form from './utilities/Form'
 import Config from './config.js'
 import Helper from './helper.js'
 
-import VueBlu from 'vue-blu'
-import 'vue-blu/dist/css/vue-blu.css'
+
+
 
 //Vue.component('pager', require('./components/Pager') )
 
@@ -35,9 +37,8 @@ import Notice from './models/notice.js'
 import Photo from './models/photo.js'
 import Resume from './models/resume.js'
 
-// require('font-awesome/css/font-awesome.css');
-// require('./assets/css/bulma.css')
-
+require('font-awesome/css/font-awesome.css');
+require('./assets/css/bulma.css')
 require('./assets/css/site.css')
 
 
@@ -54,9 +55,9 @@ window.MomentTimeZone = MomentTimeZone;
 window.Bus = new Vue({});
 
 window.axios = axios
-window.axios.defaults.headers.common = {   
-    'Authorization' : 'Bearer ' + Vue.auth.getToken() ,
-    'X-Requested-With': 'XMLHttpRequest' 
+window.axios.defaults.headers.common = {
+    'Authorization': 'Bearer ' + Vue.auth.getToken(),
+    'X-Requested-With': 'XMLHttpRequest'
 }
 
 window.Form = Form
@@ -66,40 +67,40 @@ window.TimeService = TimeService
 window.CommonService = CommonService
 
 
-window.Password=Password
+window.Password = Password
 window.Course = Course
 window.CourseStatus = CourseStatus
 window.Teacher = Teacher
 window.Schedule = Schedule
 window.TeacherCourses = TeacherCourses
 window.User = User
-window.Register=Register
+window.Register = Register
 window.Signup = Signup
-window.Center=Center
-window.Notice=Notice
-window.Photo=Photo
+window.Center = Center
+window.Notice = Notice
+window.Photo = Photo
 window.Resume = Resume
 
 
-Vue.filter('reviewedLabel', function (reviewed) {
-    
-     let style='tag is-danger'
-     let text='未審核'
-    if (parseInt(reviewed)){
+Vue.filter('reviewedLabel', reviewed => {
+
+    let style = 'tag is-danger'
+    let text = '未審核'
+    if (parseInt(reviewed)) {
         style = 'tag is-success'
-        text='已審核'
-    } 
-   
+        text = '已審核'
+    }
+
     return `<span class="${style}" > ${text} </span>`
 })
-Vue.filter('activeLabel', function (active) {
-    
-     let style='tag is-danger'
-     let text='已下架'
-    if (parseInt(active)){
+Vue.filter('activeLabel', active => {
+
+    let style = 'tag is-danger'
+    let text = '已下架'
+    if (parseInt(active)) {
         style = 'tag is-success'
-        text='上架中'
-    } 
-   
+        text = '上架中'
+    }
+
     return `<span class="${style}" > ${text} </span>`
 })

@@ -4,7 +4,7 @@
     <div style="clear: both;text-align:right;">
          <a @click.prevent="onBack"  class="button is-primary is-outlined">
             <span class="icon is-small">
-             <i class="fa fa-angle-double-left">
+             <i class="fa fa-angle-double-left"></i>
             </span>
             <span>返回</span>
          </a>
@@ -14,7 +14,7 @@
     <course-info :course="course"></course-info>
 
     <h1 class="title">師資介紹</h1>
-    <teacher-card v-for="teacher in teachers" :teacher="teacher"></teacher-card>
+    <teacher-card v-for="(teacher,index) in teachers" :key="index" :teacher="teacher"></teacher-card>
 
     
     <h1 class="title">課程進度</h1>

@@ -57,24 +57,24 @@
         
     </nav>
    
-      <div v-show="showMobileMenu" class="menu" style="width:65%">
+      <!-- <div v-show="showMobileMenu" class="menu" style="width:65%">
          <menus>
            
-            <menu-item v-for="item in menuItems" @clicked="mobileNavClicked" :id="item.id" :click="true" :icon="item.icon" >{{ item.name }}</menu-item>
+            <menu-item v-for="(item,index) in menuItems" :key="index" @clicked="mobileNavClicked" :id="item.id" :click="true" :icon="item.icon" >{{ item.name }}</menu-item>
 
 
-            <menu-item v-show="!isAuth" v-for="item in visitorMenuItems" @clicked="mobileNavClicked" :id="item.id" :click="true" :icon="item.icon" >{{ item.name }}</menu-item>
+            <menu-item v-show="!isAuth" v-for="(item,index) in visitorMenuItems" :key="index"  @clicked="mobileNavClicked" :id="item.id" :click="true" :icon="item.icon" >{{ item.name }}</menu-item>
 
             <menu-item  v-show="isAuth" icon="fa fa-user-circle-o">
               <span>{{  username }}</span>
               <menus  slot="sub">
-                  <menu-item v-for="item in userFuctions" @clicked="mobileNavClicked" :id="item.id" :click="true" :icon="item.icon" >{{ item.name }}</menu-item>
+                  <menu-item v-for="(item,index) in userFuctions" :key="index" @clicked="mobileNavClicked" :id="item.id" :click="true" :icon="item.icon" >{{ item.name }}</menu-item>
 
              
               </menus>
            </menu-item>
         </menus>
-      </div>
+      </div> -->
      
   
 </div> 

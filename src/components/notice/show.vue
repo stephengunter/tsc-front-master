@@ -12,7 +12,7 @@
         <div style="clear: both;text-align:right;">
              <a @click.prevent="onBack" class="button is-primary is-outlined">
                 <span class="icon is-small">
-                 <i class="fa fa-angle-double-left">
+                 <i class="fa fa-angle-double-left"></i>
                 </span>
                 <span>返回</span>
              </a>
