@@ -6,11 +6,11 @@
   
     <div v-else class="columns is-multiline">
 
-      <div v-for="(course,index) in courses" :key="index" class="column is-one-quater-mobile is-half-tablet is-half-desktop">
-         <course-card :entity="course"
-             @selected="onSelected">
-         </course-card>
-      </div>
+        <div v-for="(course,index) in courses" :key="index" class="column is-one-quater-mobile is-half-tablet is-half-desktop">
+            <course-card :entity="course"
+                @selected="onSelected">
+            </course-card>
+        </div>
     
     </div>
 
@@ -51,6 +51,7 @@
         methods:{
             init(){
                 this.selected=0
+                
                 this.fetchData()
             },
             fetchData(){
@@ -65,6 +66,7 @@
                     this.courses=data.courses                             
                 })
                 .catch(error=> {
+                  
                     Bus.$emit('errors')
                 })
             },

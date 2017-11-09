@@ -1,47 +1,41 @@
 <template>
-  <!-- <section class="hero is-primary">  -->
     <div class="hero-body">
-      <div class="container">
-        <div class="columns is-vcentered">
-          
-          <div class="column">
+        <div class="container">
+            <div class="columns is-vcentered">
+            
+                <div class="column">
 
-            <p class="title">
-            <router-link to="/" >     
-              社會教育推廣中心
-               </router-link>
-           </p>
-            <p class="subtitle">
-            啟發善念 終身學習 生活有智慧
-           </p>
-          </div>     
+                    <p class="title is-2" >
+                        <router-link to="/" >     
+                        社會教育推廣中心
+                        </router-link>
+                    </p>
+                        <p class="subtitle is-5">
+                        啟發善念 終身學習 生活有智慧
+                    </p>
+                </div>     
 
-        
-      </div>
+            
+            </div>
+        </div>
     </div>
-  </div>
-
-  
-   <!-- </section> -->
 </template>
 
 
 <script>
 export default {
-  name: 'hero',
-  data () {
-    return {
-    }
-  },
-
+    name: 'Hero',
+    data () {
+        return {
+        }
+    },
 }
 </script>
 
-
 <style>
-  .hero-body {
-    flex-grow: 1;
-    flex-shrink: 0;
-    padding: 1.5rem 1.5rem;
-}
+    /* .hero-body {
+        flex-grow: 1;
+        flex-shrink: 0;
+        padding: 1.5rem 1.5rem;
+    } */
 </style>

@@ -17,11 +17,8 @@
                      </a>
                   
                 </div>
-                <div class="title is-4">
-                    <!-- <i class="fa fa-clock-o fa-fw" aria-hidden="true"></i> -->
+                <div class="title is-4" v-if="course.hasClassTimes()">
                     上課時間：<span v-html="course.classTimesText()"></span> 
-
-                   
                 </div>
                 <div class="title is-4">
                     <!-- <i class="fa fa-calendar fa-fw" aria-hidden="true"></i>  -->

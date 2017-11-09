@@ -13,13 +13,13 @@
                 <router-link to="/courses" class="nav-item is-tab">     
                     <i class="fa fa-book" aria-hidden="true"></i>&nbsp; 課程總覽 
                 </router-link>
-                <router-link to="/students" class="nav-item is-tab">     
+                <router-link v-if="false" to="/students" class="nav-item is-tab">     
                     <i class="fa fa-user-o" aria-hidden="true"></i>&nbsp; 學員專區 
                 </router-link>
-                <router-link to="/teacher" class="nav-item is-tab">     
+                <router-link v-if="false" to="/teacher" class="nav-item is-tab">     
                     <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp; 教師專區 
                 </router-link>
-                <router-link to="/wanted" class="nav-item is-tab">     
+                <router-link v-if="false" to="/wanted" class="nav-item is-tab">     
                     <i class="fa fa-address-card-o" aria-hidden="true"></i>&nbsp; 徵才訊息 
                 </router-link>
             </div>
@@ -28,7 +28,7 @@
                 <span></span>
                 <span></span>
             </span>
-            <div id="nav-menu" class="nav-right nav-menu"> 
+            <div id="nav-menu" v-if="false" class="nav-right nav-menu"> 
             
                 <router-link  v-if="!isAuth" to="/login" class="nav-item is-tab">               
                    <i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp; 登入          

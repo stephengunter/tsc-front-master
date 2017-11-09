@@ -53,3 +53,8 @@ html * {
 .msg {
     line-height: 2;
 }
+
+.back-btn {
+    clear: both;
+    text-align: right;
+}

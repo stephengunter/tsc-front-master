@@ -6,7 +6,7 @@
            </span>
         </div>
         <div class="media">
-             <div class="media-left is-hidden-mobile">
+            <div class="media-left is-hidden-mobile">
                  <div class="status">
                       <span v-if="course.canJoin" class="tag is-success">招生中</span> 
                   </div>
@@ -16,48 +16,48 @@
                     </a>
                   </figure>
 
-              </div>
-              <div class="media-content">
+            </div>
+            <div class="media-content">
                
-                      <ul class="info">                    
-                          <li class="title">
-                            <a @click="$router.push('/courses/' + course.id)"> 
+                <ul class="info">                    
+                    <li class="title">
+                        <a @click="$router.push('/courses/' + course.id)"> 
                             {{ course.name}}
-                            </a>
-                          </li> 
-                          <li class="item">上課時間：<span v-html="course.classTimesText()"></span>  </li>
-                          <li class="item">開課日期：{{ course.begin_date }}</li>
-                          <li class="item">課程時數：{{  course.hoursText }}&nbsp;{{  course.weeksText }}</li>
-                          <li class="item">課程費用：<span v-html="course.formatCost()"></span> </li>
-                      </ul> 
-                       <p>{{ course.description }}</p>
+                        </a>
+                    </li> 
+                    <li class="item" v-if="course.hasClassTimes()">上課時間：<span v-html="course.classTimesText()"></span>  </li>
+                    <li class="item">開課日期：{{ course.begin_date }}</li>
+                    <li class="item">課程時數：{{  course.hoursText }}&nbsp;{{  course.weeksText }}</li>
+                    <li class="item">課程費用：<span v-html="course.formatCost()"></span> </li>
+                </ul> 
+                <p>{{ course.description }}</p>
                           
                           
                   
-              </div>
+            </div>
              
         </div>
     </div>  <!-- end box -->
 </template>
 
 <script>
-  export default {
-      name:'CourseFullCard',
-      props: {
-          entity:{
-             type: Object,
-             default: {}
-          },
-      },
-      data () {
+export default {
+    name:'CourseFullCard',
+    props: {
+        entity:{
+            type: Object,
+            default: {}
+        },
+    },
+    data () {
         return {
             course:{}
         }
-      },
-      beforeMount(){
-           this.course=new Course(this.entity)
-      },
-  }
+    },
+    beforeMount(){
+        this.course=new Course(this.entity)
+    },
+}
 
 
 </script>

@@ -31,11 +31,11 @@
     export default {
         name:'TeacherCard',
         props: {
-          teacher:{
-             type: Object,
-             default: {}
-          },
-    },
+            teacher:{
+                type: Object,
+                default: {}
+            },
+        },
 
     }
 </script>

@@ -1,41 +1,41 @@
 <template>
-  <table v-show="hasData" class="table" style="width: 95%;font-size:17px;">
-      <thead> 
-          <tr> 
-              <th></th> 
-              <th style="width:45%">課目大綱</th> 
-              <th style="width:45%">內容</th>                   
-          </tr> 
-      </thead>
-      <tbody>
-          <tr v-for="schedule in course.schedules">
-            <td class="order-td">
-              {{schedule.order}}
-            </td>
-            <td>
-              {{schedule.title}}
-            </td>
-            <td>
-              {{schedule.content}}
-            </td>
-          </tr>              
-      </tbody>
-  </table>
+    <table v-show="hasData" class="table" style="width: 95%;font-size:17px;">
+        <thead> 
+            <tr> 
+                <th></th> 
+                <th style="width:45%">課目大綱</th> 
+                <th style="width:45%">內容</th>                   
+            </tr> 
+        </thead>
+        <tbody>
+            <tr v-for="(schedule,index) in schedules" :key="index">
+                <td class="order-td">
+                    {{ schedule.order }}
+                </td>
+                <td>
+                    {{  schedule.title  }}
+                </td>
+                <td>
+                    {{  schedule.content  }}
+                </td>
+            </tr>              
+        </tbody>
+    </table>
 </template>
 
 <script>
     export default {
         name:'CourseSchedule',
         props: {
-          course:{
-             type: Object,
-             default: {}
-          },
+            schedules:{
+                type: Array,
+                default: null
+            },
         },
         computed: {
             hasData(){
-                if(!this.course.schedule) return false
-                return this.course.schedules.length > 0
+                if(!this.schedules) return false
+                return this.schedules.length > 0
             },
         },
     }
