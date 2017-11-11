@@ -3,14 +3,14 @@
         <div class="card-content">
             <div class="media">
                 <div class="media-left is-hidden-mobile">
-                    <figure class="image" >
-                    <img :src="course.photo.path">
+                    <figure class="image is-128x128">
+                        <img :src="course.photo.path">
                     </figure>
                 </div>
                 <div class="media-content">
                     <div>
                         <ul class="info">                    
-                            <li class="title">
+                            <li class="title-item">
                                 <span v-if="course.canJoin" class="tag is-success">招生中</span> 
                                 <a @click="onSelected"> 
                                     {{ course.name}}
@@ -55,9 +55,7 @@ export default {
 
 
 <style scoped>
-.card{
-        width:100%;
-}
+
 .status{
     text-align:center;
     padding-bottom:10px;
@@ -69,7 +67,7 @@ export default {
 ul.info {
     list-style-type:none;
 }
-li.title {
+li.title-item {
     font-size: 1.45em;
     font-weight: normal;
     margin-bottom: 0.5714em;

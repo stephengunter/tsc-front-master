@@ -1,6 +1,4 @@
- import 'vue-blu/dist/css/vue-blu.min.css'
  require('font-awesome/css/font-awesome.css');
- //require('./assets/css/bulma.css')
  require('./assets/css/site.css')
 
  import Moment from 'moment'
@@ -9,14 +7,21 @@
 
  import Vue from 'vue'
  import VueRouter from 'vue-router'
- import axios from 'axios';
+ import axios from 'axios'
 
  import VueBlu from 'vue-blu'
+ import 'vue-blu/dist/css/vue-blu.min.css'
+
+
+
+ import Auth from './packages/auth/Auth.js'
 
 
  Vue.use(VueRouter)
  Vue.use(VueBlu)
  Vue.use(Auth)
+
+
 
 
 
@@ -31,11 +36,15 @@
  //Vue.component('pager', require('./components/Pager') )
 
 
- import Auth from './packages/auth/Auth.js'
+
+
+
+
 
  import TimeService from './services/time.js'
  import CommonService from './services/common.js'
 
+ import Menu from './models/menu.js'
  import Password from './models/password.js'
  import Course from './models/course.js'
  import CourseStatus from './models/course-status.js'
@@ -50,8 +59,6 @@
  import Notice from './models/notice.js'
  import Photo from './models/photo.js'
  import Resume from './models/resume.js'
-
-
 
 
 
@@ -75,7 +82,7 @@
  window.TimeService = TimeService
  window.CommonService = CommonService
 
-
+ window.Menu = Menu
  window.Password = Password
  window.Course = Course
  window.CourseStatus = CourseStatus

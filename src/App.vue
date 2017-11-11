@@ -23,12 +23,14 @@
             
             <div class="container">
         
-                <level-bar v-if="levelNav.show" :centers="levelNav.centers" :default_center="levelNav.default_center"
+                <!-- <level-bar v-if="levelNav.show" :centers="levelNav.centers" :default_center="levelNav.default_center"
                 :categories="levelNav.categories" :default_category="levelNav.default_category">
                 
-                </level-bar>
+                </level-bar> -->
 
-                <router-view v-if="loaded" :params="params"></router-view>
+                <router-view v-if="loaded" :params="params" :model="model"> -->
+                        
+                </router-view>
         
             </div>  
         </section>
@@ -74,7 +76,9 @@ export default {
                 center:0,
                 category:0,
                 course:0
-            }
+            },
+
+            model:{}
         }
     },
     components:{
@@ -140,74 +144,85 @@ export default {
         
         },
         loadCourseMenus(){
+
+            let centerId=this.$route.query.center ? this.$route.query.center : 0           
+
             this.mainNav.show=true
             this.mainNav.router_link=false
             this.mainNav.key='courses'
             
             this.levelNav.show=true
+            let params={
+                category:0,
+                center:centerId,
+               
+            }
+            let getData=Course.index(params)
+            getData.then(data => {
+               
+                this.setCenters(data.centers , centerId)
 
-            let getCenters=Center.index()
+                this.setCategories(data.categories)
+               
+                this.model={
+                    courses:data.courses
+                }    
 
-            getCenters.then(data => {
-                let centers = data.centers
-                let items=centers.map(center=>{
+                this.loaded=true
+
+
+            }).catch(error=>{
+                console.log(error)
+                this.onErrors()
+            })
+        },
+        setCenters(centers, centerId){
+            let items=centers.map(center=>{
                     return {
                                name:center.name,
                                id:center.id
                            }
+            })
+
+            this.mainNav.items=items
+            this.levelNav.centers=items
+            if(centerId) {
+                let center = this.mainNav.items.find((item)=>{
+                    return item.id == centerId
                 })
-
-                this.mainNav.items=items
-                this.levelNav.centers=items
-           
-
-                let centerId=this.$route.query.center
-                if(centerId) {
-                    let center = this.mainNav.items.find((item)=>{
-                        return item.id == centerId
-                    })
-                    if(center){
-                        this.mainNav.selected=center.id
-                        this.levelNav.default_center=center.id
-                    }else{
-                        this.mainNav.selected=items[0].id
-                        this.levelNav.default_center=items[0].id
-                    } 
-                    
+                if(center){
+                    this.mainNav.selected=center.id
+                    this.levelNav.default_center=center.id
                 }else{
                     this.mainNav.selected=items[0].id
                     this.levelNav.default_center=items[0].id
-                }
-
-                let getCategories=Category.index()
-
-                getCategories.then(data=>{
-                    let categories = data.categories
-                    let items=categories.map(category=>{
-                    return {
-                                name:category.name,
-                                id:category.id,
-                                icon:category.icon,
-                           }
-                    })
-                 
-
-                    this.subNav.items=items
-                    this.subNav.selected=items[0].id
-                    this.subNav.show=true
-                    this.subNav.key='categories'
-
-                    this.levelNav.categories=items
-                    this.levelNav.default_category=items[0].id
-
-                    this.params.center=this.mainNav.selected
-                    this.params.category=this.subNav.selected
-
-                    this.loaded=true
+                } 
                 
-                })
-
+            }else{
+                this.mainNav.selected=items[0].id
+                this.levelNav.default_center=items[0].id
+            }
+        },
+        setCategories(categories){
+            let items=categories.map(category=>{
+            return {
+                        name:category.name,
+                        id:category.id,
+                        icon:category.icon,
+                    }
             })
+            
+
+            this.subNav.items=items
+            this.subNav.selected=items[0].id
+            this.subNav.show=true
+            this.subNav.key='categories'
+
+            this.levelNav.categories=items
+            this.levelNav.default_category=items[0].id
+
+            this.params.center=this.mainNav.selected
+            this.params.category=this.subNav.selected
         },
         onMenuLoaded(items){    
             if(!items.length) return   

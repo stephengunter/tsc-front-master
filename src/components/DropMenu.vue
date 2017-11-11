@@ -1,17 +1,18 @@
 <template>
     <dropdown v-if="hasData">
         <a @click.prevent="setItems"  class="button is-outlined is-primary">
-            <i  :class="selectedItem.icon" v-if="selectedItem.icon"></i>
-            &nbsp;{{ selectedItem.name }}
+            <i  :class="getIconClass(selectedItem)" v-if="selectedItem.icon"></i>
+            &nbsp;{{ selectedItem.text }}
             <span class="icon is-small">
                 <i class="fa fa-angle-down"></i>
             </span>
         </a>
-        <div slot="content">
+        <div  slot="content">
             <menus>
                 <menu-item v-for="(item,index) in otherItems" :key="index" 
-                 :id="item.id" :icon="item.icon" 
-                 @clicked="itemSelected"> {{ item.name }}
+                 :to="item.id" :icon="item.icon"  > 
+                <!-- <span id="hide_link" v-text="item.id" style="display:none;"></span> -->
+                 {{ item.text }}
                 </menu-item>
             </menus>
         </div>
@@ -39,7 +40,9 @@ export default {
         return {
             selectedId: 0,
             selectedItem: null,
-            otherItems: []
+            otherItems: [],
+
+            test:[],
         };
     },
     watch: {
@@ -64,6 +67,9 @@ export default {
             this.otherItems = []
             this.setItems()
         },
+        getIconClass(item){
+           return Menu.getIconClass(item.icon)
+        },
         setItems() {
             if (this.otherItems.length) return
 
@@ -76,17 +82,31 @@ export default {
                 }
             }
         },
-        itemSelected(id) {
+        itemSelected(e) {
+            let id=''
+            let children=e.target.childNodes
+            for (var i = 0; i < children.length; i++) {
+                if(children[i].id=='hide_link') {
+                    id=children[i].innerText
+                    break
+                }
+                
+            }
+
             if (!this.static) {
                 let item = this.otherItems.find(item => {
                     return item.id == id
-                });
+                })
                 this.selectedItem = item
                 this.selectedId = id
             }
             this.otherItems = []
 
+           
+
             this.$emit("itemSelectChanged", id)
+           
+           
         }
     }
 }

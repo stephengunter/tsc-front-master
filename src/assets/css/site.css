@@ -3,6 +3,10 @@ html * {
     /*font-family: "微軟正黑體", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
 }
 
+.card {
+    width: 100%;
+}
+
 .show-data {
     font-size: 17px;
 }

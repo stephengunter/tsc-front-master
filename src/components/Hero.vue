@@ -6,11 +6,10 @@
                 <div class="column">
 
                     <p class="title is-2" >
-                        <router-link to="/" >     
                         社會教育推廣中心
-                        </router-link>
+                       
                     </p>
-                        <p class="subtitle is-5">
+                        <p class="subtitle">
                         啟發善念 終身學習 生活有智慧
                     </p>
                 </div>     

@@ -3,51 +3,38 @@
         <nav class="nav">
             <div class="nav-left">
                 <router-link to="/" class="nav-item">     
-                    <img :src="src" alt=""> 
+                    <img :src="logoSrc" alt=""> 
                 </router-link>
             </div>
             <div class="nav-center is-hidden-mobile" >
-                <router-link to="/centers" class="nav-item is-tab">     
-                    <i class="fa fa-university" aria-hidden="true" exact></i>&nbsp; 開課中心 
+                <router-link v-for="(item,index) in menuItems" :key="index" 
+                    :to="item.id" class="nav-item is-tab">     
+                    <i v-if="item.icon" :class="getIconClass(item)" aria-hidden="true"></i>&nbsp; {{ item.text }} 
                 </router-link>
-                <router-link to="/courses" class="nav-item is-tab">     
-                    <i class="fa fa-book" aria-hidden="true"></i>&nbsp; 課程總覽 
-                </router-link>
-                <router-link v-if="false" to="/students" class="nav-item is-tab">     
-                    <i class="fa fa-user-o" aria-hidden="true"></i>&nbsp; 學員專區 
-                </router-link>
-                <router-link v-if="false" to="/teacher" class="nav-item is-tab">     
-                    <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp; 教師專區 
-                </router-link>
-                <router-link v-if="false" to="/wanted" class="nav-item is-tab">     
-                    <i class="fa fa-address-card-o" aria-hidden="true"></i>&nbsp; 徵才訊息 
-                </router-link>
+                
             </div>
             <span @click.prevent="toggleMobileMenu" id="nav-toggle" :class="[navClass,activeClass]" >
                 <span></span>
                 <span></span>
                 <span></span>
             </span>
-            <div id="nav-menu" v-if="false" class="nav-right nav-menu"> 
-            
-                <router-link  v-if="!isAuth" to="/login" class="nav-item is-tab">               
-                   <i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp; 登入          
+            <div  v-if="isAuth"  id="nav-menu"  class="nav-right nav-menu nav-item"> 
+                <!-- <drop-menu :items="userMenuItems" :default_id="0" 
+                    @itemSelectChanged="menuItemClicked" :static="true">                    
+                </drop-menu> -->
+                
+            </div>
+            <div v-else id="nav-menu"  class="nav-right nav-menu">
+                <router-link  v-for="(item,index) in visitorMenuItems" :key="index" 
+                    :to="item.id" class="nav-item is-tab">     
+                    <i v-if="item.icon" :class="getIconClass(item)" aria-hidden="true"></i>&nbsp; {{ item.text }} 
                 </router-link>
-                <router-link  v-if="!isAuth" to="/register" class="nav-item is-tab">               
-                   <i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;註冊         
-                </router-link>
-              
-                <div v-if="isAuth" class="nav-item">
-                  <drop-menu :items="userMenuItems" :default_id="0" 
-                     @itemSelectChanged="menuItemClicked" :static="true">                    
-                  </drop-menu>
-                </div>
-
+                
             </div>
         </nav>
       
 
-        <div class="menu" v-if="showMobileMenu"  style="width:65%">
+        <!-- <div class="menu" v-if="showMobileMenu"  style="width:65%">
             <menus>
            
                 <menu-item  v-for="(item,index) in menuItems" :key="index" 
@@ -67,7 +54,7 @@
                     </menus>
                 </menu-item>
             </menus>
-        </div>
+        </div> -->
      
     </div>
 </template>
@@ -81,36 +68,27 @@
         },
         data(){
             return  {
+                Menu:new Menu(),
                 isAuth: false,
                 username: "",
-                src: require("../assets/logo.gif"),
+                logoSrc: require("../assets/logo.gif"),
                 showMobileMenu: false,
                 navClass: "nav-toggle",
-                menuItems: [
-                    { id: "centers", name: "開課中心", icon: "university fa-fw" },
-                    { id: "courses", name: "課程總覽", icon: "book fa-fw" }
-                ],
-                visitorMenuItems: [
-                    { id: "login", name: "登入", icon: "sign-in fa-fw" },
-                    { id: "register", name: "註冊", icon: "user-plus fa-fw" }
-                ],
-                userMenuItems: [{ id: 0, name: "", icon: "user-circle-o fa-fw" }],
-                userFuctions: [
-                    { id: "logout", name: "登出", icon: "sign-out fa-fw" },
-                    { id: "user/signups", name: "報名紀錄", icon: "file-text-o fa-fw" },
-                    { id: "user/profiles", name: "個人資訊", icon: "id-card fa-fw" },
-                    { id: "user/change-password", name: "變更密碼", icon: "key fa-fw" }
-                ]
+                
+                menuItems:[],
+                visitorMenuItems: [],
+                userMenuItems:[],
+                
 
             }
         },
         watch:{
             $route() {
-                this.init();
+                this.init()
             }
         },
         beforeMount() {
-            this.init();
+            this.init()
         },
         created() {
             Bus.$on("authChanged", this.setAuth)
@@ -126,14 +104,30 @@
                 alert(val)
             },
             init() {
+                this.menuItems=this.Menu.getMenuItems()
+                this.visitorMenuItems=this.Menu.getVisitorMenuItems()
                 this.setAuth(this.$auth.hasToken())
-                if (this.userMenuItems.length == 1) {
-                    this.userMenuItems = this.userMenuItems.concat(this.userFuctions)
+            },
+            setAuth(isAuth) {
+                if (isAuth) {
+                    this.setUserName(this.$auth.username())
+                } else {
+                    this.setUserName('')
                 }
+                this.isAuth = isAuth
             },
             setUserName(name) {
-                this.username = name;
-                this.userMenuItems[0].name = name
+                this.username = name
+                if(!this.userMenuItems.length){
+                    this.userMenuItems=this.Menu.getUserMenuItems(name)
+                }else{
+                  
+                    this.userMenuItems[0].text = name
+                }
+                
+            },
+            getIconClass(item){
+                return Menu.getIconClass(item.icon)
             },
             menuItemClicked(id) {
                 if (id == "logout") {
@@ -150,14 +144,7 @@
                 this.showMobileMenu = !this.showMobileMenu
                 this.$emit("mobileMenuChanged", this.showMobileMenu)
             },
-            setAuth(isAuth) {
-                if (isAuth) {
-                    this.setUserName(this.$auth.username())
-                } else {
-                    this.setUserName("")
-                }
-                this.isAuth = isAuth
-            },
+            
             logout() {
                 this.$auth.logout();
                 this.setAuth(false);

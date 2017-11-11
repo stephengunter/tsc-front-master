@@ -11,20 +11,29 @@
                 <div class="media-content">
                     <div>
                         <ul class="info">   
-                            <li class="title">
-                                <a @click="$router.push('/courses?center=' + center.id)"> 
+                            <li class="title-item">
+                                <span v-if="isTrue(center.oversea)" v-text="center.name"></span>
+                                <a v-else @click="$router.push('/courses?center=' + center.id)"> 
                                     {{ center.name}}
                                 </a>
                             </li>                      
-                            <li class="item"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;  {{ addressText(center.contactInfo) }}</li>
-                            <li class="item"><i class="fa fa-volume-control-phone" aria-hidden="true"></i>&nbsp;{{ telText(center.contactInfo) }}</li>
+                            <li v-show="addressText(center.contactInfo)"  class="item">
+                                <i class="fa fa-map-marker fa-fw" aria-hidden="true"> </i>
+                               
+                                <span v-text="addressText(center.contactInfo)"></span>
+                            </li>
+                            <li v-show="telText(center.contactInfo)" class="item">
+                                <i class="fa fa-volume-control-phone fa-fw" aria-hidden="true"> </i>
+                               
+                                <span v-text="telText(center.contactInfo)"></span>
+                            </li>
                         </ul>   
 
                     </div>
                 </div>
             </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -44,6 +53,12 @@ export default {
             },
         }
     },
+    computed: {
+        hasTel(){
+            if(!this.schedules) return false
+            return this.schedules.length > 0
+        },
+    },
     beforeMount() {
         this.init()
 
@@ -52,6 +67,9 @@ export default {
         init(){
             this.getPhoto()                
         },  
+        isTrue(val){
+            return Helper.isTrue(val)
+        },
         addressText(contactInfo) {
             if(!contactInfo) return ''
             if(!contactInfo.addressA) return ''
@@ -76,13 +94,11 @@ export default {
 </script>
 
 <style scoped>
-    .card{
-        width:100%;
-    }
+    
     ul.info {
         list-style-type:none;        
     }
-    li.title {
+    li.title-item {
         font-size: 1.75em;
         font-weight: normal;
         margin-bottom: 0.5714em;

@@ -1,9 +1,10 @@
 <template>
 <div>
+    
+    
+
     <div v-show="hasNotices">
         <h1 class="title">公告訊息</h1>
-
-        
 
         <notice-table :latest="noticeTable.latest" 
           @loaded="onNoticesLoaded"
@@ -71,7 +72,13 @@
               return rows > 0 
           }
         },
+        beforeMount(){
+           
+        },
         methods:{
+            test(){
+              
+            },
             fetchData(){
                this.getCourses()
 
@@ -99,3 +106,61 @@
         
     }
 </script>
+
+
+<style>
+
+.notifications {
+  position: fixed;
+  top: 20px;
+  right: 0;
+  z-index: 1024 + 233;
+  pointer-events: none;
+
+  &.top-center{
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+  }
+  &.top-left{
+    right: auto;
+    left: 0;
+  }
+  &.bottom-left{
+    top: auto;
+    bottom: 20px;
+    right: auto;
+    left: 0;
+  }
+  &.bottom-center{
+    top: auto;
+    bottom: 20px;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+  }
+  &.bottom-right{
+    top: auto;
+    bottom: 20px;
+  }
+
+  @include tablet() {
+    max-width: 320px;
+  }
+
+  .notification {
+    margin: 10px;
+    &.has-icon{
+      padding-left: 45px;
+    }
+    &.is-default{
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      background-color: #fff;
+    }
+    .close{
+      float: right;
+      margin: -13px -14px 0 20px;
+    }
+  }
+}
+</style>

@@ -1,8 +1,21 @@
 <template>
+    <div v-show="loaded">
+    
     <div class="columns is-multiline">
         <div v-for="(center,index) in centers" :key="index"  class="column is-one-quater-mobile is-half-tablet is-half-desktop">
             <center-card :center="center"></center-card>
         </div>
+    </div>
+
+    
+
+    <h1 class="title">海外</h1>
+    <div class="columns is-multiline">
+        <div v-for="(center,index) in overseas" :key="index"  class="column is-one-quater-mobile is-half-tablet is-half-desktop">
+            <center-card :center="center"></center-card>
+        </div>
+    </div>
+
     </div>
     
 </template>
@@ -18,7 +31,8 @@ export default {
         return {
             err:{},
             loaded:false,
-            centers: []
+            centers: [],
+            overseas:[]
         }
     },
     beforeMount(){
@@ -28,7 +42,15 @@ export default {
         fetchData(){   
             let getData=Center.index()
             getData.then(data => {
-                    this.centers = data.centers
+                 this.centers = data.centers
+                    this.overseas = data.centers.filter(item=>{
+                        
+                        return Helper.isTrue(item.oversea) 
+                    })
+                    this.centers = data.centers.filter(item=>{
+                        
+                        return !Helper.isTrue(item.oversea) 
+                    })
                     this.loaded=true
                     
                 })

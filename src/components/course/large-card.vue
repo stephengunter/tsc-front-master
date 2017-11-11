@@ -17,36 +17,37 @@
                      </a>
                   
                 </div>
-                <div class="title is-4" v-if="course.hasClassTimes()">
+                <div class="title item-title" v-if="course.hasClassTimes()">
                     上課時間：<span v-html="course.classTimesText()"></span> 
                 </div>
-                <div class="title is-4">
-                    <!-- <i class="fa fa-calendar fa-fw" aria-hidden="true"></i>  -->
+                <div class="title item-title">
+                   
                     開課日期：{{ course.begin_date }}
                 </div>
-                <div class="title is-4">
-                    <!-- <i class="fa fa-hourglass fa-fw" aria-hidden="true"></i>  -->
+                <div class="title item-title">
+                    
                     課程時數：{{  course.hoursText }}&nbsp;{{  course.weeksText }}
                 </div>
-                <div class="title is-4">
-                    <!-- <i class="fa fa-hourglass fa-fw" aria-hidden="true"></i>  -->
+                <div class="title item-title">
+                   
                     報名期間：{{  course.open_date }}&nbsp;起至&nbsp;{{ course.close_date }} &nbsp;止
                 </div>
-                <div class="title is-4">
-                    <!-- <i class="fa fa-credit-card fa-fw" aria-hidden="true"></i> -->
+                <div class="title item-title">
+                    
                     課程費用：<span v-html="course.formatTuition()"></span> 
                 </div>
-                <div v-if="course.hasCost()" class="title is-4">
-                    <!-- <i class="fa fa-wrench fa-fw" aria-hidden="true"></i> -->
-                    材料費用：<span v-html="course.formatCost()"></span> 
+                <div v-if="course.hasCost()" class="title item-title">
+                   
+                    教材費用：<span v-html="course.formatCost()"></span> 
                 </div>
-                <div class="title is-4">
-                    <p style="font-size:18px">
-                        {{ course.description }}
-                    </p> 
+                <div >
+                    
+                    <p class="content" style="font-size:17px;">{{ course.description.trim() }}
+                    </p>
                
                 </div>
             </div>
+           
         </div>    
     </div>
        
@@ -57,12 +58,19 @@
 export default {
     name:'CourseLargeCard',
     props: {
-          course:{
-             type: Object,
-             default: {}
-          },
+        course:{
+            type: Object,
+            default: {}
+        },
     },
     
     
 }
 </script>
+
+<style scoped>
+.item-title{
+    font-size: 20px;
+    line-height: 0.9em
+}
+</style>

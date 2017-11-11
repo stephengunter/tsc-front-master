@@ -1,9 +1,9 @@
 <template>
   
 
-    <course-view  v-if="selected" :id="selected" @back="onBack"></course-view>
+    <details-view  v-if="selected" :id="selected" @back="onBack"></details-view>
     
-  
+    
     <div v-else class="columns is-multiline">
 
         <div v-for="(course,index) in courses" :key="index" class="column is-one-quater-mobile is-half-tablet is-half-desktop">
@@ -22,21 +22,31 @@
 <script>
 
     import CourseCard from '../../components/course/card.vue'
-    import CourseView from  '../../components/course/view.vue'
+    import Details from './details.vue'
 
     export default {
         name:'CourseIndex',
-        props: ['params'],
+        props: {
+            params:{
+                type: Object,
+                default: {}
+            },
+            model:{
+                type: Object,
+                default: {}
+            },
+        },
         components:{
-            'course-card':CourseCard,
-            'course-view':CourseView
+            'course-card' : CourseCard,
+            'details-view' : Details
         },
         watch: {
             params: {
-              handler: function () {
-                 this.init()                  
-              },
-              deep: true
+                handler(){
+                   
+                    this.refresh()                  
+                },
+                deep: true
             },
         },
         data(){
@@ -46,22 +56,27 @@
             }
         },
         beforeMount(){
-           this.init()
+            if(this.model && this.model.hasOwnProperty('courses')){
+                this.courses=this.model.courses
+            }else{
+                this.fetchData()
+            } 
+            
         },
         methods:{
-            init(){
+            refresh(){
                 this.selected=0
-                
+                this.courses=[]
                 this.fetchData()
             },
             fetchData(){
-                this.courses=[]
+                
                 let params={
                     category:this.params.category,
                     center:this.params.center
                 }
                 
-                let getData=Course.index(params)
+                let getData=Course.index(this.params)
                 getData.then(data => {
                     this.courses=data.courses                             
                 })
@@ -74,7 +89,7 @@
                 this.selected=id
             },
             onBack(){
-                this.init()
+                this.refresh()
             }
         },
        
