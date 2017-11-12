@@ -10,7 +10,9 @@
  import axios from 'axios'
 
  import VueBlu from 'vue-blu'
- import 'vue-blu/dist/css/vue-blu.min.css'
+
+
+ import './assets/sass/variables.scss'
 
 
 
@@ -44,6 +46,7 @@
  import TimeService from './services/time.js'
  import CommonService from './services/common.js'
 
+ import Content from './models/content.js'
  import Menu from './models/menu.js'
  import Password from './models/password.js'
  import Course from './models/course.js'
@@ -83,6 +86,7 @@
  window.CommonService = CommonService
 
  window.Menu = Menu
+ window.Content = Content
  window.Password = Password
  window.Course = Course
  window.CourseStatus = CourseStatus

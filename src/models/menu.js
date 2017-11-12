@@ -8,6 +8,7 @@ class Menu {
         this.menuItems = [
             { id: '/centers', text: '開課中心', icon: 'university fa-fw' },
             { id: '/courses', text: '課程總覽', icon: 'book fa-fw' },
+            { id: '/about', text: '關於我們', icon: 'info-circle fa-fw' },
             // { id: 'students', text: '學員專區', icon: 'user-o fa-fw' },
             // { id: 'teacher', text: '教師專區', icon: 'user-circle fa-fw' },
             // { id: 'wanted', text: '徵才訊息', icon: 'address-card-o' },

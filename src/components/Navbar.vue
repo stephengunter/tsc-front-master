@@ -74,10 +74,12 @@ export default {
 
         }, 
         itemSelected(id,key){
+           
             this.selected=id
-            if(!key){
-                this.$router.push('/courses?center=' + id)
-            }
+            this.$emit('selected', id, key)
+            // if(!key){
+            //     this.$router.push('/courses?center=' + id)
+            // }
         },
     
   },

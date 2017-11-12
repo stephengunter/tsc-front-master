@@ -7,14 +7,17 @@
 
             <hero></hero>
 
-            <navbar v-if="mainNav.show" 
-                :default_id="mainNav.selected" 
-                :items="mainNav.items" :router_link="mainNav.router_link">
+            <navbar v-show="mainNav.items.length" 
+                :key_name="mainNav.key" :default_id="mainNav.selected" 
+                :items="mainNav.items" :router_link="mainNav.router_link"
+                @selected="onMainNavSelected" >
             </navbar>
 
         </section>
         
-        <subnav v-if="subNav.show" :default_id="subNav.selected" :items="subNav.items"
+        <!-- Categories -->
+        <subnav v-show="subNav.items.length" 
+            :default_id="subNav.selected" :items="subNav.items"
             @itemSelected="categorySelected" >
             
         </subnav>
@@ -53,14 +56,12 @@ export default {
             loaded:false,
             mobileMenu:false,
             mainNav:{
-                show:false,
                 key:'',
                 selected:0,
                 items:[],
                 router_link:false
             },
             subNav:{
-                show:false,
                 key:'',
                 selected:0,
                 items:[]
@@ -78,7 +79,8 @@ export default {
                 course:0
             },
 
-            model:{}
+            model:{},
+            contents:[],
         }
     },
     components:{
@@ -107,35 +109,31 @@ export default {
     methods:{
         init(){
             this.loaded=false
-            this.subNav={
-                show:false,
-                key:'',
-                selected:0,
-                items:[]
-            }
-            this.params={
-                center:0,
-                category:0,
-                course:0
-            }
-
-            if(this.$route.name=='courses'){
-                this.loadCourseMenus()
-            }else{
             
-                this.mainNav={
-                    show:false,
-                    key:'',
-                    selected:0,
-                    items:[]
-                }
+            let routeName=this.$route.name ? this.$route.name : ''
+            
 
-                this.levelNav={
-                    show:false,
-                    centers:[],
-                    default_center:0,
-                    categories:[],
-                    default_category:0
+            if(routeName == 'courses'){
+                this.loadCourseMenus(routeName)
+            }else if(routeName == 'about'){
+                this.loadAboutMenues(routeName)
+                this.params={
+                    center:0,
+                    category:0,
+                    course:0
+                }
+            }else{
+
+                let key=''
+                let items=[]
+                let selected=0
+                this.setMainNav(key,items,selected)
+                this.setSubNav(key,items,selected)
+            
+                this.params={
+                    center:0,
+                    category:0,
+                    course:0
                 }
                 
                 this.loaded=true
@@ -143,88 +141,132 @@ export default {
             }  
         
         },
-        loadCourseMenus(){
-
-            let centerId=this.$route.query.center ? this.$route.query.center : 0           
-
-            this.mainNav.show=true
+        loadCourseMenus(keyName){
+           
             this.mainNav.router_link=false
-            this.mainNav.key='courses'
-            
-            this.levelNav.show=true
+
+            let centerId=this.$route.query.center ? this.$route.query.center : 0 
             let params={
                 category:0,
-                center:centerId,
-               
+                center:centerId,               
             }
             let getData=Course.index(params)
             getData.then(data => {
-               
-                this.setCenters(data.centers , centerId)
-
-                this.setCategories(data.categories)
-               
                 this.model={
                     courses:data.courses
-                }    
+                }  
 
-                this.loaded=true
+                let setCenters=this.setCenters(data.centers , centerId , keyName)
 
+                let setCategories= this.setCategories(data.categories,keyName)
+               
+                Promise.all([setCenters, setCategories]).then(values=>{
+                    this.params.center=values[0]//this.mainNav.selected
+                    this.params.category=values[1]//this.subNav.selected
+                    
+                    this.loaded=true
+                })
 
             }).catch(error=>{
-                console.log(error)
-                this.onErrors()
+                
+                this.onErrors(error)
             })
         },
-        setCenters(centers, centerId){
-            let items=centers.map(center=>{
+        setCenters(centers, centerId , keyName){
+            return new Promise((resolve, reject) => {
+                let items=centers.map(center=>{
                     return {
                                name:center.name,
                                id:center.id
                            }
-            })
-
-            this.mainNav.items=items
-            this.levelNav.centers=items
-            if(centerId) {
-                let center = this.mainNav.items.find((item)=>{
-                    return item.id == centerId
                 })
-                if(center){
-                    this.mainNav.selected=center.id
-                    this.levelNav.default_center=center.id
-                }else{
-                    this.mainNav.selected=items[0].id
-                    this.levelNav.default_center=items[0].id
-                } 
-                
-            }else{
-                this.mainNav.selected=items[0].id
-                this.levelNav.default_center=items[0].id
-            }
-        },
-        setCategories(categories){
-            let items=categories.map(category=>{
-            return {
-                        name:category.name,
-                        id:category.id,
-                        icon:category.icon,
-                    }
+
+               
+                let selected=items[0].id
+                if(centerId) {
+                    let center = this.mainNav.items.find((item)=>{
+                        return item.id == centerId
+                    })
+
+                    if(center)  selected=center.id
+                    
+                }
+
+                this.setMainNav(keyName,items,selected)
+
+                resolve(selected)
+
             })
             
+        },
+        setCategories(categories,keyName){
+            return new Promise((resolve, reject) => {
+                let items=categories.map(category=>{
+                return {
+                            name:category.name,
+                            id:category.id,
+                            icon:category.icon,
+                        }
+                })
 
+                
+                let selected=items[0].id
+
+                this.setSubNav(keyName,items,selected)
+
+                resolve(selected)
+            })
+            
+            
+
+            // this.levelNav.categories=items
+            // this.levelNav.default_category=items[0].id
+
+            
+        },
+        loadAboutMenues(){
+            let key_name='about'
+            let getData=Content.index(key_name)
+            getData.then(data => {
+                let contents=data.contents
+                this.model={
+                    contents:contents,
+                    viewing:''
+                }
+
+                let items=contents.map(content=>{
+                    return {
+                               name:content.title,
+                               id:content.id
+                           }
+                })
+
+                
+                let selected=items[0].id
+
+                this.setMainNav(key_name,items,selected)
+
+                this.setSubNav('',[],0)
+
+                this.loaded=true
+
+            }).catch(error=>{
+                
+                this.onErrors(error)
+            })
+        },
+        setMainNav(key,items,selected){
+            this.mainNav.key=key
+            this.mainNav.items=items
+            this.mainNav.selected=selected
+        },
+        setSubNav(key,items,selected){
+            this.subNav.key=key
             this.subNav.items=items
-            this.subNav.selected=items[0].id
-            this.subNav.show=true
-            this.subNav.key='categories'
-
-            this.levelNav.categories=items
-            this.levelNav.default_category=items[0].id
-
-            this.params.center=this.mainNav.selected
-            this.params.category=this.subNav.selected
+            this.subNav.selected=selected
         },
         onMenuLoaded(items){    
+            alert('onMenuLoaded')
             if(!items.length) return   
 
             this.mainNav.router_link=true
@@ -239,7 +281,16 @@ export default {
                 this.mainNav.selected=items[0].id
             }
             this.mainNav.items=items
-            this.mainNav.show=true
+           
+        },
+        onMainNavSelected(id,itemkey){
+            let key=this.mainNav.key
+           
+            if(key=='courses'){
+                this.$router.push('/courses?center=' + id)
+            }else if(key=='about'){
+                this.model.viewing=id
+            }
         },
         categorySelected(id){
             this.params.category=id
@@ -247,6 +298,8 @@ export default {
         toggleMobileMenu(val){
             this.mobileMenu=val
         },
+
+        // Bus Event Handlers
         onErrors(error,msg){
            
             console.log(error)
@@ -301,6 +354,8 @@ export default {
 
 }
 </script>
+
+
 
 <style>
     .section {

@@ -12,10 +12,11 @@
                     <div>
                         <ul class="info">   
                             <li class="title-item">
-                                <span v-if="isTrue(center.oversea)" v-text="center.name"></span>
+                                <span v-text="center.name"></span>
+                                <!-- <span v-if="isTrue(center.oversea)" v-text="center.name"></span>
                                 <a v-else @click="$router.push('/courses?center=' + center.id)"> 
                                     {{ center.name}}
-                                </a>
+                                </a> -->
                             </li>                      
                             <li v-show="addressText(center.contactInfo)"  class="item">
                                 <i class="fa fa-map-marker fa-fw" aria-hidden="true"> </i>
