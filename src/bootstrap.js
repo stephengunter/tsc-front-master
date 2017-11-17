@@ -47,6 +47,7 @@
  import CommonService from './services/common.js'
 
  import Content from './models/content.js'
+ import Download from './models/download'
  import Menu from './models/menu.js'
  import Password from './models/password.js'
  import Course from './models/course.js'
@@ -87,6 +88,7 @@
 
  window.Menu = Menu
  window.Content = Content
+ window.Download = Download
  window.Password = Password
  window.Course = Course
  window.CourseStatus = CourseStatus

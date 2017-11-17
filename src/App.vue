@@ -37,7 +37,16 @@
         
             </div>  
         </section>
-   
+        <footer class="footer">
+            <div class="container">
+                <div class="content has-text-centered">
+                    <span style="font-size: 1.2em">慈濟大學社會教育推廣中心</span> <br>
+                    <span>地址：花蓮市中央路三段701號</span> <span style="padding-left: 2em">電話：03-8565301轉1703、1704</span>
+
+
+                </div>
+            </div>
+        </footer>
     </div>
 </template>
 
@@ -116,12 +125,10 @@ export default {
             if(routeName == 'courses'){
                 this.loadCourseMenus(routeName)
             }else if(routeName == 'about'){
-                this.loadAboutMenues(routeName)
-                this.params={
-                    center:0,
-                    category:0,
-                    course:0
-                }
+                this.loadContentMenues(routeName)
+                
+            }else if(routeName == 'faq'){
+                this.loadContentMenues(routeName)
             }else{
 
                 let key=''
@@ -161,8 +168,8 @@ export default {
                 let setCategories= this.setCategories(data.categories,keyName)
                
                 Promise.all([setCenters, setCategories]).then(values=>{
-                    this.params.center=values[0]//this.mainNav.selected
-                    this.params.category=values[1]//this.subNav.selected
+                    this.params.center=values[0]
+                    this.params.category=values[1]
                     
                     this.loaded=true
                 })
@@ -224,8 +231,12 @@ export default {
 
             
         },
-        loadAboutMenues(){
-            let key_name='about'
+        loadContentMenues(key_name){
+            this.params={
+                    center:0,
+                    category:0,
+                    course:0
+                }
             let getData=Content.index(key_name)
             getData.then(data => {
                 let contents=data.contents
@@ -288,7 +299,7 @@ export default {
            
             if(key=='courses'){
                 this.$router.push('/courses?center=' + id)
-            }else if(key=='about'){
+            }else{
                 this.model.viewing=id
             }
         },

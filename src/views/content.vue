@@ -2,15 +2,13 @@
     <div>
       <p v-html="content.text"></p>
 
-      <p>
-          
-      </p>
+      
     </div>
 </template>
 
 <script>
 export default {
-    name:'AboutIndexView',
+    name:'ContentView',
     props: {
         model:{
             type: Object,

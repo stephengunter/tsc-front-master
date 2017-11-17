@@ -12,6 +12,9 @@ class Menu {
             // { id: 'students', text: '學員專區', icon: 'user-o fa-fw' },
             // { id: 'teacher', text: '教師專區', icon: 'user-circle fa-fw' },
             // { id: 'wanted', text: '徵才訊息', icon: 'address-card-o' },
+
+            { id: '/downloads', text: '文件下載', icon: 'download fa-fw' },
+            { id: '/faq', text: '常見問題', icon: 'question-circle fa-fw' },
         ]
 
         this.visitorMenuItems = [

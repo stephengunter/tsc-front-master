@@ -14,8 +14,18 @@ let routes = [{
     },
     {
         path: '/about',
-        component: require('./views/about.vue'),
+        component: require('./views/content.vue'),
         name: 'about',
+    },
+    {
+        path: '/downloads',
+        component: require('./views/downloads.vue'),
+        name: 'downloads',
+    },
+    {
+        path: '/faq',
+        component: require('./views/content.vue'),
+        name: 'faq',
     },
     {
         path: '/errors',

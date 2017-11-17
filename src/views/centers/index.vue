@@ -9,7 +9,7 @@
 
     
 
-    <h1 class="title">海外</h1>
+    <h1 v-show="overseas.length" class="title">海外</h1>
     <div class="columns is-multiline">
         <div v-for="(center,index) in overseas" :key="index"  class="column is-one-quater-mobile is-half-tablet is-half-desktop">
             <center-card :center="center"></center-card>
