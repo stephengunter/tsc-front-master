@@ -85,6 +85,19 @@ class Course {
 
         })
     }
+
+    askTel(){
+        if(!this.center) return ''
+        if(this.center.course_tel) return this.center.course_tel
+
+        if(!this.center.contactInfo) return ''
+        return this.center.contactInfo.tel
+    }
+
+    formatName(){
+        if(this.level) return  this.name + ' - ' + this.level
+        return this.name
+    }
     canNetSignup() {
         return true
         return (this.net_signup && this.canSignup)
@@ -124,6 +137,7 @@ class Course {
 
 
     }
+   
     formatCostDetails() {
 
         let formattedCost = this.formatCost()
@@ -212,12 +226,6 @@ class Course {
         if (!this.class_times) return false
         return this.class_times.length > 0
     }
-
-
-
-
-
-
 
 
 

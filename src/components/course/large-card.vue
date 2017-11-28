@@ -10,7 +10,7 @@
             
             <div class="tile is-parent is-vertical">
                 <div class="title is-2">
-                    {{ course.name }}
+                    {{ course.formatName() }}
                      <a v-show="course.canNetSignup()" style="margin-top: 5px;" 
                         @click.prevent="$router.push('/signup/create?course=' + course.id)" 
                          class="button is-info is-outlined  is-focused">線上報名
@@ -42,7 +42,7 @@
                 </div>
                 <div >
                     
-                    <p class="content" style="font-size:17px;">{{ course.description.trim() }}
+                    <p v-if="course.description" class="content" style="font-size:17px;">{{ course.description.trim() }}
                     </p>
                
                 </div>

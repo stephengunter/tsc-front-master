@@ -5,17 +5,21 @@
                 上課地點：<span v-html="course.formatLocation()"></span>          
             </div>
             <div class="column">
-                聯絡電話：{{ course.center.contactInfo.tel }}
+                <span>
+                    聯絡電話：{{ course.askTel() }}
+                </span>
+                
+                
             </div>
           
         </div>
 
         <div class="columns">
             <div class="column">
-                 課程分類：<span v-html="course.formatCategories(course.privateCategories)"></span>               
+                 課程編號：{{ course.number }}
             </div>
             <div class="column">
-                 課程編號：{{ course.number }}
+                 課程分類：<span v-html="course.formatCategories(course.privateCategories)"></span>               
             </div>
         </div>
         <div class="columns">
@@ -66,13 +70,13 @@
 </template>
 
 <script>
-  export default {
-      name:'CourseInfo',
-      props: {
-          course:{
-             type: Object,
-             default: {}
-          },
+    export default {
+        name:'CourseInfo',
+        props: {
+            course:{
+                type: Object,
+                default: {}
+            },
       },
       
       

@@ -16,6 +16,66 @@
         <h1 class="title" >課程資訊</h1>
         <course-info :course="course"></course-info>
 
+        <div style="padding-top: 1cm;">
+            <h1 class="title">折扣優惠</h1>
+            <table class="table is-bordered is-striped">
+                <thead>
+                    <tr>
+                        <th> </th>
+                        <th> 10/11 前完成繳費 </th>
+                        <th> 10/11 後 </th>
+                        <th> </th>
+                    </tr>
+                   
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>新生</td>
+                        <td>9折</td>
+                        <td>無折扣</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>同時報名兩科以上</td>
+                        <td>85折</td>
+                        <td>無折扣</td>
+                        <td></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>舊生、各級學校在校生、慈濟志業體同仁(含慈誠、委員、榮董)</td>
+                        <td>85折</td>
+                        <td>無折扣</td>
+                        <td>開學後備相關證明辦理</td>
+                    </tr>
+                    <tr>
+                        <td>持中國信託蓮花卡刷卡繳費</td>
+                        <td>9折</td>
+                        <td>9折</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>銀髮族65歲以上、身心障礙朋友</td>
+                        <td>8折</td>
+                        <td>8折</td>
+                        <td>開學後備相關證明辦理</td>
+                    </tr>
+                    <tr>
+                        <td>低收入戶</td>
+                        <td>5折</td>
+                        <td>5折</td>
+                        <td>開學後備相關證明辦理</td>
+                    </tr>
+                    <tr>
+                        <td>宗教師</td>
+                        <td>5折</td>
+                        <td>5折</td>
+                        <td>開學後備相關證明辦理</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <div v-show="teachers.length > 0" style="padding-top: 1cm;">
             <h1 class="title" >師資介紹</h1>
             <teacher-card v-for="(teacher,index) in teachers" :key="index" :teacher="teacher"></teacher-card>
@@ -27,7 +87,7 @@
             <course-schedule :schedules="course.schedules"></course-schedule>
         </div>
 
-        <div v-show="cautions.length > 0">
+        <div v-if="false">
             <h1 class="title">注意事項</h1>
                 <ul style="list-style-type:disc;">
                 <!-- <li v-for="notice, in course.notices" v-text="item"></li> -->

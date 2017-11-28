@@ -12,8 +12,8 @@
                         <ul class="info">                    
                             <li class="title-item">
                                 <span v-if="course.canJoin" class="tag is-success">招生中</span> 
-                                <a @click="onSelected"> 
-                                    {{ course.name}}
+                                <a @click="onSelected" v-text="course.formatName()"> 
+                                  
                                 </a>
                             </li> 
                             <li class="item">上課時間：<span v-html="course.classTimesText()"></span>  </li>
